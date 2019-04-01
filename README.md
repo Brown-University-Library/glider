@@ -3,6 +3,8 @@ Glider
 
 This is the development area for [Glider](http://cds.library.brown.edu/projects/glider/), an open source project that aims to support those building display-wall applications. 
 
+*Note that Glider is very much under development, so this code is unstable!*
+
 The Glider framework allows for multiple use cases, including:
 
 * Interactive digital exhibits, with which viewers interact via a touch controller (kiosk-style) or cell phones
