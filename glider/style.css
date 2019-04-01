@@ -1,0 +1,33 @@
+@import url('places/_all.css');
+
+.place-here { }
+.place-not-here { display: none }
+
+.test .part-active { background: #afa }
+.test .part-inactive { background: #faa; display: initial }
+.test .part-inactive .part-inactive { background: #f88; display: initial }
+.test .part-active .part-active { background: #8f8 }
+
+.part-active {  }
+.part-inactive { display: none }
+
+#glider-start { 
+  /* background: red; */
+
+  display: flex; 
+  width: 100%; 
+  height: 100%; 
+  margin: auto;
+  cursor: pointer;
+} 
+
+#glider-start p { 
+  margin: auto;
+  text-align: center;
+  font-size: 200%;
+  transition: opacity 1s;
+}
+
+#glider-start.not-ready p {
+  opacity: 0;
+}

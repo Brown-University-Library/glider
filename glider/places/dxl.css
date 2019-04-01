@@ -1,0 +1,12 @@
+
+/* Styles for the DXL at UConn */
+
+.DXLWall {
+  display: grid;
+  width: 100vw;
+  margin: 0 auto;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  grid-gap: 0px;
+  height:100vh;
+}

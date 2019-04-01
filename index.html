@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+  <!--
+
+    THIS IS flightplan-test-2019-02-25.html
+    (it may be temporarily renamed index.html for testing purposes)
+
+  -->
+  
+  <head>
+    <title>✈️ Glider</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- import the webpage's javascript file -->
+    <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vuex/3.1.0/vuex.min.js" 
+            integrity="sha256-ZIvksD84r/LgnGTXC+4mbAcKoHHu1w9EdhpWajDs1dQ=" 
+            crossorigin="anonymous"></script>
+    <script type="module" src="glider/main.js"></script>
+    
+    <glider-defs>
+      <place id="dslWall" type="FixedGridPlace" rows="3" columns="4" row-height="1080" column-width="1920"></place>
+      <place id="phone" type="BootstrapPlace"></place>
+      <place id="instructor" type="BootstrapPlace"></place>
+    </glider-defs>
+  </head>
+  
+  <body>
+    <div id="glider-root" class="glider-root" phase-type="par">
+      <div phase-type="seq" id="main-presentation">
+        <h1>
+          Welcome to Glider!
+        </h1>
+        <div phase-begin="0" phase-duration="3">
+          One - 3s
+        </div>
+        <div phase-duration="4.5" phase-type="par">
+          Two - sub sequences
+          <ul phase-type="seq">
+            <li id="XXX" phase-duration="1" place="dslWall">A - DSLWall only</li>
+            <li id="YYY" phase-duration="1" place="phone">B - phone only</li>
+            <li phase-duration="1">C</li>
+          </ul>
+          <ul phase-type="seq">
+            <li phase-duration="1.5">X</li>
+            <li phase-duration="1.5">Y</li>
+            <li phase-duration="1.5">Z</li>
+          </ul>
+        </div>
+        <div> 
+          Three - stop here
+        </div>      
+        <div part="testCounter" id="testC">
+          <div part-view="controller" place="phone"></div>
+          <div part-view="display" place="dslWall"></div>
+        </div>
+      </div>
+      <div part="nextButton" phase_id="main-presentation" id="nextBut" place="phone"></div>
+    </div>
+    <button onclick="glider.run(); this.parentNode.removeChild(this);">
+      RUN
+    </button>
+  </body>
+</html>
