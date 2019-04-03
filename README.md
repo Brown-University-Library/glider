@@ -3,7 +3,7 @@ Glider
 
 This is the development area for [Glider](http://cds.library.brown.edu/projects/glider/), an open source project that aims to support those building display-wall applications. 
 
-*Note that Glider is very much under development, so this code is unstable!*
+*Note that Glider is very much under development, so this code is really, really unstable!*
 
 The Glider framework allows for multiple use cases, including:
 
@@ -15,3 +15,23 @@ The Glider framework allows for multiple use cases, including:
 Glider is a project of the [Brown University Library](http://library.brown.edu), and is being developed by Patrick Rasheigh (Brown University Library) and Joel Salisbury (University of Connecticut). It is funded by, and a proud member of, the Mellon-funded [Immersive Scholar project](https://www.immersivescholar.org/) at [NCSU Libraries](https://www.lib.ncsu.edu/).
 
 Probably more than you want to know is available for perusal at [the Glider website](http://cds.library.brown.edu/projects/glider/), and please feel free to throw us an email: `patrick underscore rashleigh at brown dot edu`.
+
+Installation
+----------
+
+coming soon!
+
+API reference
+----------
+
+coming soon!
+
+Links to live examples
+----------
+
+coming soon!
+
+Contributing
+----------
+
+coming soon!
