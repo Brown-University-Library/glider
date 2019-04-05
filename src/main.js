@@ -3,7 +3,8 @@
 // import {Vue} from 'https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js';
 // import {Vuex} from 'https://unpkg.com/vuex@3.0.1/dist/vuex.js';
 
-import Vue from 'https://cdn.jsdelivr.net/npm/vue@2.6.2/dist/vue.esm.browser.js';
+// import Vue from './vue.esm.browser.js';
+// import Vuex from './vuex.js';
 
 import { getGliderOptions } from './options.js';
 
