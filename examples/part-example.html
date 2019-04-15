@@ -1,0 +1,49 @@
+<html>
+<head>
+
+  <!-- CDN SOURCES -->
+
+  <!--
+  <link type="stylesheet" href="https://cdn.jsdelivr.net/gh/Brown-University-Library/glider@v0.1.0-alpha/src/style.css"></link>
+  <script src="https://cdn.jsdelivr.net/gh/Brown-University-Library/glider@v0.1.0-alpha/dist/glider.min.js"></script>
+  -->
+  
+  <!-- LOCAL SOURCES -->
+
+  <link type="stylesheet" href="../src/style.css"></link>
+
+  <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vuex/3.1.0/vuex.min.js" 
+          integrity="sha256-ZIvksD84r/LgnGTXC+4mbAcKoHHu1w9EdhpWajDs1dQ=" 
+          crossorigin="anonymous"></script>
+  <script type="module" src="../src/main.js"></script>
+  
+  <style>
+    
+    body.place-here-wall {
+      background: black; 
+      color: white;
+      font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+      text-align: center;
+    }
+
+    body {
+      transition: background-color 1s;
+    }
+  
+  </style>
+
+  <glider-defs>
+    <place id="mobile" type="BootStrapPlace"></place>
+    <place id="wall" type="BootStrapPlace"></place>
+  </glider-defs>
+
+</head>
+<body>
+  <div part="colorPickerDemo">
+    <div part-view="controller" place="mobile"></div>
+    <div part-view="display" place="wall"></div>
+  </div>
+</body>
+</html>

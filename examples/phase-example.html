@@ -1,0 +1,65 @@
+<html>
+<head>
+
+  <!-- 
+
+    This is a simple demo of Glider's timing functions.
+
+  -->
+
+  <!-- CDN SOURCES -->
+
+  <!--
+  <link type="stylesheet" href="https://cdn.jsdelivr.net/gh/Brown-University-Library/glider@v0.1.0-alpha/src/style.css"></link>
+  <script src="https://cdn.jsdelivr.net/gh/Brown-University-Library/glider@v0.1.0-alpha/dist/glider.min.js"></script>
+  -->
+  
+  <!-- LOCAL SOURCES -->
+
+  <link type="stylesheet" href="../src/style.css"></link>
+
+  <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vuex/3.1.0/vuex.min.js" 
+          integrity="sha256-ZIvksD84r/LgnGTXC+4mbAcKoHHu1w9EdhpWajDs1dQ=" 
+          crossorigin="anonymous"></script>
+  <script type="module" src="../src/main.js"></script>
+
+  <style>
+  
+    body {
+      background-color: red;
+      color: white;
+    }
+
+    #glider-root > p, #glider-root > div {
+      position: absolute;
+      top: 33%;
+      width: 100%;
+      text-align: center;
+      font-size: 4em;
+    }
+  
+  </style>
+</head>
+
+<!-- A SEQ Phase displays each child in turn -->
+
+<body phase-type="seq">
+  <p phase-duration="2">One</p>
+  <p phase-duration="2">Two</p>
+
+  <!-- A PAR Phase displays children simultaneously -->
+
+  <div phase-type="par" phase-duration="8">
+    <span>Three</span>
+    <div phase-type="seq">
+      <span phase-begin="2" phase-duration="2">(and a half)</span>
+      <span phase-duration="2">(and three quarters)</span>
+      <span phase-duration="2">(and four fifths)</span>
+    </div>
+  </div>
+  <p phase-duration="2">Four</p>
+  <p>DONE.</p>
+</body>
+</html>

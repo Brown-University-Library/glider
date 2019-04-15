@@ -1,72 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
   
-  <!--
-
-    THIS IS flightplan-test-2019-02-25.html
-    (it may be temporarily renamed index.html for testing purposes)
-
-  -->
-  
   <head>
-    <title>✈️ Glider</title>
+    <title>✈️ Glider examples</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-    <!-- import the webpage's javascript file -->
-    <!--
-    <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vuex/3.1.0/vuex.min.js" 
-            integrity="sha256-ZIvksD84r/LgnGTXC+4mbAcKoHHu1w9EdhpWajDs1dQ=" 
-            crossorigin="anonymous"></script>
-    <script type="module" src="glider/main.js"></script>
-    -->
 
-    <script src="glider/glider.js"></script>
-    
-    <glider-defs>
-      <place id="dslWall" type="FixedGridPlace" rows="3" columns="4" row-height="1080" column-width="1920"></place>
-      <place id="phone" type="BootstrapPlace"></place>
-      <place id="instructor" type="BootstrapPlace"></place>
-    </glider-defs>
-  </head>
-  
+    <!-- <link href="examples-styles.css" rel="stylesheet"></link> -->
+    <link rel="stylesheet" 
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" 
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" 
+          crossorigin="anonymous"></link>
+
+    <style>
+      body {
+        margin: 10%;
+        background: #eee;
+      }
+    </style>
+
+  </head>    
   <body>
-    <div id="glider-root" class="glider-root" phase-type="par">
-      <div phase-type="seq" id="main-presentation">
-        <h1>
-          Welcome to Glider!
-        </h1>
-        <div phase-begin="0" phase-duration="3">
-          One - 3s
+    <h1 class="display-1">Glider examples</h1>
+    <p class="lead">
+      The following are pages that demonstrate the basics of the Glider architecture.
+    </p>
+    <div class="alert alert-light" role="alert">
+      Please note that these pages are, like Glider as a whole, in an alpha stage of release.
+    </div>
+    <h2>Overview</h2>
+    <p>
+      Glider has a metaphor of putting <em>Parts</em> (components) into 
+      <em>Places</em> (display-devices) at <em>Phases</em> (time periods).
+    </p>
+    <p>The following links demonstrate each of these in turn. 
+      Please view the source HTML code to see how each is expressed in markup.</p>
+     
+    <h2>Place example</h2>
+    <p><em>Places</em> are are devices with displays.
+      For example, a Place could be a display wall, or a presenter’s laptop, or an audience’s smartphones.
+    </p>
+    <p>
+      Places come in different <em>Place Types</em>, which are tailored for genres of display (such as display walls or smartphones).
+    </p>
+    <p>
+      A Place can have <em>Regions</em>, which are selected areas of a Place.
+    </p>
+    <p>
+      The following buttons link to the same Glider flight (located at <code>place-example.html</code>) &mdash; 
+      the only difference is that 
+      the URL takes the browser to 3 different Places, which are specified according to the 
+      following pattern: <code>#/&lt;FLIGHT INSTANCE ID>/&lt;PLACE ID></code>
+    </p>
+    <p>(We've arbitrarily assigned the Flight Instance ID to 1234)</p>
+    <div class="card">
+      <div class="list-group list-group-flush" style="width: 100%">
+        <a class="list-group-item" href="place-example.html#/1234/good">
+              <strong>The Good Place</strong><br />
+              <code>place-example.html#/1234/good</code>
+        </a>
+        <a class="list-group-item" href="place-example.html#/1234/bad">
+          <strong>The Bad Place</strong><br />
+          <code>place-example.html#/1234/bad</code>
+        </a>
+        <a class="list-group-item" href="place-example.html#/1234/wall">
+          <strong>The Wall Place</strong><br />
+          <code>place-example.html#/1234/wall</code><br />
+          <em>formatted for a diplay wall with a 3&times;4 grid of 1080p monitors (scaled to 10%)</em>
+        </a>
+      </div>
+    </div>
+
+    <h2>Parts example</h2>
+    <p>
+      Parts are modules/objects/components that have state and function. All elements in a Glider flight are
+      Parts (even simple HTML elements have a Part assigned to them).
+    </p> 
+    <p>
+      Parts are <code>active</code> or <code>inactive</code>, depending on the associated Phase (see below).
+    </p>
+    <p>
+      Parts do not appear in the page; their <em>Part Views</em> do. Part Views are the expression of the Part, 
+      and a single Part can have many Part Views &mdash; for example, a slide carousel Part may have one Part View 
+      for viewing the images (e.g. on a display wall) and another Part View for a user to advance the slides using their
+      mobile device.
+    </p>
+    <p>
+      <em>Note that Parts are VueJS components.</em> As such, Glider is meant to be easily extended by leveraging this popular
+      library.
+    </p>
+    <p>
+      The following simple example is a color selector. The <code>controller</code> Part View is the controller, 
+      while the <code>display</code> Part View shows the result. In order to see the Part in action, you need to 
+      view both Places (either in two different devices or two browser windows).
+    </p>
+    <div class="card">
+        <div class="list-group list-group-flush" style="width: 100%">
+          <a class="list-group-item" href="part-example.html#/1234/mobile">
+            <strong>Mobile Part View</strong>
+          </a>
+          <a class="list-group-item" href="part-example.html#/1234/wall">
+            <strong>Display Part View</strong>
+          </a>
         </div>
-        <div phase-duration="4.5" phase-type="par">
-          Two - sub sequences
-          <ul phase-type="seq">
-            <li id="XXX" phase-duration="1" place="dslWall">A - DSLWall only</li>
-            <li id="YYY" phase-duration="1" place="phone">B - phone only</li>
-            <li phase-duration="1">C</li>
-          </ul>
-          <ul phase-type="seq">
-            <li phase-duration="1.5">X</li>
-            <li phase-duration="1.5">Y</li>
-            <li phase-duration="1.5">Z</li>
-          </ul>
-        </div>
-        <div> 
-          Three - stop here
-        </div>      
-        <div part="testCounter" id="testC">
-          <div part-view="controller" place="phone"></div>
-          <div part-view="display" place="dslWall"></div>
+    </div>
+
+    <h2>Phases example</h2>
+    <p>
+      <em>Phases</em> define periods of time during which Parts are active.</p>
+      <p>Some are simple
+      periods that start and end. Others are compound Phases that contain other Phases.
+      These compound Phases (the SMIL standard calls them Time Containers) are either 
+      parallel (that is, the child Phases run concurrently) or sequential (the child Phases run
+      in order, from the first to the last child).
+    </p>
+    <p>
+      Phases have duration (specified in seconds by the <code>phase-duration</code> attribute) &mdash; if unspecified, the duration is INFINITY.
+    </p>
+    <p>
+      Phases also can be delayed (specified in seconds by the <code>phase-begin</code> attribute).
+    </p>
+    <div class="card">
+        <div class="list-group list-group-flush" style="width: 100%">
+          <a class="list-group-item" href="phase-example.html">
+            <strong>Phase example</strong><br />
+            In which a main sequence Phase contains a parallel Phase, which in turn contains a sequence Phase.
+          </a>
         </div>
       </div>
-      <div part="nextButton" phase_id="main-presentation" id="nextBut" place="phone"></div>
-    </div>
-    <button onclick="glider.run(); this.parentNode.removeChild(this);">
-      RUN
-    </button>
   </body>
 </html>
