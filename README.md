@@ -19,19 +19,27 @@ Probably more than you want to know is available for perusal at [the Glider webs
 Installation
 ----------
 
-coming soon!
+I'm still learning my devops techniques, so eventually I'll have a proper installation process. For now, I use rollup to reconcile all the modules into a single file. Here's the script I run from the root directory in order to generate `dist/glider.js`:
+
+```
+curl https://www.gstatic.com/firebasejs/5.8.2/firebase.js > dist/glider.js
+curl https://cdn.jsdelivr.net/npm/vue >> dist/glider.js
+curl https://cdnjs.cloudflare.com/ajax/libs/vuex/3.1.0/vuex.min.js >> dist/glider.js
+rollup src/main.js --format iife  --name "glider" >> dist/glider.js
+```
 
 API reference
 ----------
 
-coming soon!
+Coming soon - really! As the curious come by to check out Glider, I'll want to have a welcoming experience.
 
 Links to live examples
 ----------
 
-coming soon!
+I have done up some simple examples in the `examples/` directory; for now, that's a place to start.
 
 Contributing
 ----------
 
-coming soon!
+At the moment (Spring 2019) we're still developing Glider, so testing and feedback is probably the most useful thing. We're hoping to have a library of interesting Parts for launch in the Fall, so if you're interested in contributing there, please feel free.
+
