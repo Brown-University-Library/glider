@@ -492,7 +492,37 @@ function parseFlightPlans(domRoot) {
   // If none found, assume the DOM element passed _is_ the FlightPlan root
 
   if (flightPlanDomRoots.length === 0) {
-    flightPlanDomRoots = [domRoot];
+
+    console.log(`No flight plan root declared: using ${domRoot.id}`);
+
+    // If body element, then create a child div and make that the
+    //  Glider root (Vue can't use body)
+
+    // TODO: THIS DOESN'T BELONG IN A PARSER -- THIS MARKUP MODIFICATION
+    //  SHOULD BE DONE PRIOR TO PARSING
+
+    let gliderRoot;
+
+    if (domRoot === document.body) {
+      gliderRoot = document.createElement('div');
+      if (domRoot.attributes['phase-type']) {
+        gliderRoot.setAttribute(
+          'phase-type', 
+          domRoot.getAttribute('phase-type')
+        );
+      }
+      while (domRoot.firstChild) { 
+        gliderRoot.appendChild(domRoot.firstChild);
+      }
+      document.body.appendChild(gliderRoot);
+    } else {
+      gliderRoot = domRoot;
+    }
+
+    gliderRoot.classList.add('glider-root'); // TODO: NO MAGIC
+    gliderRoot.setAttribute('id', 'glider-root'); // TODO: how to handle if there's an existing @id ?
+    // TODO: Vue uses #glider-root, this area uses .glider-root -- which is it?
+    flightPlanDomRoots = [gliderRoot];
   }
 
   // Parse each FlightPlan and gather data in an array
