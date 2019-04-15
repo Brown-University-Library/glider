@@ -515,6 +515,14 @@ function parseFlightPlans(domRoot) {
         gliderRoot.appendChild(domRoot.firstChild);
       }
       document.body.appendChild(gliderRoot);
+
+      // If glider-defs is inside of GliderRoot, then move it just before
+
+      gliderRoot.parentElement.insertBefore(
+        gliderRoot.querySelector('glider-defs'),
+        gliderRoot
+      );
+
     } else {
       gliderRoot = domRoot;
     }
@@ -523,6 +531,7 @@ function parseFlightPlans(domRoot) {
     gliderRoot.setAttribute('id', 'glider-root'); // TODO: how to handle if there's an existing @id ?
     // TODO: Vue uses #glider-root, this area uses .glider-root -- which is it?
     flightPlanDomRoots = [gliderRoot];
+
   }
 
   // Parse each FlightPlan and gather data in an array
