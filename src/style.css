@@ -12,7 +12,7 @@
 .part-inactive { display: none }
 
 #glider-start { 
-  /* background: red; */
+  background: red;
 
   display: flex; 
   width: 100%; 
@@ -31,3 +31,8 @@
 #glider-start.not-ready p {
   opacity: 0;
 }
+
+#glider-defs, glider-defs {
+  display: none;
+}
+
