@@ -27,8 +27,8 @@ function createParts(p4vStore, p4vData, partRegistry, PartUtils, Vue, flightInst
   // Register each PartType as a Vue component,
   //  along with its PartViews
   
-  partTypeList.forEach(partTypeName => { // TODO: Probably partType should be renamed partTypeName
-    
+  partTypeList.forEach(partTypeName => {
+
     if (partRegistry[partTypeName] !== undefined) {
       
       console.log(`REGISTERING VUE COMPONENT FOR ${partTypeName}. Definition:`);
@@ -205,14 +205,18 @@ function createPlaces(p4vStore, p4vData, placeRegistry, clientPlace) {
       console.log(p4vStore.placesPartviews[placeId]);      
 
       placeObject.clientPlace = clientPlace; // TODO: is this the time to do this?
-             // Go through each PV assigned to this Place
+
+      // Go through each PV assigned to this Place
       //  and assign it to a PlaceRegion (default if unspecified)
       
-      p4vStore.placesPartviews[placeId].forEach(
-        partViewId => placeObject.assignPartViewToRegion(
-          placeData.region, p4vData.partViews[partViewId]
-        )
-      );    }
+      if (p4vStore.placesPartviews[placeId] !== undefined) {
+        p4vStore.placesPartviews[placeId].forEach(
+          partViewId => placeObject.assignPartViewToRegion(
+            placeData.region, p4vData.partViews[partViewId]
+          )
+        ); 
+      }
+    }
   }
   
   // Have the Place watch a VuEx registry
