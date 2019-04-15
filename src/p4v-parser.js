@@ -615,6 +615,8 @@ function parseFlightPlan(domElem) {
 
 function parseDomElem(domElem, pppRegister, forceNewPhase = false, isChildOfPart = false) { 
 
+  if (domElem.tagName === 'GLIDER-DEFS') return; // Do not parse if the glider-defs element
+
   let elemData = getDataFromDomElem(domElem),
     pppRegister_new = pppRegister.copy(),
     registerChanged = false,
@@ -1237,6 +1239,7 @@ function main() {
   // Return the p4v data object (Class P4V_Data)
   
   let p4vDataArr = parseFlightPlans(document.body);
+
   if (p4vDataArr.length > 0) {
     return p4vDataArr[0];
   } else {
