@@ -50,10 +50,11 @@ function gliderBootOnDomLoad() {
 
   // Add default stylesheet unless overridden
   
-  if (! document.querySelector('link#glider-style')) {
+  if (! document.querySelector('#glider-style')) {
     const gliderStylesheetLink = document.createElement('link');
-    gliderStylesheetLink.rel='stylesheet';
-    gliderStylesheetLink.href='https://glider.glitch.me/glider/style.css'; // TODO: NO MAGIC
+    gliderStylesheetLink.setAttribute('id', 'glider-style'); // TODO: NO MAGIC
+    gliderStylesheetLink.rel = 'stylesheet';
+    gliderStylesheetLink.href = 'https://glider.glitch.me/glider/style.css'; // TODO: NO MAGIC
     document.head.appendChild(gliderStylesheetLink);
   }
   
@@ -61,7 +62,15 @@ function gliderBootOnDomLoad() {
   
   document.body.classList.add(`place-here-${herePlace}`);  // TODO: NO MAGIC
   
-  // Add start button (TEMP)
+  // Parse the flight markup and get the data structure
+
+  let parsedP4v = parseFlightMarkup();
+  
+  console.log('-------------------------------------------------------');
+  console.log("DATA RETURNED FROM PARSER");
+  console.log(parsedP4v);
+  
+  // Add start button (TEMP, until we do async loading)
   
   let startButton = document.createElement('section');
   startButton.setAttribute('id', 'glider-start');
@@ -73,15 +82,7 @@ function gliderBootOnDomLoad() {
   };
 
   document.body.appendChild(startButton);
-  
-  // Parse the flight markup and get the data structure
 
-  let parsedP4v = parseFlightMarkup();
-  
-  console.log('-------------------------------------------------------');
-  console.log("DATA RETURNED FROM PARSER");
-  console.log(parsedP4v);
-  
   // Take that data structure and initialize the p4v store
   // TODO: This can be done immediately (no need for the DOM to load)
   
@@ -90,6 +91,8 @@ function gliderBootOnDomLoad() {
   gliderApp.here = herePlace;
   gliderApp.isInitializingInstance = initialize;
   window.gApp = gliderApp;
+  
+
   
   // Create the parts/part views, places, and phases
   // TODO: flightInstanceId should live as part of the store (or something)
@@ -155,10 +158,10 @@ function gliderBootOnDomLoad() {
     
     window.glider.run = function () { 
       this.isRunning = true;
-      this.parts['pv-nextBut-defaultView'].makeGliderRun();
+      // this.parts['pv-nextBut-defaultView'].makeGliderRun();
       this.phases['glider-root'].run(); 
     }
-    window.vv = rootVue;
+    // window.vv = rootVue;
     console.log('AFTER');
     console.log(Vue.options);
   }
