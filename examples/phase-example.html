@@ -3,7 +3,36 @@
 
   <!-- 
 
-    This is a simple demo of Glider's timing functions.
+    GLIDER DEMO: PHASES
+
+    This is a simple demo of Glider "Phases". It is meant as a
+    starting point for those who want to get a sense of the project.
+
+    Phases define periods of time. They are associated with Parts, and tell Parts when they are active.
+ 
+    Phases can be simple - periods that start and end. 
+
+    Phases can also act as containers for other Phases. These containers are either:
+
+      - parallel (that is, the contained Phases run concurrently) or 
+      - sequential (the contained Phases run in order, from the first to the last)
+
+    Phases have duration (specified in seconds by the phase-duration attribute); 
+    if unspecified, the duration is INFINITY.
+
+    Phases also can be delayed (specified in seconds by the phase-begin attribute).
+
+    Note that Glider's Phases were inspired by the SMIL standard, particularly
+    the chapter on Timing and Synchronization: https://www.w3.org/TR/SMIL3/smil-timing.html
+
+    NOTE: THIS IS NOT A STABLE FILE!
+
+    As the project progresses, this file will be updated and refined.
+
+    FOR MORE INFORMATION ON GLIDER, SEE: 
+
+    The Glider website: http://cds.library.brown.edu/projects/glider
+    The Glider repo:    https://github.com/Brown-University-Library/glider
 
   -->
 
