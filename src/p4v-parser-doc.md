@@ -127,3 +127,16 @@ Note: much of the parsing takes place in `getPartDataFromDomElem()`,
   re-stating the Role -- in other words, the Role is inherited.
   * NOTE THAT for now, a Role assigned by an element
     can NOT be reassigned by an ancestor -- you're stuck with it!
+* Places are defined in the HTML > HEAD, using the 
+  `glider-defs > place` element, e.g.
+  
+  ```
+  <glider-defs>
+    <place id="myPlace" type="BootStrapPlace" />
+  </glider-defs>
+  ```
+
+  The attributes of the place element are just passed along
+  to the constructor for the Place (note that the attributes
+  are in hypen format, but are converted to camelCase when
+  used as constructor parameters)

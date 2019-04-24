@@ -1,133 +1,278 @@
 <!DOCTYPE html>
 <html lang="en">
-  
-  <head>
-    <title>✈️ Glider examples</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- <link href="examples-styles.css" rel="stylesheet"></link> -->
-    <link rel="stylesheet" 
-          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" 
-          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" 
-          crossorigin="anonymous"></link>
+<head>
+  <title>✈️ Glider examples</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1">
 
-    <style>
-      body {
-        margin: 10%;
-        background: #eee;
-      }
-    </style>
+  <link rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+    crossorigin="anonymous">
+  </link>
 
-  </head>    
-  <body>
-    <h1 class="display-1">Glider examples</h1>
-    <p class="lead">
-      The following are pages that demonstrate the basics of the Glider architecture.
-    </p>
-    <div class="alert alert-light" role="alert">
-      Please note that these pages are, like Glider as a whole, in an alpha stage of release.
-    </div>
-    <h2>Overview</h2>
-    <p>
-      Glider has a metaphor of putting <em>Parts</em> (components) into 
-      <em>Places</em> (display-devices) at <em>Phases</em> (time periods).
-    </p>
-    <p>The following links demonstrate each of these in turn. 
-      Please view the source HTML code to see how each is expressed in markup.</p>
-     
-    <h2>Place example</h2>
-    <p><em>Places</em> are are devices with displays.
-      For example, a Place could be a display wall, or a presenter’s laptop, or an audience’s smartphones.
-    </p>
-    <p>
-      Places come in different <em>Place Types</em>, which are tailored for genres of display (such as display walls or smartphones).
-    </p>
-    <p>
-      A Place can have <em>Regions</em>, which are selected areas of a Place.
-    </p>
-    <p>
-      The following buttons link to the same Glider flight (located at <code>place-example.html</code>) &mdash; 
-      the only difference is that 
-      the URL takes the browser to 3 different Places, which are specified according to the 
-      following pattern: <code>#/&lt;FLIGHT INSTANCE ID>/&lt;PLACE ID></code>
-    </p>
-    <p>(We've arbitrarily assigned the Flight Instance ID to 1234)</p>
-    <div class="card">
-      <div class="list-group list-group-flush" style="width: 100%">
-        <a class="list-group-item" href="place-example.html#/1234/good">
-              <strong>The Good Place</strong><br />
-              <code>place-example.html#/1234/good</code>
-        </a>
-        <a class="list-group-item" href="place-example.html#/1234/bad">
-          <strong>The Bad Place</strong><br />
-          <code>place-example.html#/1234/bad</code>
-        </a>
-        <a class="list-group-item" href="place-example.html#/1234/wall">
-          <strong>The Wall Place</strong><br />
-          <code>place-example.html#/1234/wall</code><br />
-          <em>formatted for a diplay wall with a 3&times;4 grid of 1080p monitors (scaled to 10%)</em>
-        </a>
+  <style>
+    body {
+      margin: 10%;
+      background: #eee;
+    }
+  </style>
+
+</head>
+
+<body>
+  <h1 class="display-1">Glider examples</h1>
+  <p class="lead">
+    The following are pages that demonstrate the basics of
+    the Glider architecture.
+  </p>
+  <div class="alert alert-light" role="alert">
+    Please note that these pages are, like Glider as a
+    whole, in an alpha stage of release and subject to
+    frequent change.
+  </div>
+  <h2>Overview</h2>
+  <p>
+    Glider is structured around a 3-part model:
+    <!-- <em>Parts</em> (components) into 
+      <em>Places</em> (display-devices) at <em>Phases</em> (time periods). -->
+  </p>
+
+  <div class="jumbotron" style="background: white">
+    <h2 class="display-5">Glider is structured around a
+      3-part model</h2>
+    <div class="container">
+      <div class="row">
+        <p class="col lead">
+          <em>Parts</em> <br />are put into
+        </p>
+        <p class="col lead">
+          <em>Places</em> <br /> and activated by
+        </p>
+        <p class="col lead">
+          <em>Phases</em> <br />which turn parts off and on
+          over time
+        </p>
       </div>
     </div>
+    <img
+      src="https://docs.google.com/drawings/d/e/2PACX-1vR5C7PH9nrQpelf5FshfIbjUNY0UnTzTBv0GirDNOrmBBz6RYuZfyOwg41dhIOu5tYSJXXbWeM1v3kN/pub?w=941&amp;h=289"
+      width="100%" style="background-color: white">
+  </div>
 
-    <h2>Parts example</h2>
-    <p>
-      Parts are modules/objects/components that have state and function. All elements in a Glider flight are
-      Parts (even simple HTML elements have a Part assigned to them).
-    </p> 
-    <p>
-      Parts are <code>active</code> or <code>inactive</code>, depending on the associated Phase (see below).
-    </p>
-    <p>
-      Parts do not appear in the page; their <em>Part Views</em> do. Part Views are the expression of the Part, 
-      and a single Part can have many Part Views &mdash; for example, a slide carousel Part may have one Part View 
-      for viewing the images (e.g. on a display wall) and another Part View for a user to advance the slides using their
-      mobile device.
-    </p>
-    <p>
-      <em>Note that Parts are VueJS components.</em> As such, Glider is meant to be easily extended by leveraging this popular
-      library.
-    </p>
-    <p>
-      The following simple example is a color selector. The <code>controller</code> Part View is the controller, 
-      while the <code>display</code> Part View shows the result. In order to see the Part in action, you need to 
-      view both Places (either in two different devices or two browser windows).
-    </p>
-    <div class="card">
-        <div class="list-group list-group-flush" style="width: 100%">
-          <a class="list-group-item" href="part-example.html#/1234/mobile">
-            <strong>Mobile Part View</strong>
-          </a>
-          <a class="list-group-item" href="part-example.html#/1234/wall">
-            <strong>Display Part View</strong>
-          </a>
-        </div>
-    </div>
-
-    <h2>Phases example</h2>
-    <p>
-      <em>Phases</em> define periods of time during which Parts are active.</p>
-      <p>Some are simple
-      periods that start and end. Others are compound Phases that contain other Phases.
-      These compound Phases (the SMIL standard calls them Time Containers) are either 
-      parallel (that is, the child Phases run concurrently) or sequential (the child Phases run
-      in order, from the first to the last child).
-    </p>
-    <p>
-      Phases have duration (specified in seconds by the <code>phase-duration</code> attribute) &mdash; if unspecified, the duration is INFINITY.
-    </p>
-    <p>
-      Phases also can be delayed (specified in seconds by the <code>phase-begin</code> attribute).
-    </p>
-    <div class="card">
-        <div class="list-group list-group-flush" style="width: 100%">
-          <a class="list-group-item" href="phase-example.html">
-            <strong>Phase example</strong><br />
-            In which a main sequence Phase contains a parallel Phase, which in turn contains a sequence Phase.
-          </a>
-        </div>
+  <h2>Places</h2>
+  <p><em>Places</em> are are devices with displays.
+    For example, a Place could be a display wall, or a
+    presenter’s laptop, or an audience’s smartphones.
+  </p>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <h3>
+          Place Types
+        </h3>
+        <p>
+          Places come in different <em>Place Types</em>,
+          which are tailored for genres of display (such as
+          display walls or smartphones).</p>
+        <p>Currently, there are just two defined Place
+          Types:</p>
+        <dl>
+          <dt>FixedGridPlace</dt>
+          <dd>is particularly suited for
+            <a
+              href="https://www.brown.edu/academics/public-humanities/sites/public-humanities/files/Lab2-16-web_0.jpg">display
+              walls with a bezel grid</a></dd>
+          <dt>BootstrapPlace</dt>
+          <dd>automatically loads the responsive BootStrap
+            CSS framework, and is well-suited for general
+            browser display</dd>
+        </dl>
+        <p>
+          <em>There will most certainly be other Place Types
+            introduced in the future, for example a Type to
+            handle <a
+              href="https://acwm.org/blog/digital-solution-problem-paper">non-contiguous
+              displays</a>.</em>
+        </p>
       </div>
-  </body>
+      <div class="col">
+        <h3>
+          Place Regions
+        </h3>
+        <p>
+          A Place can have <em>Regions</em>, which are
+          selected areas of a Place.
+        </p>
+        <p>
+          What exactly constitutes a "region" depends on the
+          Place Type. For example, a
+          <code>FixedGridPlace</code> considers regions to
+          be rectangular cell ranges, and the region
+          names specify the row, column, width, and height
+          within the grid.
+        </p>
+        <img
+          src="https://docs.google.com/drawings/d/e/2PACX-1vSJRCwzzgww5oHqTzF-WOI4kD2KZWuKFDiKCrDMV_ybXzz-TFro4DNoX0_fcRONxXmJcAnw8X4cRc6_/pub?w=282&amp;h=166">
+      </div>
+    </div>
+  </div>
+
+  <h3>
+    Place examples
+  </h3>
+
+  <p>
+    The following buttons link to the same Glider flight
+    (located at <code>place-example.html</code>) &mdash;
+    the only difference is that
+    the URL takes the browser to 3 different Places, which
+    are specified according to the
+    following pattern:
+    <code>#/&lt;FLIGHT INSTANCE ID&gt;/&lt;PLACE ID&gt;</code>
+  </p>
+  <p>(We've arbitrarily assigned the Flight Instance ID to
+    1234)</p>
+  <p>
+    <em>Please view the source HTML code to see how each is
+      expressed in markup.</em>
+  </p>
+  <div class="card">
+    <div class="list-group list-group-flush"
+      style="width: 100%">
+      <a class="list-group-item"
+        href="place-example.html#/1234/good">
+        <strong>The Good Place</strong><br />
+        <code>place-example.html#/1234/good</code>
+      </a>
+      <a class="list-group-item"
+        href="place-example.html#/1234/bad">
+        <strong>The Bad Place</strong><br />
+        <code>place-example.html#/1234/bad</code>
+      </a>
+      <a class="list-group-item"
+        href="place-example.html#/1234/wall">
+        <strong>The Wall Place</strong><br />
+        <code>place-example.html#/1234/wall</code><br />
+        <em>formatted for a diplay wall with a 3&times;4
+          grid of 1080p monitors (scaled to 10%)</em>
+      </a>
+    </div>
+  </div>
+
+  <h2 class="mt-5">Parts</h2>
+  <p>
+    Parts are modules/objects/components that have state and
+    function. All elements in a Glider flight are
+    Parts (even simple HTML elements have a Part assigned to
+    them).
+  </p>
+  <p>
+    Parts are <code>active</code> or <code>inactive</code>,
+    depending on the associated Phase (see below).
+  </p>
+  <p>
+    Parts do not appear in the page; their <em>Part
+      Views</em> do. Part Views are the expression of the
+    Part,
+    and a single Part can have many Part Views &mdash; for
+    example, a slide carousel Part may have one Part View
+    for viewing the images (e.g. on a display wall) and
+    another Part View for a user to advance the slides using
+    their
+    mobile device.
+  </p>
+  <p class="alert alert-light" role="alert">
+    <em>Note that Parts are VueJS components.</em> As such,
+    Glider is meant to be easily extended by leveraging this
+    popular
+    library.
+  </p>
+  <h3>
+    Part Example
+  </h3>
+  <p>
+    The following simple example is a color selector. The
+    <code>controller</code> Part View is the controller,
+    while the <code>display</code> Part View shows the
+    result. In order to see the Part in action, you need to
+    view both Places (either in two different devices or two
+    browser windows).
+  </p>
+  <p>
+    <em>Please view the source HTML code to see how each is
+      expressed in markup.</em>
+  </p>
+  <div class="card">
+    <div class="list-group list-group-flush"
+      style="width: 100%">
+      <a class="list-group-item"
+        href="part-example.html#/1234/mobile"
+        target="_BLANK">
+        <strong>Mobile Part View</strong>
+      </a>
+      <a class="list-group-item"
+        href="part-example.html#/1234/wall" target="_BLANK">
+        <strong>Display Part View</strong>
+      </a>
+    </div>
+  </div>
+
+  <h2 class="mt-5">Phases</h2>
+  <p>
+    <em>Phases</em> define periods of time during which
+    Parts are active.</p>
+  <p>Some are simple
+    periods that start and end. Others are compound Phases
+    that contain other Phases.
+    These compound Phases (the SMIL standard calls them Time
+    Containers) are either
+    parallel (that is, the child Phases run concurrently) or
+    sequential (the child Phases run
+    in order, from the first to the last child).
+  </p>
+  <p>
+    Phases have duration (specified in seconds by the
+    <code>phase-duration</code> attribute) &mdash; if
+    unspecified, the duration is INFINITY.
+  </p>
+  <p>
+    Phases also can be delayed (specified in seconds by the
+    <code>phase-begin</code> attribute).
+  </p>
+  <div class="alert alert-light" role="alert">
+    Phases are loosely based on the SMIL standard,
+    particularly the <a
+      href="https://www.w3.org/TR/SMIL3/smil-timing.html">
+      Timing and Synchronization</a> chapter.
+  </div>
+  <h3>
+    Phases Example
+  </h3>
+  <p>
+    This is a simple example of Phases being used to display
+    different text over time.
+  </p>
+  <p>
+    The main Phase (a sequence), contains a parallel Phase,
+    which in turn contains a sequence Phase.
+  </p>
+  <p>
+    <em>Please view the source HTML code to see how each is
+      expressed in markup.</em>
+  </p>
+  <div class="card">
+    <div class="list-group list-group-flush"
+      style="width: 100%">
+      <a class="list-group-item" href="phase-example.html"
+        target="_BLANK">
+        <strong>Phase example</strong><br />
+      </a>
+    </div>
+  </div>
+</body>
+
 </html>
