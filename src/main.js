@@ -91,9 +91,7 @@ function gliderBootOnDomLoad() {
   gliderApp.here = herePlace;
   gliderApp.isInitializingInstance = initialize;
   window.gApp = gliderApp;
-  
 
-  
   // Create the parts/part views, places, and phases
   // TODO: flightInstanceId should live as part of the store (or something)
   //  so that it's globally accessible -- shouldn't be passed as a parameter
@@ -161,7 +159,7 @@ function gliderBootOnDomLoad() {
       // this.parts['pv-nextBut-defaultView'].makeGliderRun();
       this.phases['glider-root'].run(); 
     }
-    // window.vv = rootVue;
+    
     console.log('AFTER');
     console.log(Vue.options);
   }
