@@ -2,6 +2,18 @@
 import { getRemoteStore } from './store/firebase.js';
 import { isEqual } from './isEqual.js';
 
+/*
+
+  GLIDER.APP
+
+  This is the central clearinghouse that connects Parts, PartViews, Phases, and Places.
+  
+  None of the components communicate directly with each other; they
+  all communicate via the app.
+
+  The app also connects with the store, which in turn connects with the shared store.
+*/
+
 // isEqual is from loDash exported as a module:
 //  https://github.com/lodash/lodash/tree/4.5.0-npm-packages/lodash.isequal
 

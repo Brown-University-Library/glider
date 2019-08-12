@@ -1,19 +1,5 @@
 
 // The default Part is an HTML pass-through
-/*
-let part = {
-  render(h) { 
-    return h(
-      this.$vnode.data.tag,
-      this.$slots.default
-    ) 
-  },
-  data() {
-    return {
-      blue: "This is from the HTML Part"
-    }
-  }
-}; */
 
 let part = {
   data() {

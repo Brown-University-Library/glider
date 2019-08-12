@@ -116,6 +116,7 @@ class FixedGridPlace extends Place {
         .placetype-fixedgrid, .placetype-fixedgrid-${defaultRegionSelector} {
           width: ${this.options.columnWidth * this.options.columns}px;
           height: ${this.options.rowHeight * this.options.rows}px;
+          position: absolute;
         }`
     });
   }
