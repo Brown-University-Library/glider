@@ -40,7 +40,22 @@ Vue.use(Vuex);
 
 let glider = {};
 
+let userPartTypeRegistry = {}; // Should this be a property of the Glider object?
+
+// This gets run immediately (even before the page is parsed)
+
 function gliderBootASAP() {
+
+  window.glider = {};
+
+  // The glider object can immediately accept new Part definitions
+
+  window.glider.addPartDef = function(partDef) {
+    // TODO: Should be some sort of error checking here?
+    console.log(`Registering user part definition: ${partDef.id}`);
+    userPartTypeRegistry[partDef.id] = partDef;
+  }
+
   // Init store here?
 }
 
@@ -98,7 +113,8 @@ function gliderBootOnDomLoad() {
 
   console.log('-------------------------------------------------------');
   console.log("CREATING PARTS");
-  createParts(gliderApp, parsedP4v, partTypeRegistry, PartUtils, Vue, flightInstanceId);
+
+  createParts(gliderApp, parsedP4v, partTypeRegistry, userPartTypeRegistry, PartUtils, Vue, flightInstanceId);
   
   console.log('-------------------------------------------------------');
   console.log('CREATING PLACES');
@@ -125,7 +141,10 @@ function gliderBootOnDomLoad() {
   
   // Start Glider! (should this be in a module?)
 
-  window.glider = {};
+  // window.glider = {}; 
+  // window.glider is created ASAP (above) so that code can set parameters
+  //  (e.g. add parts) right away, before the page loads
+
   window.herePlace = herePlace;
   window.glider.phases = phases;
   window.glider.phases2Parts = parsedP4v.phasesParts;

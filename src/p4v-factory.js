@@ -16,7 +16,7 @@ import { PARSING_CONSTANTS } from './settings.js';
 // These functions take the P4v Store and create
 //  the Places, Phases, and Parts/Part Views
 
-function createParts(p4vStore, p4vData, partRegistry, PartUtils, Vue, flightInstanceId) {
+function createParts(p4vStore, p4vData, partRegistry, userPartRegistry, PartUtils, Vue, flightInstanceId) {
   
   // Get unique list of Part types in markup
 
@@ -29,13 +29,14 @@ function createParts(p4vStore, p4vData, partRegistry, PartUtils, Vue, flightInst
   
   partTypeList.forEach(partTypeName => {
 
-    if (partRegistry[partTypeName] !== undefined) {
+    if (partRegistry[partTypeName] !== undefined || 
+        userPartRegistry[partTypeName] !== undefined) {
+            
+      let partTypeDef = partRegistry[partTypeName] || userPartRegistry[partTypeName];
       
       console.log(`REGISTERING VUE COMPONENT FOR ${partTypeName}. Definition:`);
-      console.log(partRegistry[partTypeName].part);
-      
-      let partTypeDef = partRegistry[partTypeName];
-      
+      console.log(partTypeDef.part);
+
       // All Parts extend the base _super.part component
       
       partTypeDef.part.extends = partRegistry['_super'].part;

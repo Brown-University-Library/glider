@@ -73,10 +73,32 @@
   <glider-defs>
     <place id="mobile" type="BootStrapPlace"></place>
     <place id="wall" type="BootStrapPlace"></place>
-  </glider-defs>
+    <script type="module">
 
+      // This is an example of defining a Part Type inline
+
+      glider.addPartDef({
+        id: 'userPart1', // PartType IDs have no spaces or hyphens
+        part: {
+          sharedData: function() {
+            return {
+              color: 'black'
+            }
+          }
+        },
+        views: [{
+          partviewName: 'green',
+          template: `<h1 style="display:none">USER DEFINED PART</h1>`
+        }]
+      });
+
+    </script>
+  </glider-defs>
 </head>
 <body>
+  <div part="userPart1">
+    <div part-view="green" place="wall"></div>
+  </div>
   <div part="colorPickerDemo">
     <div part-view="controller" place="mobile"></div>
     <div part-view="display" place="wall"></div>
