@@ -576,7 +576,7 @@
 
     if (flightPlanDomRoots.length === 0) {
 
-      console.log(`No flight plan root declared: using ${domRoot.id}`);
+      console.log(`No flight plan root declared: using <${domRoot.tagName}>`);
 
       // If body element, then create a child div and make that the
       //  Glider root (Vue can't use body)
@@ -601,11 +601,12 @@
 
         // If glider-defs is inside of GliderRoot, then move it just before
 
-        gliderRoot.parentElement.insertBefore(
-          gliderRoot.querySelector('glider-defs'),
-          gliderRoot
-        );
+        const gliderDefs = gliderRoot.querySelector('glider-defs');
 
+        if (gliderDefs) {
+          gliderRoot.parentElement.insertBefore(gliderDefs, gliderRoot);
+        }
+        
       } else {
         gliderRoot = domRoot;
       }
@@ -3643,17 +3644,23 @@
     }
     
     // Force advance to the next child
-    // TODO: this is a kludge
+    //  by taking current running child and forcing it to complete
+    // TODO: this is a kludge (WHY?)
     
     forceNext() {
       
-      console.log('NEXT!!');
-      console.log(this.isRunning);
+      console.log(`FORCING ADVANCE ON PHASE ${this.id}`);
 
-      let nextChild = this.currChildIndex + 1;
-      if (nextChild < this.childPhases.length && this.isRunning) {
-        console.log(this.currChildIndex);
-        this.childPhases[this.currChildIndex].forceComplete();
+      if (! this.isRunning) { 
+        console.log(' > Phase not running, so advance cancelled'); 
+      }
+
+      if (this.isRunning) {
+        let nextChild = this.currChildIndex + 1;
+        if (nextChild < this.childPhases.length) {
+          console.log(` > Forcing child phase (index ${this.currChildIndex}) to complete`);
+          this.childPhases[this.currChildIndex].forceComplete();
+        }
       }
     }
 
@@ -4021,7 +4028,6 @@
 
   let part$3 = {
     template: `<div><slot></slot></div>`,
-    // props: ['phase_id'],
     sharedData: function() {
       return {
         currSlide: -1
@@ -4041,7 +4047,7 @@
     props: ['phase_id'],
     template: `
     <button v-on:click="advance">
-      next ▶
+      NEXT ▶
     </button>`,
     methods: {
       
@@ -4483,7 +4489,7 @@
   // These functions take the P4v Store and create
   //  the Places, Phases, and Parts/Part Views
 
-  function createParts(p4vStore, p4vData, partRegistry, PartUtils, Vue, flightInstanceId) {
+  function createParts(p4vStore, p4vData, partRegistry, userPartRegistry, PartUtils, Vue, flightInstanceId) {
     
     // Get unique list of Part types in markup
 
@@ -4496,13 +4502,14 @@
     
     partTypeList.forEach(partTypeName => {
 
-      if (partRegistry[partTypeName] !== undefined) {
+      if (partRegistry[partTypeName] !== undefined || 
+          userPartRegistry[partTypeName] !== undefined) {
+              
+        let partTypeDef = partRegistry[partTypeName] || userPartRegistry[partTypeName];
         
         console.log(`REGISTERING VUE COMPONENT FOR ${partTypeName}. Definition:`);
-        console.log(partRegistry[partTypeName].part);
-        
-        let partTypeDef = partRegistry[partTypeName];
-        
+        console.log(partTypeDef.part);
+
         // All Parts extend the base _super.part component
         
         partTypeDef.part.extends = partRegistry['_super'].part;
@@ -4755,6 +4762,25 @@
 
   let glider = {};
 
+  let userPartTypeRegistry = {}; // Should this be a property of the Glider object?
+
+  // This gets run immediately (even before the page is parsed)
+
+  function gliderBootASAP() {
+
+    window.glider = {};
+
+    // The glider object can immediately accept new Part definitions
+
+    window.glider.addPartDef = function(partDef) {
+      // TODO: Should be some sort of error checking here?
+      console.log(`Registering user part definition: ${partDef.id}`);
+      userPartTypeRegistry[partDef.id] = partDef;
+    };
+
+    // Init store here?
+  }
+
   // Main Glider bootup sequence
 
   function gliderBootOnDomLoad() {
@@ -4809,7 +4835,8 @@
 
     console.log('-------------------------------------------------------');
     console.log("CREATING PARTS");
-    createParts(gliderApp, parsedP4v, partTypeRegistry, PartUtils, Vue, flightInstanceId);
+
+    createParts(gliderApp, parsedP4v, partTypeRegistry, userPartTypeRegistry, PartUtils, Vue, flightInstanceId);
     
     console.log('-------------------------------------------------------');
     console.log('CREATING PLACES');
@@ -4836,7 +4863,10 @@
     
     // Start Glider! (should this be in a module?)
 
-    window.glider = {};
+    // window.glider = {}; 
+    // window.glider is created ASAP (above) so that code can set parameters
+    //  (e.g. add parts) right away, before the page loads
+
     window.herePlace = herePlace;
     window.glider.phases = phases;
     window.glider.phases2Parts = parsedP4v.phasesParts;
@@ -4875,6 +4905,11 @@
 
     // phases.run();
   }
+
+  // Do what you can before the markup, then
+  // boot up Glider once Flight markup is loaded
+
+  gliderBootASAP();
   document.addEventListener('DOMContentLoaded', gliderBootOnDomLoad);
 
   exports.glider = glider;
