@@ -518,11 +518,12 @@ function parseFlightPlans(domRoot) {
 
       // If glider-defs is inside of GliderRoot, then move it just before
 
-      gliderRoot.parentElement.insertBefore(
-        gliderRoot.querySelector('glider-defs'),
-        gliderRoot
-      );
+      const gliderDefs = gliderRoot.querySelector('glider-defs');
 
+      if (gliderDefs) {
+        gliderRoot.parentElement.insertBefore(gliderDefs, gliderRoot);
+      }
+      
     } else {
       gliderRoot = domRoot;
     }
