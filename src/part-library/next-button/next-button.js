@@ -7,7 +7,6 @@
 
 let part = {
   template: `<div><slot></slot></div>`,
-  // props: ['phase_id'],
   sharedData: function() {
     return {
       currSlide: -1
@@ -27,7 +26,7 @@ let partView_button = {
   props: ['phase_id'],
   template: `
     <button v-on:click="advance">
-      next ▶
+      NEXT ▶
     </button>`,
   methods: {
     
