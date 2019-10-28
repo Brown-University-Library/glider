@@ -317,17 +317,23 @@ class Phase_seq extends Phase_withChildren {
   }
   
   // Force advance to the next child
-  // TODO: this is a kludge
+  //  by taking current running child and forcing it to complete
+  // TODO: this is a kludge (WHY?)
   
   forceNext() {
     
-    console.log('NEXT!!');
-    console.log(this.isRunning);
+    console.log(`FORCING ADVANCE ON PHASE ${this.id}`);
 
-    let nextChild = this.currChildIndex + 1;
-    if (nextChild < this.childPhases.length && this.isRunning) {
-      console.log(this.currChildIndex);
-      this.childPhases[this.currChildIndex].forceComplete();
+    if (! this.isRunning) { 
+      console.log(' > Phase not running, so advance cancelled') 
+    }
+
+    if (this.isRunning) {
+      let nextChild = this.currChildIndex + 1;
+      if (nextChild < this.childPhases.length) {
+        console.log(` > Forcing child phase (index ${this.currChildIndex}) to complete`);
+        this.childPhases[this.currChildIndex].forceComplete();
+      }
     }
   }
 
