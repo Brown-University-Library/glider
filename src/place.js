@@ -161,7 +161,8 @@ class FixedGridPlaceRegion { // Q: Is there any reason to make this a subclass o
           id: `place-fixedgrid-${selector}`,
           css: `
             .place-fixedgrid-${selector} {
-              position: absolute;
+              position: fixed;
+              box-sizing: border-box;
               width: ${parentPlace.options.columnWidth * parsedSelector.width}px;
               height: ${parentPlace.options.rowHeight * parsedSelector.height}px;
               left: ${parentPlace.options.columnWidth * (parsedSelector.column - 1)}px;
