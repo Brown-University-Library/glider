@@ -4047,7 +4047,7 @@
     props: ['phase_id'],
     template: `
     <button v-on:click="advance">
-      NEXT ▶
+      ADVANCE
     </button>`,
     methods: {
       
@@ -4369,7 +4369,8 @@
             id: `place-fixedgrid-${selector}`,
             css: `
             .place-fixedgrid-${selector} {
-              position: absolute;
+              position: fixed;
+              box-sizing: border-box;
               width: ${parentPlace.options.columnWidth * parsedSelector.width}px;
               height: ${parentPlace.options.rowHeight * parsedSelector.height}px;
               left: ${parentPlace.options.columnWidth * (parsedSelector.column - 1)}px;
