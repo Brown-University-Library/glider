@@ -4094,7 +4094,11 @@
           
           if (window.glider.isRunning) {
             console.log('ADVANCING -- BLAH BLAH BLAH');
+            if (this.phase_id !== undefined) {
             window.glider.phases[this.phase_id].forceNext();
+            } else {
+              console.error('NextButton does not have a phase target (you need to add a phase_id attribute)');
+            }
           }
         }
         
@@ -4149,17 +4153,18 @@
     template: `
     <div style="color: white; text-align: center">
       <h1>Choose</h1>
-      <div style="font-size: 300%; padding: 10px; border: 1px solid white">
-        <span v-on:click="setRed" style="color: red">
+      <div v-bind:style="'background-color:' + this.color 
+        + '; transition: background-color 1s; font-size: 300%; padding: 10px; border: 1px solid white'">
+        <span v-on:click="setColor('red')" style="color: red">
           █
         </span>
-        <span v-on:click="setBlue" style="color: blue">
+        <span v-on:click="setColor('blue')" style="color: blue">
           █
         </span>
-        <span v-on:click="setGreen" style="color: green">
+        <span v-on:click="setColor('green')" style="color: green">
           █
         </span>
-        <span v-on:click="setOrange" style="color: orange">
+        <span v-on:click="setColor('orange')" style="color: orange">
           █
         </span>
       </div>
@@ -4167,17 +4172,8 @@
   `,
     
     methods: {
-      setRed: function() { 
-        this.color = 'red';
-      },
-      setBlue: function() { 
-        this.color = 'blue';
-      },
-      setGreen: function() { 
-        this.color = 'green';
-      },
-      setOrange: function() { 
-        this.color = 'orange';
+      setColor(c) {
+        this.color = c;
       }
     }
   };
@@ -4185,14 +4181,11 @@
   let partView_colorDisplay = {
     partviewName: 'display',
     template: `
-    <h1 class="display-1">
+    <h1 class="display-1" 
+        v-bind:style="'background-color:' + this.color 
+          + '; transition: background-color 1s'">
       {{ color }}
-    </h1>`,
-    watch: {
-      color: function (color) {
-        document.body.style.backgroundColor = color;
-      }
-    }
+    </h1>`
   };
 
   // WRAP IT ALL UP AND EXPORT
@@ -4809,7 +4802,7 @@
     
     // Add start button (TEMP, until we do async loading)
     
-    if (initialize) { // 'initialize' is set if URL ends with /main (see option.js)
+    // if (initialize) { // 'initialize' is set if URL ends with /main (see option.js)
       let startButton = document.createElement('section');
       startButton.setAttribute('id', 'glider-start');
       startButton.setAttribute('class', 'not-ready2');
@@ -4820,7 +4813,7 @@
       };
 
       document.body.appendChild(startButton);
-    }
+    // }
 
     // Take that data structure and initialize the p4v store
     // TODO: This can be done immediately (no need for the DOM to load)
