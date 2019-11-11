@@ -26,7 +26,7 @@ let partView_button = {
   props: ['phase_id'],
   template: `
     <button v-on:click="advance">
-      NEXT ▶
+      ADVANCE
     </button>`,
   methods: {
     
