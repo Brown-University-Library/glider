@@ -94,3 +94,14 @@ h2.part-inactive {
 .test .part-inactive .part-inactive { background: #f88; display: initial }
 .test .part-active .part-active { background: #8f8 }
 
+/* For nextButton built-in Part */
+     
+.part-nextButton.place-here {
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  font-size: 500%;
+}
+
