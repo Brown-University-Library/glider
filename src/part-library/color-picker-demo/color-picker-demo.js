@@ -20,17 +20,18 @@ let partView_colorPicker = {
   template: `
     <div style="color: white; text-align: center">
       <h1>Choose</h1>
-      <div style="font-size: 300%; padding: 10px; border: 1px solid white">
-        <span v-on:click="setRed" style="color: red">
+      <div v-bind:style="'background-color:' + this.color 
+        + '; transition: background-color 1s; font-size: 300%; padding: 10px; border: 1px solid white'">
+        <span v-on:click="setColor('red')" style="color: red">
           █
         </span>
-        <span v-on:click="setBlue" style="color: blue">
+        <span v-on:click="setColor('blue')" style="color: blue">
           █
         </span>
-        <span v-on:click="setGreen" style="color: green">
+        <span v-on:click="setColor('green')" style="color: green">
           █
         </span>
-        <span v-on:click="setOrange" style="color: orange">
+        <span v-on:click="setColor('orange')" style="color: orange">
           █
         </span>
       </div>
@@ -38,17 +39,8 @@ let partView_colorPicker = {
   `,
   
   methods: {
-    setRed: function() { 
-      this.color = 'red';
-    },
-    setBlue: function() { 
-      this.color = 'blue';
-    },
-    setGreen: function() { 
-      this.color = 'green';
-    },
-    setOrange: function() { 
-      this.color = 'orange';
+    setColor(c) {
+      this.color = c;
     }
   }
 }
@@ -56,15 +48,12 @@ let partView_colorPicker = {
 let partView_colorDisplay = {
   partviewName: 'display',
   template: `
-    <h1 class="display-1">
+    <h1 class="display-1" 
+        v-bind:style="'background-color:' + this.color 
+          + '; transition: background-color 1s'">
       {{ color }}
-    </h1>`,
-  watch: {
-    color: function (color) {
-      document.body.style.backgroundColor = color;
-    }
-  }
-}
+    </h1>`
+};
 
 // WRAP IT ALL UP AND EXPORT
 
