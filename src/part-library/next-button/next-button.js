@@ -74,7 +74,11 @@ let partView_button = {
         
         if (window.glider.isRunning) {
           console.log('ADVANCING -- BLAH BLAH BLAH');
+          if (this.phase_id !== undefined) {
           window.glider.phases[this.phase_id].forceNext();
+          } else {
+            console.error('NextButton does not have a phase target (you need to add a phase_id attribute)');
+          }
         }
       }
       
