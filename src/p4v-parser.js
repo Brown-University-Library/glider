@@ -230,6 +230,10 @@ class P4V_Data {
       options: elemData.part.options,
       container: elemData.part.container
     };
+
+    if (options.type === PARSING_CONSTANTS.PART.DEFAULT_PART_NAME) {
+      console.log(`DEFAULT PART ID = ${options.id}`);
+    }
     
     // TODO: Check this
     // If an HTML element, need to keep Place information
@@ -493,7 +497,7 @@ function parseFlightPlans(domRoot) {
 
   if (flightPlanDomRoots.length === 0) {
 
-    console.log(`No flight plan root declared: using ${domRoot.id}`);
+    console.log(`No flight plan root declared: using <${domRoot.tagName}>`);
 
     // If body element, then create a child div and make that the
     //  Glider root (Vue can't use body)

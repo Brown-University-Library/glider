@@ -87,7 +87,7 @@ function gliderBootOnDomLoad() {
   
   // Add start button (TEMP, until we do async loading)
   
-  if (initialize) { // 'initialize' is set if URL ends with /main (see option.js)
+  // if (initialize) { // 'initialize' is set if URL ends with /main (see option.js)
     let startButton = document.createElement('section');
     startButton.setAttribute('id', 'glider-start');
     startButton.setAttribute('class', 'not-ready2');
@@ -98,7 +98,7 @@ function gliderBootOnDomLoad() {
     };
 
     document.body.appendChild(startButton);
-  }
+  // }
 
   // Take that data structure and initialize the p4v store
   // TODO: This can be done immediately (no need for the DOM to load)
