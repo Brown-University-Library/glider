@@ -91,7 +91,7 @@ function gliderBootOnDomLoad() {
     let startButton = document.createElement('section');
     startButton.setAttribute('id', 'glider-start');
     startButton.setAttribute('class', 'not-ready2');
-    startButton.innerHTML = '<p>✈️<br />Start</p>';
+    startButton.innerHTML = '<p><span style="font-size:300%">✈</span><br />Start</p>';
     startButton.onclick = function() {
       window.glider.run(); 
       this.parentNode.removeChild(this);
