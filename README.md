@@ -38,8 +38,6 @@ Links to live examples
 
 I have done up some simple examples in the `examples/` directory; for now, that's a place to start.
 
-Contributing
-----------
+At the moment (Winter 2019) we're still developing and polishing Glider, so testing and feedback is probably the most useful thing. We are definitely looking to partner with people who have project ideas, so please feel free to contact us for more information.
 
-At the moment (Spring 2019) we're still developing Glider, so testing and feedback is probably the most useful thing. We're hoping to have a library of interesting Parts for launch in the Fall, so if you're interested in contributing there, please feel free.
 
