@@ -12,7 +12,7 @@ The Glider framework allows for multiple use cases, including:
 * Participatory presentations, in which audiences receive supplemental materials as the lecture is delivered
 * Digital repository viewing interfaces, in which users interactively select and display items on the display wall using their cell phone
 
-Glider is a project of the [Brown University Library](http://library.brown.edu), and is being developed by Patrick Rasheigh (Brown University Library) and Joel Salisbury (University of Connecticut). It is funded by, and a proud member of, the Mellon-funded [Immersive Scholar project](https://www.immersivescholar.org/) at [NCSU Libraries](https://www.lib.ncsu.edu/).
+Glider is a project of the [Brown University Library](http://library.brown.edu), and is being developed by Patrick Rashleigh (Brown University Library). It is funded by, and a proud member of, the Mellon-funded [Immersive Scholar project](https://www.immersivescholar.org/) at [NCSU Libraries](https://www.lib.ncsu.edu/).
 
 Probably more than you want to know is available for perusal at [the Glider website](http://cds.library.brown.edu/projects/glider/), and please feel free to throw us an email: `patrick underscore rashleigh at brown dot edu`.
 
@@ -28,18 +28,6 @@ curl https://cdnjs.cloudflare.com/ajax/libs/vuex/3.1.0/vuex.min.js >> dist/glide
 rollup src/main.js --format iife  --name "glider" >> dist/glider.js
 ```
 
-API reference
+Progress
 ----------
-
-Coming soon - really! As the curious come by to check out Glider, I'll want to have a welcoming experience.
-
-Links to live examples
-----------
-
-I have done up some simple examples in the `examples/` directory; for now, that's a place to start.
-
-Contributing
-----------
-
-At the moment (Spring 2019) we're still developing Glider, so testing and feedback is probably the most useful thing. We're hoping to have a library of interesting Parts for launch in the Fall, so if you're interested in contributing there, please feel free.
-
+The pandemic of 2020 has pushed the Immersive Scholar timelines later, so I took the opportunity to do a major re-write of Glider which, as of July, is nearing completion.
