@@ -30,4 +30,4 @@ rollup src/main.js --format iife  --name "glider" >> dist/glider.js
 
 Progress
 ----------
-The pandemic of 2020 has pushed the Immersive Scholar timelines later, so I took the opportunity to do a major re-write of Glider which, as of July, is nearing completion.
+The pandemic of 2020 has pushed the Immersive Scholar timelines later, so I took the opportunity to do a major re-write of Glider which, as of July, is nearing completion. Progress is in the `develop` branch.
