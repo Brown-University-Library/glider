@@ -17,7 +17,7 @@ let glider = {};
 
 function main() {
 
-  const initParameters = getInitParameters(); // TODO: Pass user overrides
+  const initParameters = getInitParameters(); // @todo: Pass user overrides
 
   LOG(['PARSED DATA', initParameters], 4);
   
@@ -33,29 +33,16 @@ function main() {
 
   gliderApp.assignPartsToPlaces(parts, places);
 
-      /*
-  LOG(['PLACES', places]);
-
   glider = getGliderAPI({
     gliderApp: gliderApp, 
     parts: parts, 
-    places: places, 
-    phases: phases,
+    places: places,
+    // phases: phases,
     store: sharedStore,
     storeConn: sharedStoreConn,
-    DEBUG: true // If false, return a limited API
+    DEBUG: true // If false, return a limited API 
+                // @todo: default FALSE -- override in user settings?
   });
-*/
-
-  // START TEMP
-
-  glider.sharedStore = sharedStore;
-  glider.sharedStoreConn = sharedStoreConn;
-  glider.parts = parts;
-  glider.places = places;
-  glider.displayDomRoot = displayDomRoot;
-
-  // END TEMP
 
   window.glider = glider;
 }
