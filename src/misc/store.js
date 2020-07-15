@@ -53,26 +53,26 @@ class SharedStore {
     newItem.lastModified = newItem.lastModified || getNow();
     newItem.lastModifiedBy = newItem.lastModifiedBy || this.clientId;
 
-    const item = this.getOrInitItem(itemId),
-          hasWritePermission = item.canBeWritten, // @todo: more here?
-          updateIsFresher = (item.lastModified < newItem.lastModified),
-          valueChanged = (newItem.val !== item.val);
+    const oldItem = this.getOrInitItem(itemId),
+          hasWritePermission = oldItem.canBeWritten, // @todo: more here?
+          updateIsFresher = (oldItem.lastModified < newItem.lastModified),
+          valueChanged = (newItem.val !== oldItem.val);
 
     let storeUpdated;
 
     if (hasWritePermission && updateIsFresher) {
 
-      // Update store
+      // Update store value (if changed)
 
       if (valueChanged) {
-        this.state[itemId].val = newItem.val;
+        oldItem.val = newItem.val;
       }
 
-      this.state[itemId] = {
-        lastModified: newItem.lastModified,
-        canBeWritten: true,
-        lastModifiedBy: newItem.lastModifiedBy
-      };
+      // Even if value doesn't change, update
+      //  lastModified information
+
+      oldItem.lastModified = newItem.lastModified;
+      oldItem.lastModifiedBy = newItem.lastModifiedBy;
 
       storeUpdated = valueChanged;
     } else {
