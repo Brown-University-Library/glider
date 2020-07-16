@@ -77,11 +77,6 @@ import Vue from 'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.esm.browser.js
 
 */
 
-/*
-  COMPETING APPROACHES: watchers (via .watch property) vs accessors (via .computed property)
-  WHO SHALL PREVAIL??
-*/
-
 // Given a PartType name and definition,
 //  get the watcher functions for any sharedData
 
@@ -156,7 +151,7 @@ function getPartSharedVarAccessors(gliderApp, initParameters, partTypeName, part
       .map(partInstance => initParameters.parts[partInstance].id);
 
     // Register each instance of this Part Type with the app
-    // (WHY?? What purpose does this serve?)
+    // (@todo WHY?? What purpose does this serve?)
 
     partInstanceIDs.forEach(partId => {
       gliderApp.registerPart({
@@ -167,49 +162,10 @@ function getPartSharedVarAccessors(gliderApp, initParameters, partTypeName, part
     });
 
     // END - WHAT DOES THIS HAVE TO DO W STORE?
-
-    // Add shared variable setters and getters to 
-    //  the component's .computed
-    // TODO: Currently overwrites .computed -- should this be moved to a mixin?
-
-    // partTypeDef.part.computed = partTypeSettersGetters;
-
-    // delete partTypeDef.part.sharedData;
   }
   
   return accessors;
 }
-
-/*
-function getPartSharedVarAccessors(partTypeDef, gliderApp) {
-
-  // TODO: This assumes that there are no computed vars that AREN'T shared??
-  //  Maybe this is only at the PartType level as opposed to the Part Instance level,
-  //  so it's OK.
-
-  const sharedVarNames = Object.keys(partTypeDef.part.computed || {});
-
-  const sharedVarAccessors = sharedVarNames.reduce((accessors, sharedVarName) => {
-    
-    const getter = function() {
-      console.log(`GETTING ${sharedVarName} IN VUE!`);
-      const partInstanceId = this.id;
-      return gliderApp.getPartViewSharedVariable(partInstanceId, sharedVarName);
-    };
-    
-    const setter = function(value) {
-      console.log(`SETTING ${sharedVarName} TO ${value} in VUE!`);
-      const partInstanceId = this.id;
-      gliderApp.setPartViewSharedVariable(partInstanceId, sharedVarName, value);
-    };
-    
-    accessors[sharedVarName] = { get: getter, set: setter };
-    return accessors;
-  }, {});
-
-  return sharedVarAccessors;
-}
-*/
 
 // Given the root of the display markup, prepare that markup 
 //  for compilation into Vue components
@@ -267,16 +223,6 @@ function prepareDisplayDomForVueCompilation(initParameters, displayDomRoot) {
       );
       
       partViewContainer.setAttribute('part_id', parentPartId);
-
-      /*  DON'T ERASE THIS YET - BUT IS THIS THE PLACE TO DO IT?
-          I THINK THIS IS HANDLED IN MAIN.JS BY:
-          gliderApp.assignPartsToPlaces(parts, places);
-
-      // Associate PartView with a Place
-
-      if (initParameters.parts[parentPartId].place) {
-        gliderApp.addPartViewToPlace(partViewId, initParameters.parts[parentPartId].place);
-      } */
     }
     
     partViewContainer.setAttribute('is', `${parentPartType}-${partViewDef.name}`);
@@ -309,7 +255,6 @@ function createVueComponentsFromPartTypes_views(partTypeDef, sharedVarWatchers, 
       // Assign watchers for shared variables
 
       if (sharedVarWatchers) {
-        // partViewDef.computed = Object.assign(sharedVarAccessors, partViewDef.computed);
         partViewDef.watch = Object.assign(sharedVarWatchers, partViewDef.watchers);
       }
 
@@ -326,9 +271,6 @@ function createVueComponentsFromPartTypes_views(partTypeDef, sharedVarWatchers, 
       }
 
       partViewDef.mixins.push(sharedDataMixin);
-      console.log('QQQQQQQQQQ');
-      //console.log(partViewDef.watchers);
-      console.log(partViewDef);
 
       components[partViewVueName] = partViewDef;
     });
@@ -411,9 +353,6 @@ function createVueComponentsFromPartTypes(gliderApp, initParameters, partRegistr
       );
     }
   });
-
-  console.log('IIIIIIIIII');
-  console.log(componentDefs);
 
   return componentDefs;
 }
