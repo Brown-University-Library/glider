@@ -10,7 +10,7 @@ class Clock {
 
   // Start the clock
   // this.phasesToNotify.forEach(phase => phase.resolveTime(Clock.getNow()));
-  // TODO: Not sure that the clock should ask the Phases to resolve their timeGraph ...
+  // @todo: Not sure that the clock should ask the Phases to resolve their timeGraph ...
 
   start() {
 
