@@ -44,6 +44,7 @@ let PARSING_CONSTANTS = {
     SELECTOR_PREFIX: 'place-',
     CLASSNAME_PREFIX: 'place-',
     ROLE_REGION_DELIMITER: '-', // @todo: We define this but don't use it!
+    DEF_MARKUP_SELECTOR: 'glider-defs > place',
     DEFAULT_PLACE_NAME: 'defaultPlace',
     DEFAULT_PLACE_TYPE: 'bootstrapplace', // @todo: more generic?
     DEFAULT_PLACE_OPTIONS: { asetting: true },

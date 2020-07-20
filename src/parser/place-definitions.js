@@ -36,10 +36,9 @@ function getPlaceDefs() {
 
   let placeDefinitions = [];
 
-  // @todo glider defs selector should be in system-settings
+  document.querySelectorAll(PARSING_CONSTANTS.PLACE.DEF_MARKUP_SELECTOR)
+          .forEach(placeDefElem => {
 
-  document.querySelectorAll('glider-defs > place').forEach(placeDefElem => {
-    
     let definitionParameters = {};
     
     Array.from(placeDefElem.attributes).forEach(function(att) {
