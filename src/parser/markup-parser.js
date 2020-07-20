@@ -56,7 +56,7 @@ function getHash(string) {
   
   let hash = 0;
   
-  string.split('').forEach((char) => {
+  string.split('').forEach(char => {
     hash = ((hash << 5) - hash) + char.charCodeAt();
     hash = hash & hash; // Convert to 32bit integer
   });
@@ -86,27 +86,10 @@ function getIdFromDomPosition(domElement) {
   return getHash(makeId(domElement));
 }
 
-/*
-let LOG_FLAG = {
-  any: true
-}
-
-function log(text, category) {
-  if (LOG_FLAG.any) {
-    if (category === undefined)
-      console.log(text);
-    else if (LOG_FLAG[category] === undefined || LOG_FLAG[category]) {
-      console.log(text);
-    }
-  }
-} */
-
-
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 // Misc Parsing functions
 
-
-// TODO: Getting the Glider-defs (including places) seems like a different
+// @todo Getting the Glider-defs (including places) seems like a different
 //  function from the rest of this module -- move to its own module?
 
 function getPlaceDefinitions() {
@@ -508,7 +491,7 @@ function parseFlightPlans(domRoot) {
     LOG(`No flight plan root declared: using <${domRoot.tagName}>`);
 
     // If body element, then create a child div and make that the
-    //  Glider root (Vue can't use body)
+    //  Glider root (Vue can't use the body element)
 
     // TODO: THIS DOESN'T BELONG IN A PARSER -- THIS MARKUP MODIFICATION
     //  SHOULD BE DONE PRIOR TO PARSING
@@ -516,11 +499,11 @@ function parseFlightPlans(domRoot) {
     let gliderRoot;
 
     if (domRoot === document.body) {
-      gliderRoot = document.createElement('div');
-      if (domRoot.attributes['phase-type']) {
+      gliderRoot = document.createElement(PARSING_CONSTANTS.FLIGHT_PLAN_DEFAULT_ROOT_ELEM);
+      if (domRoot.attributes['phase-type']) { // @todo no magic
         gliderRoot.setAttribute(
-          'phase-type', 
-          domRoot.getAttribute('phase-type')
+          'phase-type',  // @todo no magic
+          domRoot.getAttribute('phase-type') // @todo no magic
         );
       }
       while (domRoot.firstChild) { 
@@ -530,7 +513,7 @@ function parseFlightPlans(domRoot) {
 
       // If glider-defs is inside of GliderRoot, then move it just before
 
-      const gliderDefs = gliderRoot.querySelector('glider-defs');
+      const gliderDefs = gliderRoot.querySelector('glider-defs');  // @todo no magic
 
       if (gliderDefs) {
         gliderRoot.parentElement.insertBefore(gliderDefs, gliderRoot);
@@ -541,8 +524,8 @@ function parseFlightPlans(domRoot) {
     }
 
     gliderRoot.classList.add(PARSING_CONSTANTS.FLIGHT_PLAN_ROOT_CLASSNAME);
-    gliderRoot.setAttribute('id', 'glider-root'); // TODO: how to handle if there's an existing @id ?
-    // TODO: Vue uses #glider-root, this area uses .glider-root -- which is it?
+    gliderRoot.setAttribute('id', 'glider-root'); // @todo: how to handle if there's an existing @id ?
+    // @todo: Vue uses #glider-root, this area uses .glider-root -- which is it?
     flightPlanDomRoots = [gliderRoot];
   }
 
@@ -636,13 +619,15 @@ function parseFlightPlan(domElem) {
 
 function parseDomElem(domElem, pppRegister, forceNewPhase = false, isChildOfPart = false) { 
 
-  if (domElem.tagName === 'GLIDER-DEFS') return; // Do not parse if the glider-defs element
+  // Do not parse if the glider-defs element
+  
+  if (domElem.tagName === 'GLIDER-DEFS') return;
 
   let elemData = getDataFromDomElem(domElem),
-    pppRegister_new = pppRegister.copy(),
-    registerChanged = false,
-    tellChildrenTheyHaveAPartParent = false,
-    forceChildrenToHaveNewPhase;
+      pppRegister_new = pppRegister.copy(),
+      registerChanged = false,
+      tellChildrenTheyHaveAPartParent = false,
+      forceChildrenToHaveNewPhase;
 
   LOG('DOM ELEMENT PARSED: ' + elemData.domNode.id);
   LOG(elemData.part);  
@@ -742,9 +727,9 @@ function parseDomElem(domElem, pppRegister, forceNewPhase = false, isChildOfPart
 
   /*
   
-  CHANGE: Can't have new Phase if also defines a PartView.
-  Need to throw a warning if a Phase is being forced and there's a PartView definition
-  (e.g. if the Parent part also has a SEQ/PAR definition on it)
+    CHANGE: Can't have new Phase if also defines a PartView.
+    Need to throw a warning if a Phase is being forced and there's a PartView definition
+    (e.g. if the Parent part also has a SEQ/PAR definition on it)
   
   */
   
@@ -787,7 +772,7 @@ function parseDomElem(domElem, pppRegister, forceNewPhase = false, isChildOfPart
     (elemData.phase.definesNewPhase && elemData.phase.isContainer) 
   );
   
-  // Parse child elements
+  // Parse child elements -- recurse
 
   Array.from(domElem.children).forEach(
     child => parseDomElem(
@@ -1165,8 +1150,8 @@ function getPartDataFromDomElem(domElem) {
 }
 
 // DATA-FROM-DOM FUNCTIONS: Places temp from Joel. 
-// #ToDo Still need to figure out how this Place data gets to App.js
-// #ToDo does every phase need place defined? Probably, right?
+// @todo Still need to figure out how this Place data gets to App.js
+// @todo does every phase need place defined? Probably, right?
 
 function getPlaceDataFromDomElem(domElem) {
 
