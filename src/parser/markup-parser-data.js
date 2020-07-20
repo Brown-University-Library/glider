@@ -268,10 +268,6 @@ class P4V_Data {
     
     LOG(`Setting PartView ${partViewName} belonging to Part ${partId} to Place ${p4vReg.place.id}`);
   }
-  
-  addPlaceDefs(placeDefs) {
-     this.placeDefs = this.placeDefs.concat(placeDefs);
-  }
 }
 
 export { P4V_Data };

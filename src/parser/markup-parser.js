@@ -15,16 +15,6 @@ OUTLINE
 - Utility functions
   - getHash()
   - getIdFromDomPosition()
-  
-- Misc parsing functions
-  - getPlaceDefinitions() -- MOVE THIS
-
-- P4V_Data class
-  (The data structure that will initialize the P4v objects)
-
-- Register class
-  (This object keeps track of "current" Parts, Places, Phases
-  as the DOM is parsed)
 
 - High-level parsing functions 
   (they don't access the DOM directly, but do the high-level
@@ -88,35 +78,6 @@ function getIdFromDomPosition(domElement) {
   }
   
   return getHash(makeId(domElement));
-}
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-// Misc Parsing functions
-
-// @todo Getting the Glider-defs (including places) seems like a different
-//  function from the rest of this module -- move to its own module?
-
-function getPlaceDefinitions() {
-  
-  let placeDefinitions = [];
-  
-  const toCamelCase = function(dashTerm) { 
-    return dashTerm.replace(/-(\w)/gi, (s, letter) => letter.toUpperCase());
-  };
-  
-  document.querySelectorAll('glider-defs > place').forEach(placeDefElem => {
-    
-    let definitionParameters = {};
-    
-    Array.from(placeDefElem.attributes).forEach(function(att) {
-      // definitionParameters[toCamelCase(att.name)] = placeDefElem.getAttribute(att.name);
-      definitionParameters[att.name.toLowerCase()] = placeDefElem.getAttribute(att.name).toLowerCase();
-    });
-    
-    placeDefinitions.push(definitionParameters);
-  });
-  
-  return placeDefinitions;
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -197,10 +158,6 @@ function parseFlightPlan(domElem) {
   let p4vData = new P4V_Data(domElem),
       elemData = getDataFromDomElem(domElem),
       initPart, initPlace, initPhase;
-
-  // Initialize p4vData with place information
-  
-  p4vData.addPlaceDefs(getPlaceDefinitions());
   
   // Create root Phase object (seq unless specified otherwise)
 
