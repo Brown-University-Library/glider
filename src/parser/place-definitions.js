@@ -1,32 +1,6 @@
 
-
-/*
-function getPlaceDefinitions() {
-  
-  let placeDefinitions = [];
-  
-  const toCamelCase = function(dashTerm) { 
-    return dashTerm.replace(/-(\w)/gi, (s, letter) => letter.toUpperCase());
-  };
-  
-  document.querySelectorAll('glider-defs > place').forEach(placeDefElem => {
-    
-    let definitionParameters = {};
-    
-    Array.from(placeDefElem.attributes).forEach(function(att) {
-      // definitionParameters[toCamelCase(att.name)] = placeDefElem.getAttribute(att.name);
-      definitionParameters[att.name.toLowerCase()] = placeDefElem.getAttribute(att.name).toLowerCase();
-    });
-    
-    placeDefinitions.push(definitionParameters);
-  });
-  
-  return placeDefinitions;
-}
-
-addPlaceDefs(placeDefs) {
-  this.placeDefs = this.placeDefs.concat(placeDefs);
-} */
+import { PARSING_CONSTANTS } from '../system-settings.js';
+import { LOG } from '../misc/logger.js';
 
 // Place parameters are set in glider-defs as key/value pairs (as element attributes)
 // The key is the attribute name, lower case no hyphens - e.g. row-width becomes rowwidth
@@ -49,6 +23,10 @@ function getPlaceDefs() {
     
     placeDefinitions.push(definitionParameters);
   });
+
+  if (placeDefinitions.length) {
+    LOG([`FOUND ${placeDefinitions.length} PLACE DEFINITIONS`, placeDefinitions], 1);
+  }
 
   return { placeDefs: placeDefinitions }
 }
