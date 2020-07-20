@@ -1,11 +1,31 @@
 
 import { PARSING_CONSTANTS } from '../system-settings.js';
 
+
+function changeRootElem(domNode, newRootElemName) {
+
+  let newDomNode = document.createElement(newRootElemName);
+
+  // Copy the children
+
+  while (domNode.firstChild) {
+    newDomNode.appendChild(domNode.firstChild);
+  }
+
+  // Copy the attributes
+
+  for(let attr of domNode.attributes) {
+    newDomNode.setAttribute(attr.name, attr.value);
+  }
+
+  return newDomNode;
+}
+
 // Get shadow DOM node for display
 
 function initDisplayDom(initParameters, flightDisplayMarkup, gliderStylesheetLink) {
 
-  // Create display root element and add global Glider classname
+  // Create and append display root element and add global Glider classname
 
   const displayDomHostElement = document.createElement(PARSING_CONSTANTS.DISPLAY_ROOT_ELEM);
 
@@ -19,6 +39,13 @@ function initDisplayDom(initParameters, flightDisplayMarkup, gliderStylesheetLin
 
   const displayDomRoot = displayDomHostElement.attachShadow({ mode: 'open' });
 
+  // Make sure that the markup copy doesn't have a <template> elem as root
+  // (Vue doesn't like that)
+
+  if (flightDisplayMarkup.tagName.toLowerCase() === 'template') {
+    flightDisplayMarkup = changeRootElem(flightDisplayMarkup, 'div');
+  }
+  
   // Append markup copy and global CSS stylesheet to shadow DOM
 
   displayDomRoot.appendChild(flightDisplayMarkup);
@@ -52,8 +79,8 @@ function initDom(initParameters) {
     `${PARSING_CONSTANTS.PLACE.BODY_ELEM_HERE_CLASSNAME_PREFIX}${initParameters.herePlace}`
   );
 
-  // TODO: allow for a callback for user-defined Markup DOM processing
-  // TODO: allow for a callback for user-defined Display DOM processing
+  // @todo: allow for a callback for user-defined Markup DOM processing
+  // @todo: allow for a callback for user-defined Display DOM processing
 
   // Create a shodow DOM node and copy the Flight markup over
 
