@@ -102,8 +102,8 @@ class P4V_Data {
     let options = {
       id: elemData.part.id,
       type: elemData.part.type === undefined 
-        ? PARSING_CONSTANTS.PART.DEFAULT_PART_NAME 
-        : elemData.part.type,
+            ? PARSING_CONSTANTS.PART.DEFAULT_PART_NAME 
+            : elemData.part.type,
       options: elemData.part.options,
       container: elemData.part.container
     };
@@ -215,7 +215,6 @@ class P4V_Data {
     
     let options = {
       id: this.makePlaceId(placeRole, placeRegion),
-      // id: `pl-${placeRole}-${placeRegion}`, // TODO: this should be a function off of PARSING_CONSTANTS
       role: placeRole,
       region: placeRegion
     };
@@ -256,18 +255,24 @@ class P4V_Data {
     LOG(`Setting PartId ${partId} to PartViewId ${partViewId}`);
   }
   
+  // Map a Place ID to an array of PartView IDs
+
   associatePartViewWithPlace(p4vReg) {
     
     let partId = p4vReg.part.id,
         partViewName = p4vReg.partView.name,
         placeId = p4vReg.place.id;
     
+    // Initialize new Place entry with an empty array
+
     if (this.placesPartviews[placeId] === undefined) {
       this.placesPartviews[placeId] = []; 
     }
     
+    // Add PartView to array
+
     this.placesPartviews[placeId].push(`pv-${partId}-${partViewName}`);
-    
+
     LOG(`Setting PartView ${partViewName} belonging to Part ${partId} to Place ${p4vReg.place.id}`);
   }
 }

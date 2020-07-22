@@ -122,6 +122,8 @@ function parseFlightPlans(domRoot) {
       document.body.appendChild(gliderRoot);
 
       // If glider-defs is inside of GliderRoot, then move it just before
+      // @todo This kind of DOM pre-processing should be moved outside of/before parser
+      //       and possibly called in main.js
 
       const gliderDefs = gliderRoot.querySelector('glider-defs');  // @todo no magic
 
@@ -132,6 +134,8 @@ function parseFlightPlans(domRoot) {
     } else {
       gliderRoot = domRoot;
     }
+
+    // @todo - more DOM pre-processing that should not be here ... this is a parser!
 
     gliderRoot.classList.add(PARSING_CONSTANTS.FLIGHT_PLAN_ROOT_CLASSNAME);
     gliderRoot.setAttribute('id', 'glider-root'); // @todo: how to handle if there's an existing @id ?
@@ -151,6 +155,7 @@ function parseFlightPlans(domRoot) {
 // Parse a FlightPlan root
 //  Create an App object, initialize a PPP Register
 //  Recurse into child DOM elements
+//  Do some cleanup
 //  Return the App object
 
 function parseFlightPlan(domElem) { 
@@ -173,10 +178,13 @@ function parseFlightPlan(domElem) {
   initPart = { id: 'rootPart' }; // TODO: KLUDGE
 
   // Create root Place object
-  // TODO (Patrick): This should probably be an 'all' Place
+  // @todo This should probably be an 'all' Place
   //  i.e. ROLE=undefined, and REGION=UNDEFINED
 
-  initPlace = { id: 'rootPlace', role: "_undefined1", region: undefined }; // TODO: KLUDGE
+  initPlace = { 
+    id: 'rootPlace', 
+    role: '_undefined1', 
+    region: undefined }; // @todo this is a KLUDGE
 
   // Create initial PPPRegister
 
@@ -193,6 +201,7 @@ function parseFlightPlan(domElem) {
   pppRegister_init.save();
   p4vData.setRootPhase(initPhase);
 
+  // PARSE!
   // Recurse to children by passing them to parseDomElem()
 
   let forceNewPhase = true;
@@ -201,7 +210,7 @@ function parseFlightPlan(domElem) {
     childElem => parseDomElem(childElem,  pppRegister_init, forceNewPhase)
   );
   
-  // Cleanup data
+  // Post-parse cleanup
   
   // Add DefaultView IFF there is a Part with no associated View
   
@@ -231,11 +240,13 @@ function parseFlightPlan(domElem) {
 // This is the main parsing function for non-root DOM elements.
 // Checks to see if there's a change in PPP
 
+// @todo this is a very long function - break up
+
 function parseDomElem(domElem, pppRegister, forceNewPhase = false, isChildOfPart = false) { 
 
   // Do not parse if the glider-defs element
   
-  if (domElem.tagName === 'GLIDER-DEFS') return;
+  if (domElem.tagName === 'GLIDER-DEFS') return; // @todo no magic
 
   let elemData = getDataFromDomElem(domElem),
       pppRegister_new = pppRegister.copy(),
@@ -280,9 +291,11 @@ function parseDomElem(domElem, pppRegister, forceNewPhase = false, isChildOfPart
     newPartImplicityDeclared = (elemData.phase.definesNewPhase || forceNewPhase);
 
   if (newPartImplicityDeclared) { // NOTIFICATION MESSAGE
-    LOG(`NEW PART IMPLICITLY DECLARED FOR ${elemData.domNode.id} because 
-    elemData.phase.definesNewPhase = ${elemData.phase.definesNewPhase} OR 
-    forceNewPhase = ${forceNewPhase}`);
+    LOG(
+      `NEW PART IMPLICITLY DECLARED FOR ${elemData.domNode.id} because ` +
+      (elemData.phase.definesNewPhase ? 'this elem defines a new Phase ' : '') +
+      (forceNewPhase ? 'a new Phase is being forced': '')
+    );
   }
   
   if (! elemData.part.definesNewPartView && 
@@ -322,7 +335,13 @@ function parseDomElem(domElem, pppRegister, forceNewPhase = false, isChildOfPart
     }
 
     let newPlaceRegion = elemData.place.region,
-        newPlaceElemData = Object.assign({}, elemData, { place: { role: newPlaceRole, region: newPlaceRegion }});
+        newPlaceData = { 
+          place: { 
+            role: newPlaceRole, 
+            region: newPlaceRegion 
+          }
+        },
+        newPlaceElemData = Object.assign({}, elemData, newPlaceData);
     
     // let newPlace = getNewPlace(elemData, pppRegister.app);
 
@@ -358,12 +377,9 @@ function parseDomElem(domElem, pppRegister, forceNewPhase = false, isChildOfPart
       (elemData.phase.definesNewPhase || forceNewPhase || hasChildren)) {
 
     let parentPhase = pppRegister.phase,
-      //newPhaseOptions = getPhaseConstructorOptionsFromElemData(elemData),
-      //newPhase = Phase.createType(newPhaseOptions.type, newPhaseOptions);
-      // newPhase = getNewPhase(elemData, pppRegister.app);
-      newPhase = pppRegister.app.addPhase(elemData);
+        newPhase = pppRegister.app.addPhase(elemData);
 
-    LOG("CREATING NEW PHASE ID: " + newPhase.id);
+    LOG(`CREATING NEW PHASE ID ${newPhase.id}`);
     
     pppRegister.app.createParentChildPhaseRelationship(parentPhase, newPhase);
     // parentPhase.addChild(newPhase); // New Phase is child of parent
@@ -406,19 +422,11 @@ function parseDomElem(domElem, pppRegister, forceNewPhase = false, isChildOfPart
 //  here.
 
 function getDataFromDomElem(domElem) {
-
-  let phaseData = getPhaseDataFromDomElem(domElem),
-    partData = getPartDataFromDomElem(domElem),
-    placeData = getPlaceDataFromDomElem(domElem);
-
-  // tested to this point
-  // console.log(`PlaceData is ${placeData.id}`);
-
   return {
     domNode: domElem,
-    part: partData,
-    place: placeData,
-    phase: phaseData
+    part:  getPartDataFromDomElem(domElem),
+    place: getPlaceDataFromDomElem(domElem),
+    phase: getPhaseDataFromDomElem(domElem),
   }
 }
 
@@ -612,7 +620,7 @@ function getPartDataFromDomElem(domElem) {
     return id;
   }
 
-  // TODO: This is an (insecure) kludge -- see 
+  // @todo: This is an (insecure) kludge -- see 
   //  getPartOptionsFromDomElem_TODO for the proper solution
 
   function getPartOptionsFromDomElem(domElem) {
@@ -709,11 +717,7 @@ function getPartDataFromDomElem(domElem) {
         `(${OPEN_BRACE}|${COMMA})(${QUOT}?)(${KEY_TEXT})(${QUOT}?)${COLON}`,
         'g'
       );
-/*
-      console.log(`(${OPEN_BRACE}|${COMMA})(${QUOT}?)(${KEY_TEXT})(${QUOT}?)${COLON}`);
-      console.log(jsonString);
-      console.log(jsonString.replace(keysThatNeedQuotesRegEx, '$1"$3":'));
-*/
+
       return jsonString.replace(keysThatNeedQuotesRegEx, '$1"$3":');
     }
 
@@ -850,6 +854,9 @@ function main() {
   // Put ID's on all elements in body (for now)
   // These IDs map to P4V IDs, for easy cross-checking
   
+  // @todo -- move this to a DOM pre-processing routine
+  //          (along with other stuff similarly marked in this js file)
+
   document.body.querySelectorAll('*').forEach(elem => {
     if (elem.getAttribute('id') === null) {
       elem.setAttribute('id', `g${getIdFromDomPosition(elem)}`);

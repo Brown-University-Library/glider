@@ -72,6 +72,8 @@ class PPP_Register {
 
     this.app.associatePartWithPhase(this);
 
+    // If there's a PartView, save associated data
+
     if (this.partView !== PARSING_CONSTANTS.PART.VIEW_UNDEF 
         && this.partView !== undefined) {
       this.app.addPartView(this);
