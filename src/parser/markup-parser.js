@@ -209,13 +209,21 @@ function parseFlightPlan(domElem) {
     .filter(partId => p4vData.partsPartViews[partId] === undefined)
     .forEach(partWithNoViewId => p4vData.addDefaultPartViewToView(partWithNoViewId));
   
-  // Add default place for Views that have none specified
+  // For PartViews that have no Place specified, 
+  //   copy from associated Part
+  // (These PartViews are default Views from combined Part/PartView
+  //   elements)
 
-  /*
-  Object.keys(p4vStore.partViews)
-    .filter(partViewId => p4vStore.partsPartViews[partViewId] === undefined)
-    .forEach(partWithNoViewId => p4vStore.addDefaultPartViewToView(partWithNoViewId));
-  */
+  Object.values(p4vData.partViews)
+        .filter(partView => !partView.place && p4vData.parts[partView.partId].place)
+        .forEach(partView => {
+          partView.place = p4vData.parts[partView.partId].place;
+          delete p4vData.parts[partView.partId].place;
+        });
+
+  // @todo -- prune tree of nested HTML Parts/PartViews
+  // @todo -- replace all these IDs with pointers, to simplify the code that
+  //          consumes this object
 
   return p4vData;
 }

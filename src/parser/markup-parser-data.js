@@ -112,9 +112,9 @@ class P4V_Data {
       LOG(`DEFAULT PART ID = ${options.id}`);
     }
     
-    // TODO: Check this
-    // If an HTML element, need to keep Place information
-    // (maybe in the end we should create the PartView here as well -- think on this)
+    // @todo: Check this
+    // Parts don't have Places (only Part Views do)
+    // But if it's an HTML element, we need to keep the Place information
     
     // THIS SHOULD STORE THE PLACE ID
     
@@ -149,12 +149,14 @@ class P4V_Data {
       : p4vRegister.partView.name;
     
     // Compile definition
-    
+
     let options = {
       partId: p4vRegister.part.id,
       id: `pv-${p4vRegister.part.id}-${partViewName}`, // @todo NO MAGIC VALUES!
       name: partViewName,
-      container: p4vRegister.partView.container
+      container: p4vRegister.partView.container,
+      place: this.makePlaceId(p4vRegister.place.role, p4vRegister.place.region)
+      // Note that full place info is stored in .places[placeId]
     };
     
     // Save this PartView in registry if it's new
