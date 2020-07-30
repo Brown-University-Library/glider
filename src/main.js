@@ -1,15 +1,17 @@
 
-import { LOG }                from './misc/logger.js';
-import { getInitParameters }  from './parser/init-parameters.js';
-import { getSharedStore }     from './misc/store.js';
-import { initConnection }     from './misc/store-sync.js';
-import { connectionConfig }   from './misc/store-sync-conx_pusher_config.js';
-import { getGliderAPI }       from './misc/gliderAPI.js';
-import { GliderApp }          from './app/app.js';
-import { initDom }            from './misc/initDom.js';
-import { initParts }          from './part/initParts.js';
-import { initPhases }         from './phase/initPhases.js';
-import { initPlaces }         from './place/initPlaces.js';
+import { LOG }                     from './misc/logger.js';
+import { getDocumentSections }     from './parser/get-document-parts.js';
+import { prepareMarkupForParsing } from './parser/prepareMarkupForParsing.js';
+import { getInitParameters }       from './parser/init-parameters.js';
+import { getSharedStore }          from './misc/store.js';
+import { initConnection }          from './misc/store-sync.js';
+import { connectionConfig }        from './misc/store-sync-conx_pusher_config.js';
+import { getGliderAPI }            from './misc/gliderAPI.js';
+import { GliderApp }               from './app/app.js';
+import { initDisplayDom }          from './misc/initDisplayDom.js';
+import { initParts }               from './part/initParts.js';
+import { initPhases }              from './phase/initPhases.js';
+import { initPlaces }              from './place/initPlaces.js';
 
 // Some initial setup
 

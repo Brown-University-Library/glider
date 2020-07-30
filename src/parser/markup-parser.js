@@ -12,10 +12,6 @@ import { getDataFromDomElem } from './markup-parser-dom-extract.js';
 
 OUTLINE
 
-- Utility functions
-  - getHash()
-  - getIdFromDomPosition()
-
 - High-level parsing functions 
   (they don't access the DOM directly, but do the high-level
   analysis and recursion)
@@ -29,112 +25,15 @@ OUTLINE
 */
 
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-
-// Utilities
-
-// Simple hash function adapted from 
-//  https://stackoverflow.com/questions/6122571/simple-non-secure-hash-function-for-javascript
-// NOTE: Can return negative numbers; e.g. hash for 'strign' is -891986113
-
-function getHash(string) {
-  
-  let hash = 0;
-  
-  string.split('').forEach(char => {
-    hash = ((hash << 5) - hash) + char.charCodeAt();
-    hash = hash & hash; // Convert to 32bit integer
-  });
-  
-  return Math.abs(hash);
-}
-
-// Get a unique identifier based on the position of the element in the DOM tree.
-// Good for auto-generating IDs for elements that will be the same across Clients
-// (Currently not used)
-
-function getIdFromDomPosition(domElement) {
-  
-  function makeId(domElement) {
-
-    if (domElement === document.body) return ''; // boundary condition
-
-    let previousSiblingCount = 0,
-        currSibling = domElement;
-
-    while (currSibling = currSibling.previousSibling) 
-      previousSiblingCount++;
-
-    return previousSiblingCount + '.' + makeId(domElement.parentNode);
-  }
-  
-  return getHash(makeId(domElement));
-}
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 // PARSING FUNCTIONS
 
-// Find all FlightPlans on page and parse each with parseFlightPlan()
-//  Returns an array of App objects
+// Parse each flightPlan markup with parseFlightPlan()
 //  (This allows for separate Flights on a single page, which may or may not
 //    prove useful)
 
-function parseFlightPlans(domRoot) {
-
-  let flightPlanDomRoots = Array.from(
-    domRoot.querySelectorAll(PARSING_CONSTANTS.FLIGHT_PLAN_SELECTOR)
-  );
-
-  // If none found, assume the DOM element passed _is_ the FlightPlan root
-
-  if (flightPlanDomRoots.length === 0) {
-
-    LOG(`No flight plan root declared: using <${domRoot.tagName}>`);
-
-    // If body element, then create a child div and make that the
-    //  Glider root (Vue can't use the body element)
-
-    // TODO: THIS DOESN'T BELONG IN A PARSER -- THIS MARKUP MODIFICATION
-    //  SHOULD BE DONE PRIOR TO PARSING
-
-    let gliderRoot;
-
-    if (domRoot === document.body) {
-      gliderRoot = document.createElement(PARSING_CONSTANTS.FLIGHT_PLAN_DEFAULT_ROOT_ELEM);
-      if (domRoot.attributes['phase-type']) { // @todo no magic
-        gliderRoot.setAttribute(
-          'phase-type',  // @todo no magic
-          domRoot.getAttribute('phase-type') // @todo no magic
-        );
-      }
-      while (domRoot.firstChild) { 
-        gliderRoot.appendChild(domRoot.firstChild);
-      }
-      document.body.appendChild(gliderRoot);
-
-      // If glider-defs is inside of GliderRoot, then move it just before
-      // @todo This kind of DOM pre-processing should be moved outside of/before parser
-      //       and possibly called in main.js
-
-      const gliderDefs = gliderRoot.querySelector('glider-defs');  // @todo no magic
-
-      if (gliderDefs) {
-        gliderRoot.parentElement.insertBefore(gliderDefs, gliderRoot);
-      }
-      
-    } else {
-      gliderRoot = domRoot;
-    }
-
-    // @todo - more DOM pre-processing that should not be here ... this is a parser!
-
-    gliderRoot.classList.add(PARSING_CONSTANTS.FLIGHT_PLAN_ROOT_CLASSNAME);
-    gliderRoot.setAttribute('id', 'glider-root'); // @todo: how to handle if there's an existing @id ?
-    // @todo: Vue uses #glider-root, this area uses .glider-root -- which is it?
-    flightPlanDomRoots = [gliderRoot];
-  }
-
-  // Parse each FlightPlan and gather data in an array
+function parseFlightPlans(flightPlanDomRoots) {
 
   let p4vData_all = flightPlanDomRoots.map(
     flightPlanDomRoot => parseFlightPlan(flightPlanDomRoot)
