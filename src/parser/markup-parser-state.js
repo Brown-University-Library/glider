@@ -8,7 +8,7 @@ import { LOG } from '../misc/logger.js';
 //  for the current element being parsed. 
 // Can save its state to the P4V_Data data structure for export to the rest of Glider.
 
-class PPP_Register {
+class P4V_Register {
 
   constructor (options) {
     this.part = options.part;
@@ -33,7 +33,7 @@ class PPP_Register {
 
   updateAndCopy(stateUpdate) {
     let newState = Object.assign(this.state, stateUpdate);
-    return new PPP_Register(newState);
+    return new P4V_Register(newState);
   }
 
   // Change some aspect of the register and return an 
@@ -65,4 +65,4 @@ class PPP_Register {
   }
 }
 
-export { PPP_Register };
+export { P4V_Register };

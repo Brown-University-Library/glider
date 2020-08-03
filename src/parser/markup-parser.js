@@ -2,7 +2,7 @@
 import { PARSING_CONSTANTS } from '../system-settings.js';
 import { LOG } from '../misc/logger.js';
 import { P4V_Data } from './markup-parser-data.js';
-import { PPP_Register } from './markup-parser-state.js';
+import { P4V_Register } from './markup-parser-state.js';
 import { getDataFromDomElem } from './markup-parser-dom-extract.js';
 
 
@@ -75,9 +75,9 @@ function parseFlightPlan(domElem) {
     region: undefined 
   }; // @todo this is a KLUDGE
 
-  // Create initial PPPRegister
+  // Create initial register
 
-  let pppRegister_init = new PPP_Register({
+  let p4vReg_init = new P4V_Register({
     part: initPart,
     partView: PARSING_CONSTANTS.PART.VIEW_UNDEF,
     place: initPlace,
@@ -86,7 +86,7 @@ function parseFlightPlan(domElem) {
 
   // Save this to to the P4V_Data store - and set root Phase
 
-  p4vData.saveRegister(pppRegister_init);
+  p4vData.saveRegister(p4vReg_init);
   p4vData.setRootPhase(initPhase);
 
   // PARSE!
@@ -95,7 +95,7 @@ function parseFlightPlan(domElem) {
   let forceNewPhase = true;
 
   Array.from(domElem.children).forEach(
-    childElem => parseDomElem(childElem, pppRegister_init, p4vData, forceNewPhase)
+    childElem => parseDomElem(childElem, p4vReg_init, p4vData, forceNewPhase)
   );
   
   // Post-parse cleanup
@@ -130,14 +130,14 @@ function parseFlightPlan(domElem) {
 
 // @todo this is a very long function - break up
 
-function parseDomElem(domElem, pppRegister, p4vData, forceNewPhase = false, isChildOfPart = false) { 
+function parseDomElem(domElem, p4vReg_inherited, p4vData, forceNewPhase = false, isChildOfPart = false) { 
 
   // Do not parse if the glider-defs element
   
   if (domElem.tagName === 'GLIDER-DEFS') return; // @todo no magic
 
   let elemData = getDataFromDomElem(domElem),
-      pppRegister_new = pppRegister.copy(),
+      p4vReg = p4vReg_inherited.copy(),
       registerChanged = false,
       tellChildrenTheyHaveAPartParent = false,
       forceChildrenToHaveNewPhase;
@@ -158,9 +158,9 @@ function parseDomElem(domElem, pppRegister, p4vData, forceNewPhase = false, isCh
 
     if (elemData.part.definesNewPartView) {
       let newPartViewName = elemData.part.view;
-      pppRegister_new = pppRegister_new.changePartViewTo(newPartViewName, domElem);
+      p4vReg = p4vReg.changePartViewTo(newPartViewName, domElem);
     } // else { // DISABLED, FOR NOW
-      // pppRegister_new = pppRegister_new.changePartViewTo(
+      // p4vReg = p4vReg.changePartViewTo(
       //  PARSING_CONSTANTS.PART.PART_DEFAULT_VIEW_NAME, domElem
       // )
       // }
@@ -190,7 +190,7 @@ function parseDomElem(domElem, pppRegister, p4vData, forceNewPhase = false, isCh
       (newPartExplicitlyDeclared || newPartImplicityDeclared) ) {
     
     let newPart = p4vData.addPart(elemData);
-    pppRegister_new = pppRegister_new.changePartTo(newPart);
+    p4vReg = p4vReg.changePartTo(newPart);
 
     registerChanged = true;
     tellChildrenTheyHaveAPartParent = true;
@@ -199,13 +199,13 @@ function parseDomElem(domElem, pppRegister, p4vData, forceNewPhase = false, isCh
 /*
   if (elemData.part.definesNewPart || elemData.part.definesNewPartView) {
     let newPart = getNewPart(elemData, pppRegister.app);
-    pppRegister_new = pppRegister_new.changePartTo(newPart)
+    p4vReg = p4vReg.changePartTo(newPart)
       .changePartViewTo(newPart);
     registerChanged = true;
   } */
 
   // If a change of Place Role or Region, create new and update register
-  //   Check if Role is defined in the DOM; update Role in PPPRegister, but
+  //   Check if Role is defined in the DOM; update Role in register, but
   //     only if it is currently undefined
 
   if (elemData.place.hasRole || elemData.place.hasRegion) {
@@ -219,7 +219,7 @@ function parseDomElem(domElem, pppRegister, p4vData, forceNewPhase = false, isCh
     if (elemData.place.hasRole) {
       newPlaceRole = elemData.place.role;
     } else {
-      newPlaceRole = pppRegister.place.role;
+      newPlaceRole = p4vReg.place.role;
     }
 
     let newPlaceRegion = elemData.place.region,
@@ -235,7 +235,7 @@ function parseDomElem(domElem, pppRegister, p4vData, forceNewPhase = false, isCh
     
     let newPlace = p4vData.addPlace(newPlaceElemData);
 
-    pppRegister_new = pppRegister_new.changePlaceTo(newPlace);
+    p4vReg = p4vReg.changePlaceTo(newPlace);
     registerChanged = true;
   }
   
@@ -262,7 +262,7 @@ function parseDomElem(domElem, pppRegister, p4vData, forceNewPhase = false, isCh
   if (! elemData.part.definesNewPartView && 
       (elemData.phase.definesNewPhase || forceNewPhase || hasChildren)) {
 
-    let parentPhase = pppRegister.phase,
+    let parentPhase = p4vReg.phase,
         newPhase = p4vData.addPhase(elemData);
 
     LOG(`CREATING NEW PHASE ID ${newPhase.id}`);
@@ -270,14 +270,14 @@ function parseDomElem(domElem, pppRegister, p4vData, forceNewPhase = false, isCh
     p4vData.createParentChildPhaseRelationship(parentPhase, newPhase);
     // parentPhase.addChild(newPhase); // New Phase is child of parent
   
-    pppRegister_new = pppRegister_new.changePhaseTo(newPhase);
+    p4vReg = p4vReg.changePhaseTo(newPhase);
     registerChanged = true;
   }
 
   // If register has changed, save this PPP coordinate
 
   if (registerChanged) {
-    p4vData.saveRegister(pppRegister_new);
+    p4vData.saveRegister(p4vReg);
   }
 
   // Force children to have new Phases if this is a container Phase
@@ -292,8 +292,8 @@ function parseDomElem(domElem, pppRegister, p4vData, forceNewPhase = false, isCh
 
   Array.from(domElem.children).forEach(
     child => parseDomElem(
-      child, 
-      pppRegister_new, 
+      child,
+      p4vReg, 
       p4vData,
       forceChildrenToHaveNewPhase, 
       tellChildrenTheyHaveAPartParent
