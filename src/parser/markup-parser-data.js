@@ -270,10 +270,41 @@ class P4V_Data {
     }
     
     // Add PartView to array
+    // @todo: THIS IS NOT THE PLACE TO MINT A PV ID!!
 
     this.placesPartviews[placeId].push(`pv-${partId}-${partViewName}`);
 
     LOG(`Setting PartView ${partViewName} belonging to Part ${partId} to Place ${p4vReg.place.id}`);
+  }
+
+  // @todo NASTY KLUDGE: called during parser cleanup
+
+  associatePartViewWithPlace2({ partView, place }) {
+
+    const partViewId = partView.id,
+          placeId = place;
+
+    if (this.placesPartviews[placeId] === undefined) {
+      this.placesPartviews[placeId] = []; 
+    }
+
+    console.log(`this.placesPartviews[${placeId}].push(${partViewId});`)
+
+    this.placesPartviews[placeId].push(partViewId);
+  }
+
+  saveRegister(p4vReg) {
+
+    this.associatePartWithPhase(p4vReg);
+
+    // If there's a PartView, save associated data
+
+    if (p4vReg.partView !== PARSING_CONSTANTS.PART.VIEW_UNDEF 
+        && p4vReg.partView !== undefined) {
+      this.addPartView(p4vReg);
+      this.associatePartWithPartView(p4vReg);
+      this.associatePartViewWithPlace(p4vReg);
+    }
   }
 }
 

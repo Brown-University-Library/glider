@@ -88,7 +88,7 @@ function parseFlightPlan(domElem) {
 
   // Save this to to the P4V_Data store - and set root Phase
 
-  pppRegister_init.save();
+  p4vData.saveRegister(pppRegister_init);
   p4vData.setRootPhase(initPhase);
 
   // PARSE!
@@ -97,7 +97,7 @@ function parseFlightPlan(domElem) {
   let forceNewPhase = true;
 
   Array.from(domElem.children).forEach(
-    childElem => parseDomElem(childElem,  pppRegister_init, forceNewPhase)
+    childElem => parseDomElem(childElem, pppRegister_init, p4vData, forceNewPhase)
   );
   
   // Post-parse cleanup
@@ -132,7 +132,7 @@ function parseFlightPlan(domElem) {
 
 // @todo this is a very long function - break up
 
-function parseDomElem(domElem, pppRegister, forceNewPhase = false, isChildOfPart = false) { 
+function parseDomElem(domElem, pppRegister, p4vData, forceNewPhase = false, isChildOfPart = false) { 
 
   // Do not parse if the glider-defs element
   
@@ -281,7 +281,7 @@ function parseDomElem(domElem, pppRegister, forceNewPhase = false, isChildOfPart
   // If register has changed, save this PPP coordinate
 
   if (registerChanged) {
-    pppRegister_new.save();
+    p4vData.saveRegister(pppRegister_new);
   }
 
   // Force children to have new Phases if this is a container Phase
@@ -298,6 +298,7 @@ function parseDomElem(domElem, pppRegister, forceNewPhase = false, isChildOfPart
     child => parseDomElem(
       child, 
       pppRegister_new, 
+      p4vData,
       forceChildrenToHaveNewPhase, 
       tellChildrenTheyHaveAPartParent
     )
