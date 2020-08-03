@@ -5,8 +5,6 @@ import { P4V_Data } from './markup-parser-data.js';
 import { PPP_Register } from './markup-parser-state.js';
 import { getDataFromDomElem } from './markup-parser-dom-extract.js';
 
-// @todo -- there is an 'app' property here that is mis-named -- 
-//   rename it parsedData or something
 
 /*
 
@@ -43,10 +41,10 @@ function parseFlightPlans(flightPlanDomRoots) {
 }
 
 // Parse a FlightPlan root
-//  Create an App object, initialize a PPP Register
+//  Create a parsed data object, initialize a PPP Register
 //  Recurse into child DOM elements
 //  Do some cleanup
-//  Return the App object
+//  Return the parsed data
 
 function parseFlightPlan(domElem) { 
 
@@ -74,12 +72,12 @@ function parseFlightPlan(domElem) {
   initPlace = { 
     id: 'rootPlace', 
     role: '_undefined1', 
-    region: undefined }; // @todo this is a KLUDGE
+    region: undefined 
+  }; // @todo this is a KLUDGE
 
   // Create initial PPPRegister
 
   let pppRegister_init = new PPP_Register({
-    app: p4vData,
     part: initPart,
     partView: PARSING_CONSTANTS.PART.VIEW_UNDEF,
     place: initPlace,
@@ -191,7 +189,7 @@ function parseDomElem(domElem, pppRegister, p4vData, forceNewPhase = false, isCh
   if (! elemData.part.definesNewPartView && 
       (newPartExplicitlyDeclared || newPartImplicityDeclared) ) {
     
-    let newPart = pppRegister.app.addPart(elemData);
+    let newPart = p4vData.addPart(elemData);
     pppRegister_new = pppRegister_new.changePartTo(newPart);
 
     registerChanged = true;
@@ -233,11 +231,9 @@ function parseDomElem(domElem, pppRegister, p4vData, forceNewPhase = false, isCh
         },
         newPlaceElemData = Object.assign({}, elemData, newPlaceData);
     
-    // let newPlace = getNewPlace(elemData, pppRegister.app);
-
     // Add place to P4v data structure
     
-    let newPlace = pppRegister.app.addPlace(newPlaceElemData); 
+    let newPlace = p4vData.addPlace(newPlaceElemData);
 
     pppRegister_new = pppRegister_new.changePlaceTo(newPlace);
     registerChanged = true;
@@ -267,11 +263,11 @@ function parseDomElem(domElem, pppRegister, p4vData, forceNewPhase = false, isCh
       (elemData.phase.definesNewPhase || forceNewPhase || hasChildren)) {
 
     let parentPhase = pppRegister.phase,
-        newPhase = pppRegister.app.addPhase(elemData);
+        newPhase = p4vData.addPhase(elemData);
 
     LOG(`CREATING NEW PHASE ID ${newPhase.id}`);
     
-    pppRegister.app.createParentChildPhaseRelationship(parentPhase, newPhase);
+    p4vData.createParentChildPhaseRelationship(parentPhase, newPhase);
     // parentPhase.addChild(newPhase); // New Phase is child of parent
   
     pppRegister_new = pppRegister_new.changePhaseTo(newPhase);

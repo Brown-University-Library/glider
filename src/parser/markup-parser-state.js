@@ -11,7 +11,6 @@ import { LOG } from '../misc/logger.js';
 class PPP_Register {
 
   constructor (options) {
-    this.app = options.app;
     this.part = options.part;
     this.partView = options.partView;
     this.place = options.place;
@@ -22,7 +21,6 @@ class PPP_Register {
 
   get state() {
     return {
-      app: this.app,
       part: this.part,
       place: this.place,
       partView: this.partView,
@@ -64,22 +62,6 @@ class PPP_Register {
 
   copy() {
     return this.updateAndCopy({});
-  }
-
-  // Save register to P4V_Data store
-
-  save() {
-
-    this.app.associatePartWithPhase(this);
-
-    // If there's a PartView, save associated data
-
-    if (this.partView !== PARSING_CONSTANTS.PART.VIEW_UNDEF 
-        && this.partView !== undefined) {
-      this.app.addPartView(this);
-      this.app.associatePartWithPartView(this);
-      this.app.associatePartViewWithPlace(this);
-    }
   }
 }
 
