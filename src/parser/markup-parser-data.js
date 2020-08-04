@@ -90,72 +90,25 @@ class P4V_Data {
     this.phaseChildren[parentPhase.id].push(childPhase.id);
   }
   
-  // Enter a new Part definition in registry
-
-  addPart(elemData) {
-    
-    LOG("ADDING PART: ${elemData.part.type} ID ${elemData.part.id}", 3);
-    LOG(elemData, 1);
-    
-    // Compile definition
-    
-    let options = {
-      id: elemData.part.id,
-      type: elemData.part.type === undefined 
-            ? PARSING_CONSTANTS.PART.DEFAULT_PART_NAME 
-            : elemData.part.type,
-      options: elemData.part.options,
-      container: elemData.part.container
-    };
-
-    if (options.type === PARSING_CONSTANTS.PART.DEFAULT_PART_NAME) {
-      LOG(`DEFAULT PART ID = ${options.id}`);
-    }
-    
-    // @todo: Check this
-    // Parts don't have Places (only Part Views do)
-    // But if it's an HTML element, we need to keep the Place information
-    
-    // THIS SHOULD STORE THE PLACE ID
-    
-    //if (options.type === PARSING_CONSTANTS.PART.DEFAULT_PART_NAME) {
-      
-      if (elemData.place.hasRole || elemData.place.hasRegion) {
-        options.place = this.makePlaceId(elemData.place.role, elemData.place.region);        
-        LOG('Identity Part parsed: need to add Place info');
-        LOG(options);
-      }
-      
-    // }
-
-    // Save this Part in registry if it's new
-    
-    if (this.parts[options.id] === undefined) {
-      this.parts[options.id] = options; 
-    }
-    
-    return options;
-  }
-  
   // Enter a new PartView definition in registry
 
-  addPartView(p4vRegister) {
+  addPartView(p4vReg) {
 
     LOG("ADDING PART VIEW");
-    LOG(p4vRegister);
+    LOG(p4vReg);
     
-    let partViewName = (p4vRegister.partView.name === undefined)
+    let partViewName = (p4vReg.partView.name === undefined)
       ? PARSING_CONSTANTS.PART.DEFAULT_PARTVIEW_NAME 
-      : p4vRegister.partView.name;
+      : p4vReg.partView.name;
     
     // Compile definition
 
     let options = {
-      partId: p4vRegister.part.id,
-      id: `pv-${p4vRegister.part.id}-${partViewName}`, // @todo NO MAGIC VALUES!
+      partId: p4vReg.part.id,
+      id: `pv-${p4vReg.part.id}-${partViewName}`, // @todo NO MAGIC VALUES!
       name: partViewName,
-      container: p4vRegister.partView.container,
-      place: this.makePlaceId(p4vRegister.place.role, p4vRegister.place.region)
+      container: p4vReg.partView.container,
+      place: PARSING_CONSTANTS.PLACE.GET_ID(p4vReg.place.role, p4vReg.place.region)
       // Note that full place info is stored in .places[placeId]
     };
     
@@ -293,7 +246,16 @@ class P4V_Data {
     this.placesPartviews[placeId].push(partViewId);
   }
 
+  // Given a register (parser state), save the info contained
+  //  therein
+
   saveRegister(p4vReg) {
+
+    // Save the Part if it's new
+
+    if (!this.parts[p4vReg.part.id]) {
+      this.parts[p4vReg.part.id] = p4vReg.part;
+    }
 
     this.associatePartWithPhase(p4vReg);
 

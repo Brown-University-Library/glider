@@ -1,6 +1,7 @@
 
 import { PARSING_CONSTANTS } from '../system-settings.js';
 import { LOG } from '../misc/logger.js';
+import { getPartData } from './markup-parser-state-p4v-factory.js';
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 // REGISTER CLASS
@@ -11,6 +12,7 @@ import { LOG } from '../misc/logger.js';
 class P4V_Register {
 
   constructor (options) {
+
     this.part = options.part;
     this.partView = options.partView;
     this.place = options.place;
@@ -39,8 +41,9 @@ class P4V_Register {
   // Change some aspect of the register and return an 
   //  updated copy
 
-  changePartTo(part) { 
-    return this.updateAndCopy({ part: part });
+  changePartTo(elemData) {
+    const partData = getPartData(elemData);
+    return this.updateAndCopy({ part: partData });
   }
 
   changePartViewTo(partViewName, partViewDomElemContainer) {
