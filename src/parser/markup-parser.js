@@ -220,20 +220,18 @@ function parseDomElem(domElem, p4vReg_inherited, p4vData, forceNewPhase = false,
       newPlaceRole = p4vReg.place.role;
     }
 
-    let newPlaceRegion = elemData.place.region,
-        newPlaceData = { 
+    let newPlaceData = { 
           place: { 
             role: newPlaceRole, 
-            region: newPlaceRegion 
+            region: elemData.place.region
           }
         },
         newPlaceElemData = Object.assign({}, elemData, newPlaceData);
     
     // Add place to P4v data structure
-    
-    let newPlace = p4vData.addPlace(newPlaceElemData);
+    //  @todo: should that stuff above be in p4vReg.changePlaceTo()?
 
-    p4vReg = p4vReg.changePlaceTo(newPlace);
+    p4vReg = p4vReg.changePlaceTo(newPlaceElemData)
     registerChanged = true;
   }
   

@@ -53,10 +53,29 @@ class P4V_Register {
     });
   }
   
-  changePlaceTo(place) { 
-    LOG("CHANGING PLACE TO: ");
-    LOG(place);
-    return this.updateAndCopy({ place: place });
+  // Can take either elemData from parser or a
+  //   { role, region } object
+
+  changePlaceTo(placeElemData) { 
+
+    LOG(['CHANGING PLACE TO:', placeElemData]);
+
+    const placeDataRoot = placeElemData.place ? placeElemData.place : placeElemData;
+
+    // Compile definition
+    
+    let placeRole = placeDataRoot.role,
+        placeRegion = placeDataRoot.region === undefined 
+          ? PARSING_CONSTANTS.PLACE.DEFAULT_REGION_NAME
+          : placeDataRoot.region;
+    
+    let placeData = {
+      id: PARSING_CONSTANTS.PLACE.GET_ID(placeRole, placeRegion),
+      role: placeRole,
+      region: placeRegion
+    };
+
+    return this.updateAndCopy({ place: placeData });
   }
 
   changePhaseTo(phase) { 

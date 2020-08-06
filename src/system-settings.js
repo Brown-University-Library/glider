@@ -71,6 +71,15 @@ PARSING_CONSTANTS.PART.GET_CSS_CLASS = (partName, partViewName) => {
        : '');
 };
 
+PARSING_CONSTANTS.PLACE.GET_ID = (role, region) => {
+    
+  if (region === undefined) {
+    region = PARSING_CONSTANTS.PLACE.DEFAULT_REGION_NAME; 
+  }
+  
+  return `pl-${role}-${region}`
+};
+
 // Vue component name generator
 
 PARSING_CONSTANTS.PART.GET_VUE_COMPONENT_NAME = (partName, partViewName) => {

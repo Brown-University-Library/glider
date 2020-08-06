@@ -143,44 +143,6 @@ class P4V_Data {
     return options;
   }
   
-  // TODO: this should be in a place where all the other 
-  //  IDs are minted -- maybe off of PARSING_CONSTANTS?
-  
-  makePlaceId(role, region) {
-    
-    if (region === undefined) {
-      region = PARSING_CONSTANTS.PLACE.DEFAULT_REGION_NAME; 
-    }
-    
-    return `pl-${role}-${region}`
-  }
-  
-  // Enter a new Place definition in registry
-  
-  addPlace(elemData) {
-
-    // Compile definition
-    
-    let placeRole = elemData.place.role,
-        placeRegion = elemData.place.region === undefined 
-          ? PARSING_CONSTANTS.PLACE.DEFAULT_REGION_NAME
-          : elemData.place.region;
-    
-    let options = {
-      id: this.makePlaceId(placeRole, placeRegion),
-      role: placeRole,
-      region: placeRegion
-    };
-    
-    // Save this Place in registry if it's new
-    
-    if (this.places[options.id] === undefined) {
-      this.places[options.id] = options; 
-    }
-    
-    return options;
-  }
-  
   associatePartWithPhase(p4vReg) {
     
     let phaseId = p4vReg.phase.id;
@@ -255,6 +217,12 @@ class P4V_Data {
 
     if (!this.parts[p4vReg.part.id]) {
       this.parts[p4vReg.part.id] = p4vReg.part;
+    }
+
+    // Save this Place if it's new
+
+    if (!this.places[p4vReg.place.id]) {
+      this.places[p4vReg.place.id] = p4vReg.place; 
     }
 
     this.associatePartWithPhase(p4vReg);
