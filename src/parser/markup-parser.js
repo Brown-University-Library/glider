@@ -189,9 +189,7 @@ function parseDomElem(domElem, p4vReg_inherited, p4vData, forceNewPhase = false,
   if (! elemData.part.definesNewPartView && 
       (newPartExplicitlyDeclared || newPartImplicityDeclared) ) {
     
-    let newPart = p4vData.addPart(elemData);
-    p4vReg = p4vReg.changePartTo(newPart);
-
+    p4vReg = p4vReg.changePartTo(elemData);
     registerChanged = true;
     tellChildrenTheyHaveAPartParent = true;
   }
