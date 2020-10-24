@@ -2,10 +2,13 @@
 let PARSING_CONSTANTS = {
 
   FLIGHT_PLAN_ROOT_CLASSNAME: 'glider-root',
-  FLIGHT_PLAN_SELECTOR: '.glider-root', // Is this used?
+  FLIGHT_PLAN_ROOT_ID: 'glider-root', // @todo: not sure this should be used
+  // FLIGHT_PLAN_SELECTOR: '.glider-root',
+  FLIGHT_PLAN_DEFAULT_ROOT_ELEM: 'template',
   DEFAULT_FLIGHT_ID: 'f0000',
   DISPLAY_ROOT_CLASSNAME: 'glider-display',
   DISPLAY_ROOT_ELEM: 'div',
+  SKIP_ELEMENTS: ['glider-defs'], // Use lower case
 
   PART: {
     ID_ATT_NAME: 'id',
@@ -45,7 +48,7 @@ let PARSING_CONSTANTS = {
     CLASSNAME_PREFIX: 'place-',
     ROLE_REGION_DELIMITER: '-', // @todo: We define this but don't use it!
     DEF_MARKUP_SELECTOR: 'glider-defs > place',
-    DEFAULT_PLACE_NAME: 'defaultPlace',
+    DEFAULT_PLACE_NAME: 'defaultRole', // @todo rename this DEFAULT_ROLE_NAME
     DEFAULT_PLACE_TYPE: 'bootstrapplace', // @todo: more generic?
     DEFAULT_PLACE_OPTIONS: { asetting: true },
     DEFAULT_REGION_NAME: 'defaultRegion',
@@ -83,6 +86,8 @@ PARSING_CONSTANTS.PLACE.GET_ID = (role, region) => {
   
   return `pl-${role}-${region}`
 };
+
+PARSING_CONSTANTS.PART.GET_VIEW_ID = (partId, partViewName) => `pv-${partId}-${partViewName}`;
 
 // Vue component name generator
 
