@@ -59,6 +59,10 @@ let PARSING_CONSTANTS = {
   STYLE: {
     ELEM_ID: 'glider-style',
     HREF: '/src/style/glider.css'
+  },
+
+  ERROR: {
+    NO_SEQ_ON_PART: "You can't declare a Phase of type SEQ on a Part. Defaulting to PAR."
   }
 };
 
