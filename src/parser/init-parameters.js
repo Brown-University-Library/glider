@@ -11,9 +11,14 @@ import { getPlaceDefs }      from './place-definitions.js';
 // - as Glider constructor argument?
 // - as JSON file?
 
-function getInitParameters() {
+function getInitParameters(documentSections) {
   return Object.freeze(
-    Object.assign(parseFlightMarkup(), urlOptions, getPlaceDefs())
+    Object.assign(
+      {}, 
+      parseFlightMarkup(documentSections), 
+      urlOptions, 
+      getPlaceDefs(documentSections)
+    )
   );
 }
 
