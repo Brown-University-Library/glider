@@ -14,10 +14,13 @@ import { PARSING_CONSTANTS } from '../system-settings.js';
   it relates to P4v definitions. This data is passed back to 
   the high-level parsing functions)
 
-  - getDataFromDomElem(), which calls:
-    - getPhaseDataFromDomElem()
-    - getPartDataFromDomElem()
-    - getPlaceDataFromDomElem()
+  OUTLINE
+
+  - getPhaseDataFromDomElem()
+  - getPartDataFromDomElem()
+  - getPlaceDataFromDomElem()
+
+  - getDataFromDomElem()
 
 */
 
@@ -96,25 +99,14 @@ function getPhaseDataFromDomElem(domElem) {
 
   phaseData.definesNewPhase = (phaseData.hasDuration || phaseData.hasDelay || phaseData.hasType);
 
+  console.log(`PHASE ${domElem.id}`, phaseData);
+
   return phaseData;
 }
 
 // DATA-FROM-DOM FUNCTIONS: Parts
 
 function getPartDataFromDomElem(domElem) {
-
-  // Check the immediate children of domElem to
-  //  see if they define View(s). 
-  // Returns False if there are no Views defined; 
-  //  True otherwise
-  // DISABLED FOR NOW
-
-  /*
-  function checkIfHasChildViews(domElem) {
-    return Array.from(domElem.children).some(childElem => {
-      return (getPartTypeView(childElem).view !== undefined)
-    });
-  } */
   
   // Routines for extracting PartView names from DOM
 
@@ -343,7 +335,6 @@ function getPartDataFromDomElem(domElem) {
     partContainer = domElem,
     definesNewPartView = (partTypeView.view !== undefined),
     definesNewPart = (partTypeView.type !== undefined && ! definesNewPartView);
-    // hasChildViews = checkIfHasChildViews(domElem);
 
   return {
     type: partTypeView.type,
@@ -353,14 +344,11 @@ function getPartDataFromDomElem(domElem) {
     options: options,
     container: partContainer,
     definesNewPart: definesNewPart,
-    definesNewPartView: definesNewPartView,
-    // hasChildViews: hasChildViews
+    definesNewPartView: definesNewPartView
   }
 }
 
-// DATA-FROM-DOM FUNCTIONS: Places temp from Joel. 
-// @todo Still need to figure out how this Place data gets to App.js
-// @todo does every phase need place defined? Probably, right?
+// DATA-FROM-DOM FUNCTIONS: Places
 
 function getPlaceDataFromDomElem(domElem) {
 
@@ -432,11 +420,12 @@ function getPlaceDataFromDomElem(domElem) {
 
   placeData.hasRole = (placeData.role !== undefined);
   placeData.hasRegion = (placeData.region !== undefined);
+  placeData.hasPlace = placeData.hasRole || placeData.hasRegion;
 
   return placeData;
 }
 
-
+// Main interface
 
 function getDataFromDomElem(domElem) {
   return {
