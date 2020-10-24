@@ -1,0 +1,272 @@
+<html>
+
+<head>
+
+  <!-- 
+
+    OPEN THESE LINKS IN TWO SEPARATE BROWSERS (they may be on different devices):
+
+    COLOR SELECTOR: /tests/part-test.html#f1234/mobile
+    COLOR DISPLAY:  /tests/part-test.html#f1234/wall
+
+  -->
+
+  <!-- CDN SOURCES (outdated) -->
+
+  <!--
+  <link type="stylesheet" href="https://cdn.jsdelivr.net/gh/Brown-University-Library/glider@v0.1.0-alpha/src/style.css"></link>
+  <script src="https://cdn.jsdelivr.net/gh/Brown-University-Library/glider@v0.1.0-alpha/dist/glider.min.js"></script>
+  -->
+
+  <!-- LOCAL SOURCES -->
+
+  <link type="stylesheet" href="../src/style.css"></link>
+
+  <style>
+  
+  #input-markup {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50vw;
+    height: 100vh;
+    overflow: scroll;
+  }
+
+  #input-markup-save {
+    width: 100%;
+    height: 2em;
+    line-height: 2em;
+    background-color: rgb(56, 128, 56);
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  #input-markup-save:hover {
+    background-color: rgb(69, 159, 69);
+    cursor:pointer;
+  }
+
+  .glider-root, #glider-root {
+    background-color: rgb(255,255,176);
+    display: none;
+  }
+
+  #markup-display {
+    background-color: rgb(176,255,176);
+    font-family: monospace;
+    white-space:pre;
+    height: 100%;
+    width: 100%;
+    overflow: scroll;
+  }
+
+
+  #parser-output {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50vw;
+    height: 100vh;
+    overflow: scroll;
+    background-color: rgb(255, 176, 176);
+    padding: 0 1em;
+    /*
+    font-family: monospace;
+    white-space:pre; */
+  }
+
+  #parser-output h1 {
+    font-size: 100%;
+  }
+
+  #parser-output-toc {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 10em;
+    background-color: rgb(250, 121, 121);
+    padding: 1em;
+  }
+  
+  </style>
+
+  <glider-defs>
+    <place id="mobile" type="BootStrapPlace"></place>
+    <place id="wall" type="FixedGridPlace" rows="3"
+      columns="4" row-height="108" column-width="192">
+    </place>
+  </glider-defs>
+</head>
+
+<body>
+  <div id="input-markup">
+    <div id="input-markup-container">
+      <div class="glider-root" id="glider-root">
+
+        <!-- PHASES -->
+      
+        <!-- Unmarked plain HTML (no Part or PV, but there is a Phase for each).
+              All should be PAR except the grandchild, a LEAF. -->
+      
+        <p id="plain-HTML">
+          <em id="plain-HTML-child-1">Here</em> is a 
+          <span id="plain-HTML-child-2">span,     
+            <span id="plain-HTML-child-2-child-1">nested</span>
+          </span>
+        </p> 
+      
+        <!-- Simple PAR -->
+      
+        <div phase-type="par" id="par-01">
+            <p phase-begin="4s" id="par-01-delay-4s">Delay me!</p>
+            <p>No</p>
+            <p phase-duration="3s" phase-begin="2s" id="par-01-dur-3s-delay-2s">Maybe</p>
+            <p>So</p>
+        </div>
+      
+        <!-- Simple SEQ -->  
+      
+        <div phase-type="seq" id="seq-01">
+          <p>Yes</p>
+          <p phase-begin="3s" id="seq-01-delay-3s">No</p>
+          <p phase-duration="10s" id="seq-01-dur-10s">Maybe</p>
+          <p>So</p>
+        </div>
+      
+        <!-- NESTED SEQ -->
+      
+        <div phase-type="seq" id="seq-02">
+          <div phase-type="seq" id="seq-02-seq-01">
+            <p>Yes</p>
+            <p phase-begin="3s" id="seq-02-seq-01-delay-3s">No</p>
+            <p phase-duration="10s" id="seq-02-seq-01-dur-10s">Maybe</p>
+            <p>So</p>
+          </div>
+          <div phase-type="par" id="seq-02-par-01">
+            <p>Yes</p>
+            <p phase-begin="3s" id="seq-02-par-01-delay-3s">No</p>
+            <p phase-duration="10s" id="seq-02-par-01-dur-10s">Maybe</p>
+            <p>So</p>
+          </div>
+      
+          <!-- As a child of a Phase container, this should have a Part and Phase -->
+      
+          <div id="seq-02-plain-HTML">
+            <p>Yes</p>
+          </div>
+        </div>
+      
+        <!-- PLACES -->
+      
+        <!-- Basic place designation -->
+      
+        <p id="role-set" place-role="A">
+          This is in Place-role A, default region
+        </p>
+      
+        <p id="region-set" place-region="B">
+          This is in Place-region B.
+        </p>
+      
+        <p id="def-place-1" place="A-B">
+          This is in role A, region B
+        </p>
+      
+        <div id="def-place-C" place="C">
+          <p id="def-place-C-no-region">
+            This should be in Pace Role C, default Region.
+          </p>
+          <p id="def-place-C-region-D" place-region="D">
+            This should be in Place Role C, Region D.
+            <span id="def-place-C-region-D_inherited">
+                This should also be in Place Role C, Region D &mdash; inherited from the parent.
+            </span>
+          </p>
+        </div>
+
+        
+        <!-- PARTS -->
+      
+        <div id="def-part-default">
+          This should be a default part (i.e. identity, i.e. HTML pass-through) 
+          with a default view.
+          <p id="def-part-default-child">
+            This should also be a default part/partview.
+          </p>
+        </div>
+      
+        <div part-type="A" id="def-part-A">
+          <div part-view="B" id="def-part-A-view-B">
+            This is contained within Part A, View B.
+            <div id="def-part-A-view-B-child">
+              This is contained within a child of Part A, View B.
+            </div>
+          </div>
+          <div class="part-A-C" id="def-part-A-view-C">
+            This is contained within Part A, View C.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="input-markup-save">UPDATE</div>
+    <textarea id="markup-display" wrap="soft">
+      [markup display goes here]
+      One 
+      Two
+    </textarea>
+    <!-- <textarea hidden id="markup-edit"></textarea> -->
+  </div>
+  <div id="parser-output">
+    [PARSER OUTPUT GOES HERE]
+  </div>
+  <div id="parser-output-toc">
+    Jump to
+    <div id="parser-output-toc-list"></div>
+  </div>
+</body>
+
+<script type="module">
+  
+    import { getDocumentSections }     from '../src/parser/get-document-parts.js';
+    import { prepareMarkupForParsing } from '../src/parser/prepareMarkupForParsing.js';
+    import { getInitParameters }       from '../src/parser/init-parameters.js';
+
+    const markupDisplayNode = document.getElementById('markup-display'),
+          gliderRoot = document.getElementById('input-markup-container'),
+          parserOutputDisplay = document.getElementById('parser-output'),
+          parserOutputTOC = document.getElementById('parser-output-toc-list');
+
+    function runParser() {
+      const documentSections = getDocumentSections(),
+          preparedDocumentSections = prepareMarkupForParsing(documentSections),
+          initParameters = getInitParameters(preparedDocumentSections);
+
+      parserOutputDisplay.innerHTML = '';
+      parserOutputTOC.innerHTML = '';
+
+      Object.keys(initParameters).forEach(gliderPar => {
+        parserOutputDisplay.innerHTML += `
+          <h1 id="${gliderPar}">${gliderPar}</h1>
+          <pre>${JSON.stringify(initParameters[gliderPar], undefined, 2)}</pre>
+        `;
+        parserOutputTOC.innerHTML += `<div><a href="#${gliderPar}">${gliderPar}</a></div>`;
+      });
+
+      console.log("OBJECT RETURNED FROM PARSER", initParameters);
+    }
+
+    document.getElementById('input-markup-save')
+            .addEventListener('click', () => {
+              gliderRoot.innerHTML = markupDisplayNode.value;
+              console.log({gliderRoot, markupDisplayNode});
+              runParser();
+            });
+    
+    markupDisplayNode.innerHTML = gliderRoot.innerHTML;
+    runParser();
+
+  </script>
+</html>
