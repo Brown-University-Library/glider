@@ -68,7 +68,7 @@ function parseFlightPlan(domElem) {
   let p4vData = new P4V_Data(domElem),
       elemData = getDataFromDomElem(domElem),
       p4vReg = P4V_Register.initialize(elemData);
-LOG(['INIT REGISTER', p4vReg]);
+
   // Create root Phase object (SEQ unless specified otherwise)
 
   if (elemData.phase.type !== PARSING_CONSTANTS.PHASE.TYPES.PAR) {
@@ -76,7 +76,7 @@ LOG(['INIT REGISTER', p4vReg]);
   } else {
     p4vReg = P4V_Register.changePhaseToPar({p4vReg, elemData});
   }
-  LOG(['FIRST SAVE', p4vReg]);
+
   p4vData.saveRegisterAsRoot(p4vReg);
 
   const isChildOfPart = false; // @todo: should there be a root Glider Part?
@@ -108,7 +108,7 @@ function parseDomElem(domElem, p4vReg_inherited, p4vData, isChildOfPart = false)
         declaresNewPartView = elemData.part.definesNewPartView,
         appliesPlace = elemData.place.hasPlace,
         declaresPhase = elemData.phase.definesNewPhase,
-        hasChild = domElem.childElementCount > 0;
+        hasChild = (domElem.childElementCount > 0);
 
   // Parts
 
@@ -165,7 +165,7 @@ function parseDomElem(domElem, p4vReg_inherited, p4vData, isChildOfPart = false)
         LOG(PARSING_CONSTANTS.ERROR.NO_SEQ_ON_PART, 1, 'warn');
       }
     }
-  } else { // No Child? It's a LEAF, automatically
+  } else { // No Child - it's a LEAF
     p4vReg = P4V_Register.changePhaseToLeaf({p4vReg, elemData});
   } 
 
@@ -173,12 +173,6 @@ function parseDomElem(domElem, p4vReg_inherited, p4vData, isChildOfPart = false)
         tellParentToCreateDefaultPV = (declaresNewPart && isChildOfPart);
 
   // Recurse!
-
-  LOG([`RECURDING FROM ${domElem.id}`, {
-    domElem,
-    children: getChildGliderElements(domElem),
-    p4vReg
-  }]);
 
   const childReturnVals = getChildGliderElements(domElem).map(
     child => {
