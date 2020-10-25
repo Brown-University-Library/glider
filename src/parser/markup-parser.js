@@ -2,9 +2,8 @@
 import { PARSING_CONSTANTS } from '../system-settings.js';
 import { LOG } from '../misc/logger.js';
 import { P4V_Data } from './markup-parser-data.js';
-import { P4V_Register } from './markup-parser-state.js';
+import * as P4V_Register from './markup-parser-state.js';
 import { getDataFromDomElem } from './markup-parser-dom-extract.js';
-
 
 /*
 
@@ -59,7 +58,7 @@ function parseFlightPlans(flightPlanDomRoots) {
 }
 
 // Parse a FlightPlan root
-//  Create a parsed data object, initialize a PPP Register
+//  Create a parsed data object, initialize a Register
 //  Recurse into child DOM elements
 //  Do some cleanup
 //  Return the parsed data
@@ -68,52 +67,25 @@ function parseFlightPlan(domElem) {
 
   let p4vData = new P4V_Data(domElem),
       elemData = getDataFromDomElem(domElem),
-      initPart, initPlace, initPhase;
-  
-  // Create root Phase object (seq unless specified otherwise)
+      p4vReg = P4V_Register.initialize(elemData);
+LOG(['INIT REGISTER', p4vReg]);
+  // Create root Phase object (SEQ unless specified otherwise)
 
-  // let newPhaseType = (elemData.phase.type === 'par') ? 'par' : 'seq'; 
-  if (elemData.phase.type !== 'par') {
-    elemData.phase.type = 'seq';
+  if (elemData.phase.type !== PARSING_CONSTANTS.PHASE.TYPES.PAR) {
+    p4vReg = P4V_Register.changePhaseToSeq({p4vReg, elemData});
+  } else {
+    p4vReg = P4V_Register.changePhaseToPar({p4vReg, elemData});
   }
-  
-  initPhase = p4vData.addPhase(elemData);
+  LOG(['FIRST SAVE', p4vReg]);
+  p4vData.saveRegisterAsRoot(p4vReg);
 
-  // Create root Part object
-  
-  initPart = { id: 'rootPart' }; // TODO: KLUDGE
+  const isChildOfPart = false; // @todo: should there be a root Glider Part?
 
-  // Create root Place object
-  // @todo This should probably be an 'all' Place
-  //  i.e. ROLE=undefined, and REGION=UNDEFINED
-
-  initPlace = { 
-    id: 'rootPlace', 
-    role: '_undefined1', 
-    region: undefined 
-  }; // @todo this is a KLUDGE
-
-  // Create initial register
-
-  let p4vReg_init = new P4V_Register({
-    part: initPart,
-    partView: PARSING_CONSTANTS.PART.VIEW_UNDEF,
-    place: initPlace,
-    phase: initPhase
-  });
-
-  // Save this to to the P4V_Data store - and set root Phase
-
-  p4vData.saveRegister(p4vReg_init);
-  p4vData.setRootPhase(initPhase);
-
-  // PARSE!
+  // PARSE THE DOCUMENT!
   // Recurse to children by passing them to parseDomElem()
 
-  let forceNewPhase = true;
-
-  Array.from(domElem.children).forEach(
-    childElem => parseDomElem(childElem, p4vReg_init, p4vData, forceNewPhase)
+  getChildGliderElements(domElem).forEach(
+    childElem => parseDomElem(childElem, p4vReg, p4vData, isChildOfPart)
   );
   
   // Post-parse cleanup & return
@@ -122,198 +94,135 @@ function parseFlightPlan(domElem) {
 }
 
 // This is the main parsing function for non-root DOM elements.
-// Checks to see if there's a change in PPP
 
-// @todo this is a very long function - break up
+function parseDomElem(domElem, p4vReg_inherited, p4vData, isChildOfPart = false) { 
 
-function parseDomElem(domElem, p4vReg_inherited, p4vData, forceNewPhase = false, isChildOfPart = false) { 
+  const elemData = getDataFromDomElem(domElem);
+  let p4vReg = P4V_Register.copy(p4vReg_inherited);
 
-  // Do not parse if the glider-defs element
-  
-  if (domElem.tagName === 'GLIDER-DEFS') return; // @todo no magic
+  LOG([`PARSING DOM ELEM ${domElem.id}`, {domElem, p4vData, elemData, p4vReg_inherited}]);
 
-  let elemData = getDataFromDomElem(domElem),
-      p4vReg = p4vReg_inherited.copy(),
-      registerChanged = false,
-      tellChildrenTheyHaveAPartParent = false,
-      forceChildrenToHaveNewPhase;
+  // These are the parser inputs
 
-  LOG('DOM ELEMENT PARSED: ' + elemData.domNode.id);
-  LOG(elemData.part);  
-  
-  // If a Part definition, create new and update register
+  const declaresNewPart = elemData.part.definesNewPart,
+        declaresNewPartView = elemData.part.definesNewPartView,
+        appliesPlace = elemData.place.hasPlace,
+        declaresPhase = elemData.phase.definesNewPhase,
+        hasChild = domElem.childElementCount > 0;
 
-  // If this is the direct child of a Part
-  //   AND if it also defines a new PartView, 
-  //     then set it to the PartView indicated in the markup
-  //   OTHERWISE, set the register PartView to the default view -- DISABLED
-  
-  const partViewImplicitlyDeclared = isChildOfPart;
+  // Parts
 
-  if (partViewImplicitlyDeclared) {
-
-    if (elemData.part.definesNewPartView) {
-      let newPartViewName = elemData.part.view;
-      p4vReg = p4vReg.changePartViewTo(newPartViewName, domElem);
-    } // else { // DISABLED, FOR NOW
-      // p4vReg = p4vReg.changePartViewTo(
-      //  PARSING_CONSTANTS.PART.PART_DEFAULT_VIEW_NAME, domElem
-      // )
-      // }
-
-    registerChanged = true;
+  if (declaresNewPart) { // Create a Part
+    p4vReg = P4V_Register.changePartTo({p4vReg, elemData});
+    // tellChildrenTheyHaveAPartParent = true;
+  } else if (isChildOfPart) { // Inherit part
+    // This happens by default - noop?
+  } else if (declaresNewPartView || appliesPlace || declaresPhase) {
+    // Default part
+    p4vReg = P4V_Register.changePartToDefault({p4vReg, elemData});
+  } else { // All else fails: no Part -- clear
+    // @todo - is it simpler just to have EVERY element have a Part?
+    // p4vReg = P4V_Register.clearPart(p4vReg); // ORIGINAL
+    p4vReg = P4V_Register.changePartToDefault({p4vReg, elemData}); // TESTING THIS - every elem has a Part
   }
 
-  // Conditions for defining a new Part:
-  //  Either the markup explicitly declares a new Part OR
-  //   it defines a new Phase which requires a Part to reference
-  //   (which is always the case with Phase children of Container Phases)
-  // Ignore Part definition if also defines a PartView
-  //  (NOTE: this may be changed in the future)
+  // PartViews
 
-  const newPartExplicitlyDeclared = (elemData.part.definesNewPart && ! isChildOfPart),
-    newPartImplicityDeclared = (elemData.phase.definesNewPhase || forceNewPhase);
-
-  if (newPartImplicityDeclared) { // NOTIFICATION MESSAGE
-    LOG(
-      `NEW PART IMPLICITLY DECLARED FOR ${elemData.domNode.id} because ` +
-      (elemData.phase.definesNewPhase ? 'this elem defines a new Phase ' : '') +
-      (forceNewPhase ? 'a new Phase is being forced': '')
-    );
-  }
-  
-  if (! elemData.part.definesNewPartView && 
-      (newPartExplicitlyDeclared || newPartImplicityDeclared) ) {
-    
-    p4vReg = p4vReg.changePartTo(elemData);
-    registerChanged = true;
-    tellChildrenTheyHaveAPartParent = true;
+  if (declaresNewPartView) { // Set to new PV
+    p4vReg = P4V_Register.changePartViewTo({p4vReg, elemData});
+  } else if (  (declaresNewPart && !hasChild) || // Set to default PV
+               (!declaresNewPart && (isChildOfPart || appliesPlace || declaresPhase))) {
+    p4vReg = P4V_Register.changePartViewToDefault({p4vReg, elemData});
+  } else if (declaresNewPart) { // If a Part -- then let children declare PVs
+    p4vReg = P4V_Register.clearPartView(p4vReg);
+  } else {
+    // p4vReg = P4V_Register.clearPartView(p4vReg);  // ORIGINAL
+    p4vReg = P4V_Register.changePartViewToDefault({p4vReg, elemData}); // TESTING THIS - every elem has a Part
   }
 
-/*
-  if (elemData.part.definesNewPart || elemData.part.definesNewPartView) {
-    let newPart = getNewPart(elemData, pppRegister.app);
-    p4vReg = p4vReg.changePartTo(newPart)
-      .changePartViewTo(newPart);
-    registerChanged = true;
-  } */
+  // Places
+  // Once role is set, it can't be changed by descendents
 
-  // If a change of Place Role or Region, create new and update register
-  //   Check if Role is defined in the DOM; update Role in register, but
-  //     only if it is currently undefined
+  if (appliesPlace) {
+    p4vReg = P4V_Register.changePlaceTo({p4vReg, elemData});
+  }
 
-  if (elemData.place.hasRole || elemData.place.hasRegion) {
+  // Phases
 
-    // If the role hasn't already been determined (in an ancestor)
-    // AND the role is defined in the current element, then
-    // use that new role
+  // All elements are assigned a Phase. If there are child
+  //  elements, then it's a container (i.e. SEQ or PAR).
+  // By default, it's a PAR -- it's only SEQ if it's declared
+  //  and even then it can't be on a Part 
+  //  (since PartViews need to be active at the same time)
 
-    let newPlaceRole;
-    
-    if (elemData.place.hasRole) {
-      newPlaceRole = elemData.place.role;
-    } else {
-      newPlaceRole = p4vReg.place.role;
+  if (hasChild) {
+    const declaresSEQ = elemData.phase.type === PARSING_CONSTANTS.PHASE.TYPES.SEQ;
+    if (declaresSEQ && !declaresNewPart) { // It's a SEQ
+      p4vReg = P4V_Register.changePhaseToSeq({p4vReg, elemData});
+    } else { // It's a PAR
+      p4vReg = P4V_Register.changePhaseToPar({p4vReg, elemData});
+      if (declaresSEQ) {
+        LOG(PARSING_CONSTANTS.ERROR.NO_SEQ_ON_PART, 1, 'warn');
+      }
     }
+  } else { // No Child? It's a LEAF, automatically
+    p4vReg = P4V_Register.changePhaseToLeaf({p4vReg, elemData});
+  } 
 
-    let newPlaceData = { 
-          place: { 
-            role: newPlaceRole, 
-            region: elemData.place.region
-          }
-        },
-        newPlaceElemData = Object.assign({}, elemData, newPlaceData);
-    
-    // Add place to P4v data structure
-    //  @todo: should that stuff above be in p4vReg.changePlaceTo()?
+  const tellChildrenTheyHaveAPartParent = (declaresNewPart && !declaresNewPartView && hasChild),
+        tellParentToCreateDefaultPV = (declaresNewPart && isChildOfPart);
 
-    p4vReg = p4vReg.changePlaceTo(newPlaceElemData)
-    registerChanged = true;
-  }
-  
-  // If a change of Phase (i.e. explicitly declared in markup)
-  //   or forced to create a new Phase (because this is the child of a par or seq),
-  //   or has child elements (which defaults to a PAR container)
-  // then create new Phase and update register
+  // Recurse!
 
-  /*
-  
-    CHANGE: Can't have new Phase if also defines a PartView.
-    Need to throw a warning if a Phase is being forced and there's a PartView definition
-    (e.g. if the Parent part also has a SEQ/PAR definition on it)
-  
-  */
-  
-  if (elemData.part.definesNewPartView && forceNewPhase) {
-    console.warn(`Element ${elemData.domNode.id}: 
-                  Can't have a new Phase and PartView defined on the same element. New Phase ignored.`); 
-  }
-  
-  let hasChildren = (elemData.domNode.children.length > 0);
-  
-  if (! elemData.part.definesNewPartView && 
-      (elemData.phase.definesNewPhase || forceNewPhase || hasChildren)) {
+  LOG([`RECURDING FROM ${domElem.id}`, {
+    domElem,
+    children: getChildGliderElements(domElem),
+    p4vReg
+  }]);
 
-    let parentPhase = p4vReg.phase,
-        newPhase = p4vData.addPhase(elemData);
-
-    LOG(`CREATING NEW PHASE ID ${newPhase.id}`);
-    
-    p4vData.createParentChildPhaseRelationship(parentPhase, newPhase);
-    // parentPhase.addChild(newPhase); // New Phase is child of parent
-  
-    p4vReg = p4vReg.changePhaseTo(newPhase);
-    registerChanged = true;
-  }
-
-  // If register has changed, save this PPP coordinate
-
-  if (registerChanged) {
-    p4vData.saveRegister(p4vReg);
-  }
-
-  // Force children to have new Phases if this is a container Phase
-  //  OR if this element has children (defaults to PAR)
-  
-  forceChildrenToHaveNewPhase = (
-    hasChildren ||
-    (elemData.phase.definesNewPhase && elemData.phase.isContainer) 
-  );
-  
-  // Parse child elements -- recurse
-
-  Array.from(domElem.children).forEach(
-    child => parseDomElem(
-      child,
-      p4vReg, 
-      p4vData,
-      forceChildrenToHaveNewPhase, 
+  const childReturnVals = getChildGliderElements(domElem).map(
+    child => {
+      LOG([`RECURSING FROM ${domElem.id} TO ${child.id}`, p4vReg]);
+      return parseDomElem(
+      child, p4vReg, p4vData,
       tellChildrenTheyHaveAPartParent
-    )
+    )}
   );
+
+  // If no child defines a PartView, 
+  //   then create a default one for this Part
+
+  // @todo - only run this if there are children
+
+  // Save register
+
+  p4vData.saveRegister(p4vReg);
+
+  // Return info about this elem
+
+  return {
+    createDefaultView: tellParentToCreateDefaultPV
+  }
+}
+
+// Utility function: given a domNode, return all child nodes
+//  that are to be parsed (filter out the skips)
+
+function getChildGliderElements(domElem) {
+  return Array.from(domElem.children).filter(childElem => 
+    ! PARSING_CONSTANTS.SKIP_ELEMENTS.includes(domElem.tagName.toLowerCase())
+  )
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-// Main -- call parseFlightPlans on DOM load
+// Main -- call parseFlightPlans after DOM loaded.
 // Currently only deals with the first Flight on the page
 
-function main() {
-  
-  // Put ID's on all elements in body (for now)
-  // These IDs map to P4V IDs, for easy cross-checking
-  
-  // @todo -- move this to a DOM pre-processing routine
-  //          (along with other stuff similarly marked in this js file)
-
-  document.body.querySelectorAll('*').forEach(elem => {
-    if (elem.getAttribute('id') === null) {
-      elem.setAttribute('id', `g${getIdFromDomPosition(elem)}`);
-    }
-  });
+function main(documentSections) {
   
   // Return the p4v data object (Class P4V_Data)
   
-  let p4vDataArr = parseFlightPlans(document.body);
+  let p4vDataArr = parseFlightPlans(documentSections.flightPlanRoots);
 
   if (p4vDataArr.length > 0) {
     return p4vDataArr[0];
@@ -321,7 +230,5 @@ function main() {
     return null; 
   }
 }
-
-// init();
 
 export { main as parseFlightMarkup }
