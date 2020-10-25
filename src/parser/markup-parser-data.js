@@ -270,47 +270,10 @@ class P4V_Data {
   }
 
   // Post-parse cleanup
+  // @todo -- prune tree of unnecessary Parts/Phases?
 
   clean() {
-
-    console.log('CLEAN!!!!');
-
-    // Add DefaultView IFF there is a Part with no associated View
     
-    Object.keys(this.parts)
-      .filter(partId => this.partsPartViews[partId] === undefined)
-      .forEach(partWithNoViewId => this.addDefaultPartViewToView(partWithNoViewId));
-
-    // For PartViews that have no Place specified, 
-    //   copy from associated Part
-    // (These PartViews are default Views from combined Part/PartView
-    //   elements)
-
-    // @todo: this should probably happen during the parsing process --
-    //  maybe by looking to see (after recusion to the children) 
-    //  if a Part has any Views, then creating one if not
-
-    LOG(['!!!!!!!!', Object.values(this.partViews)]);
-    LOG(['!!!!!!!!', 
-      // Object.values(this.partViews).filter(partView => !partView.place)
-      Object.values(this.partViews).map(partView => this.parts[partView.partId].place)
-    ]);
-
-
-    Object.values(this.partViews)
-    .filter(partView => !partView.place && this.parts[partView.partId].place)
-    .forEach(partView => {
-      const place = this.parts[partView.partId].place;
-      partView.place = place;
-      LOG(['@@@@@@@@@', partView.id]);
-      // this.addPlace({}) // @todo: do we need to create a Place here?
-      this.associatePartViewWithPlace2({ partView, place })
-      delete this.parts[partView.partId].place;
-    });
-
-    // @todo -- prune tree of nested HTML Parts/PartViews
-    // @todo -- replace all these IDs with pointers, to simplify the code that
-    //          consumes this object
   }
 }
 

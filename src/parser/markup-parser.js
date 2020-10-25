@@ -89,7 +89,8 @@ function parseFlightPlan(domElem) {
   );
   
   // Post-parse cleanup & return
-  // p4vData.clean();
+
+  p4vData.clean();
   return p4vData;
 }
 
