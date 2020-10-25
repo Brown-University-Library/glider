@@ -3,8 +3,9 @@ import { PARSING_CONSTANTS } from '../system-settings.js';
 import { LOG } from '../misc/logger.js';
 
 // Enter a new Part definition
+//  (note: uses Place information as well as Part)
 
-function getPartData(elemData) {
+export function getPartData(elemData) {
     
   // Compile definition
   
@@ -14,7 +15,8 @@ function getPartData(elemData) {
           ? PARSING_CONSTANTS.PART.DEFAULT_PART_NAME 
           : elemData.part.type,
     options: elemData.part.options,
-    container: elemData.part.container
+    container: elemData.part.container, // @todo: can we get rid of .container in favour of .markupNode?
+    markupNode: elemData.part.container
   };
 
   if (partData.type === PARSING_CONSTANTS.PART.DEFAULT_PART_NAME) {
@@ -24,9 +26,10 @@ function getPartData(elemData) {
   // @todo: Check this
   // Parts don't have Places (only Part Views do)
   // But if it's an HTML element, we need to keep the Place information
+  //  in the Part for future use
   
   // THIS SHOULD STORE THE PLACE ID
-  
+  /*
   //if (partData.type === PARSING_CONSTANTS.PART.DEFAULT_PART_NAME) {
     
     if (elemData.place.hasRole || elemData.place.hasRegion) {
@@ -35,9 +38,24 @@ function getPartData(elemData) {
       LOG(partData);
     }
     
-  // }
+  // } */
   
   return partData;
 }
 
-export { getPartData }
+// @todo - this is currently unused, but may be useful
+//         if we decide to have a Part for every element
+//        (A register could get a null Part assigned instead of undefined)
+
+export function getNullPartData(elemData) {
+
+  const nullPartDataUpdate = { 
+    part: { 
+      type: PARSING_CONSTANTS.PART.NULL_PART_NAME 
+    } 
+  };
+
+  return getPartData(
+    Object.assign(elemData, nullPartDataUpdate)
+  );
+}
