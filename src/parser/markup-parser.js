@@ -98,30 +98,8 @@ function parseFlightPlan(domElem) {
     childElem => parseDomElem(childElem, p4vReg_init, p4vData, forceNewPhase)
   );
   
-  // Post-parse cleanup
-  
-  // Add DefaultView IFF there is a Part with no associated View
-  
-  Object.keys(p4vData.parts)
-    .filter(partId => p4vData.partsPartViews[partId] === undefined)
-    .forEach(partWithNoViewId => p4vData.addDefaultPartViewToView(partWithNoViewId));
-  
-  // For PartViews that have no Place specified, 
-  //   copy from associated Part
-  // (These PartViews are default Views from combined Part/PartView
-  //   elements)
-
-  Object.values(p4vData.partViews)
-        .filter(partView => !partView.place && p4vData.parts[partView.partId].place)
-        .forEach(partView => {
-          partView.place = p4vData.parts[partView.partId].place;
-          delete p4vData.parts[partView.partId].place;
-        });
-
-  // @todo -- prune tree of nested HTML Parts/PartViews
-  // @todo -- replace all these IDs with pointers, to simplify the code that
-  //          consumes this object
-
+  // Post-parse cleanup & return
+  // p4vData.clean();
   return p4vData;
 }
 
