@@ -20,9 +20,27 @@ OUTLINE
 - main()
   This is what is exported from the module
 
+The parser is responsible for looking at the Flight Plan (HTML markup)
+and returning a data structure that represents that markup in terms of
+Parts, PartViews, Places, and Phases (P4V) and the relationships between
+them.
+
+This file contains the high-level parsing functions.
+
+The functions that actually look at the DOM and convert it in a fairly
+literal way to a data structure are contained in a separate module
+and are accessed via the getDataFromDomElem() function.
+
+The parser state at any given DOM element is stored in
+a state register p4vReg. The functions contained in module P4V_Register
+are responsible for updating the register and returning a new one. 
+The register is the means by which parent elements' attributes (e.g. Place)
+are inherited by the children.
+
+Ever so often, the parser state is saved to the parsed data store, P4V_Data.
+This object is what's returned to the main Glider system (after a bit of cleanup).
+
 */
-
-
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 // PARSING FUNCTIONS
