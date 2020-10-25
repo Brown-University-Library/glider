@@ -17,7 +17,9 @@ The _Flightplan_ is the term for the markup that forms the content of the Glider
 
 All Flightplan markup elements have an ID (in the form of an `id` attribute). 
 
-If the element doesn't have one, one will be assigned that is based on its position in the document -- thereby ensuring that across all clients the IDs will be the same.
+If the element doesn't have one, one will be assigned that is based on its position in the document -- thereby ensuring that across all clients the IDs will be the same. 
+
+Therefore: currently _if the Glider markup is modified prior to parsing, then either (a) it has to be modified consistently between clients, *OR* (b) explicit IDs need to be provided._
 
 ### Glider Root
 
