@@ -176,7 +176,7 @@ function prepareDisplayDomForVueCompilation(initParameters, displayDomRoot) {
   //  add an @is attribute to the element to
   //  signal to Vue that it is a component
   // Also, add a @ref and set it to ID
-  // Also, add a suitable class name to @class
+  // Also, add a class name to indicate Part Type
   
   for (let partId in initParameters.parts) {
     const partDef = initParameters.parts[partId],
@@ -207,13 +207,10 @@ function prepareDisplayDomForVueCompilation(initParameters, displayDomRoot) {
 
     partViewContainer.setAttribute('id', partViewId);
     
-    // If also a Part, then move that over to @isAlso
-    //  and register this partView in a Place 
-    //  (not sure that this is the place to do that ...)
-
-    // @todo Since we now have an independent Display DOM, can't we just 
-    //  change the display DOM to have two elements - one for the 
-    //  Part and one for the Part View?? (ie no need for @isAlso)
+    // If this PartView is also a Part, then create a 
+    //  parent element and make THAT the Part
+    //  and register this PartView in a Place 
+    //  @todo is this is the place to do that?
     
     if (partViewContainer.getAttribute('is') !== null) {
 
@@ -288,6 +285,8 @@ function createVueComponentsFromPartTypes_part(partDef, sharedVarAccessors, part
 
   // Parts should never have a template 
   //  (that's what Views are for)
+  // @todo: think this through - if neither template nor render is defined,
+  //  then the Glider mixin should kick in (not this below)
 
   if (partDef.template === undefined && partDef.render === undefined) {
     partDef.template = '<div><slot></slot></div>';
@@ -385,6 +384,10 @@ function initParts(gliderApp, initParameters, displayDomRoot) {
 
   let componentDefs = createVueComponentsFromPartTypes(gliderApp, initParameters, partRegistry);
   prepareDisplayDomForVueCompilation(initParameters, displayDomRoot);
+
+  console.log(displayDomRoot.outerHTML);
+
+
   const vueRoot = compileMarkupInVue(displayDomRoot, componentDefs, gliderApp);
   gliderApp.setPartVueComponents(vueRoot);
 
