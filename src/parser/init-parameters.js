@@ -2,6 +2,9 @@
 import { urlOptions }        from './url-options.js';
 import { parseFlightMarkup } from './markup-parser.js';
 import { getPlaceDefs }      from './place-definitions.js';
+import { PARSING_CONSTANTS } from '../system-settings.js';
+
+const clientId = PARSING_CONSTANTS.GET_CLIENT_ID();
 
 // Extract initialization data from markup and URL query string
 //  (executed only once DOM is loaded - that's why these are functions)
@@ -17,7 +20,8 @@ function getInitParameters(documentSections) {
       {}, 
       parseFlightMarkup(documentSections), 
       urlOptions, 
-      getPlaceDefs(documentSections)
+      getPlaceDefs(documentSections),
+      {clientId}
     )
   );
 }

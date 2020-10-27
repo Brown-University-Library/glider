@@ -75,6 +75,9 @@ let PARSING_CONSTANTS = {
 
 // ID and Classname generators
 
+PARSING_CONSTANTS.GET_CLIENT_ID = () => 
+  'glider-client-' + Date.now() + Math.floor(Math.random() * 10000);
+
 PARSING_CONSTANTS.PART.GET_CSS_CLASS = (partName, partViewName) => {
   return `${PARSING_CONSTANTS.PART.CLASSNAME_PREFIX}${partName}` 
     + (partViewName 
