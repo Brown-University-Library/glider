@@ -1,0 +1,393 @@
+<html>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+<div is="parentPart" id="g1658" ref="g1658">
+  <div is="childView1" id="pv-g1658-defaultView" ref="pv-g1658-defaultView"></div>
+  <div is="childView2" id="pv-g1658-fancyView"   ref="pv-g1658-fancyView"></div>
+</div>
+
+<script type="module">
+
+import { GliderApp } from '../app/app-as-class.js';
+import { getSharedStore } from './store.js';
+
+// Set up store, app
+
+const initParameters = {
+  "markupRoot": {},
+  "parts": {
+    "g1658": {
+      "id": "g1658",
+      "type": "identity",
+      "options": {},
+      "container": {}
+    },
+    "g1720": {
+      "id": "g1720",
+      "type": "identity",
+      "options": {},
+      "container": {}
+    },
+    "g48623": {
+      "id": "g48623",
+      "type": "identity",
+      "options": {},
+      "container": {}
+    },
+    "g46671538": {
+      "id": "g46671538",
+      "type": "identity",
+      "options": {},
+      "container": {},
+      "place": "pl-myPlace-defaultRegion"
+    },
+    "g48518580": {
+      "id": "g48518580",
+      "type": "identity",
+      "options": {},
+      "container": {}
+    },
+    "g1903466935": {
+      "id": "g1903466935",
+      "type": "identity",
+      "options": {},
+      "container": {}
+    },
+    "g616492999": {
+      "id": "g616492999",
+      "type": "identity",
+      "options": {},
+      "container": {}
+    },
+    "g1158514363": {
+      "id": "g1158514363",
+      "type": "identity",
+      "options": {},
+      "container": {}
+    },
+    "g48685": {
+      "id": "g48685",
+      "type": "identity",
+      "options": {},
+      "container": {},
+      "place": "pl-myOtherPlace-defaultRegion"
+    },
+    "g48747": {
+      "id": "g48747",
+      "type": "identity",
+      "options": {},
+      "container": {}
+    }
+  },
+  "partViews": {
+    "pv-g1658-defaultView": {
+      "partId": "g1658",
+      "id": "pv-g1658-defaultView",
+      "name": "defaultView",
+      "container": {}
+    },
+    "pv-g1658-fancyView": {
+      "partId": "g1658",
+      "id": "pv-g1658-fancyView",
+      "name": "fancyView",
+      "container": {}
+    },
+    "pv-g1720-defaultView": {
+      "partId": "g1720",
+      "id": "pv-g1720-defaultView",
+      "name": "defaultView",
+      "container": {}
+    },
+    "pv-g48623-defaultView": {
+      "partId": "g48623",
+      "id": "pv-g48623-defaultView",
+      "name": "defaultView",
+      "container": {}
+    },
+    "pv-g46671538-defaultView": {
+      "partId": "g46671538",
+      "id": "pv-g46671538-defaultView",
+      "name": "defaultView",
+      "container": {}
+    },
+    "pv-g48518580-defaultView": {
+      "partId": "g48518580",
+      "id": "pv-g48518580-defaultView",
+      "name": "defaultView",
+      "container": {}
+    },
+    "pv-g1903466935-defaultView": {
+      "partId": "g1903466935",
+      "id": "pv-g1903466935-defaultView",
+      "name": "defaultView",
+      "container": {}
+    },
+    "pv-g616492999-defaultView": {
+      "partId": "g616492999",
+      "id": "pv-g616492999-defaultView",
+      "name": "defaultView",
+      "container": {}
+    },
+    "pv-g1158514363-defaultView": {
+      "partId": "g1158514363",
+      "id": "pv-g1158514363-defaultView",
+      "name": "defaultView",
+      "container": {}
+    },
+    "pv-g48685-defaultView": {
+      "partId": "g48685",
+      "id": "pv-g48685-defaultView",
+      "name": "defaultView",
+      "container": {}
+    },
+    "pv-g48747-defaultView": {
+      "partId": "g48747",
+      "id": "pv-g48747-defaultView",
+      "name": "defaultView",
+      "container": {}
+    }
+  },
+  "places": {
+    "pl-myPlace-defaultRegion": {
+      "id": "pl-myPlace-defaultRegion",
+      "role": "myPlace",
+      "region": "defaultRegion",
+      "roleNotSet": false
+    },
+    "pl-myOtherPlace-defaultRegion": {
+      "id": "pl-myOtherPlace-defaultRegion",
+      "role": "myOtherPlace",
+      "region": "defaultRegion",
+      "roleNotSet": false
+    }
+  },
+  "placeDefs": [
+    {
+      "id": "good",
+      "type": "bootstrapplace"
+    },
+    {
+      "id": "bad",
+      "type": "bootstrapplace"
+    },
+    {
+      "id": "wall",
+      "type": "fixedgridplace",
+      "rows": "3",
+      "columns": "4",
+      "row-height": "108",
+      "column-width": "192"
+    },
+    {
+      "id": "defaultPlace",
+      "type": "bootstrapplace",
+      "asetting": true
+    }
+  ],
+  "phases": {
+    "glider-root": {
+      "delay": null,
+      "id": "glider-root",
+      "duration": null,
+      "type": "seq"
+    },
+    "g1658": {
+      "delay": null,
+      "id": "g1658",
+      "duration": 2,
+      "type": "leaf"
+    },
+    "g1720": {
+      "delay": null,
+      "id": "g1720",
+      "duration": 2,
+      "type": "leaf"
+    },
+    "g48623": {
+      "delay": null,
+      "id": "g48623",
+      "duration": 8,
+      "type": "par"
+    },
+    "g46671538": {
+      "delay": null,
+      "id": "g46671538",
+      "duration": null,
+      "type": "leaf"
+    },
+    "g48518580": {
+      "delay": null,
+      "id": "g48518580",
+      "duration": null,
+      "type": "seq"
+    },
+    "g1903466935": {
+      "delay": 2,
+      "id": "g1903466935",
+      "duration": 2,
+      "type": "leaf"
+    },
+    "g616492999": {
+      "delay": null,
+      "id": "g616492999",
+      "duration": 2,
+      "type": "leaf"
+    },
+    "g1158514363": {
+      "delay": null,
+      "id": "g1158514363",
+      "duration": 2,
+      "type": "leaf"
+    },
+    "g48685": {
+      "delay": null,
+      "id": "g48685",
+      "duration": 2,
+      "type": "leaf"
+    },
+    "g48747": {
+      "delay": null,
+      "id": "g48747",
+      "duration": null,
+      "type": "leaf"
+    }
+  },
+  "rootPhaseId": "glider-root",
+  "phasesParts": {
+    "glider-root": [
+      "rootPart"
+    ],
+    "g1658": [
+      "g1658"
+    ],
+    "g1720": [
+      "g1720"
+    ],
+    "g48623": [
+      "g48623"
+    ],
+    "g46671538": [
+      "g46671538"
+    ],
+    "g48518580": [
+      "g48518580"
+    ],
+    "g1903466935": [
+      "g1903466935"
+    ],
+    "g616492999": [
+      "g616492999"
+    ],
+    "g1158514363": [
+      "g1158514363"
+    ],
+    "g48685": [
+      "g48685"
+    ],
+    "g48747": [
+      "g48747"
+    ]
+  },
+  "partsPartViews": {
+    "part-1": "partview11",
+    "part-1": "partview12",
+    "part-2": "partview21",
+    "part-2": "partview22"
+  },
+  "placesPartviews": {},
+  "phaseChildren": {
+    "glider-root": [
+      "g1658",
+      "g1720",
+      "g48623",
+      "g48685",
+      "g48747"
+    ],
+    "g48623": [
+      "g46671538",
+      "g48518580"
+    ],
+    "g48518580": [
+      "g1903466935",
+      "g616492999",
+      "g1158514363"
+    ]
+  },
+  "flightInstanceId": "3333",
+  "herePlace": "defaultPlace",
+  "initialize": false
+};
+
+const store = getSharedStore(initParameters);
+const glider = new GliderApp(initParameters, store);
+
+window.glider = glider;
+window.store  = store;
+
+// Define a new component
+
+const FLIGHT_ID = 1234;
+
+const sharedVarWatchers = glider.getPartTypeWatchers({ 
+  sharedVariables: ['a','b','c'], 
+  partTypeName: 'dude', 
+  flightInstanceId: FLIGHT_ID
+});
+
+Vue.component('childView1', {
+  data: function () {
+    return {
+      count: 0,
+      a: 100,
+      id: 'pv-g1658-defaultView'
+    }
+  },
+  watch: sharedVarWatchers,
+  template: `<div class="partview"><button v-on:click="count++">You clicked me {{ count }} times.</button>
+             <button v-on:click="a++">You clicked me {{ a }} times.</button>
+             <button v-on:click="a = 10">10!</button></div>`
+});
+
+Vue.component('childView2', {
+  data: function () {
+    return {
+      count: 0,
+      a: 100,
+      id: 'pv-g1658-fancyView'
+    }
+  },
+  watch: sharedVarWatchers,
+  template: `<div class="partview"><button v-on:click="count++">You clicked me {{ count }} times.</button>
+             <button v-on:click="a++">You clicked me {{ a }} times.</button>
+             <button v-on:click="a = 10">10!</button></div>`
+});
+
+Vue.component('parentPart', {
+  data: function () {
+    return {
+      a: 10,
+      id: 'g1658'
+    }
+  },
+  // watch: sharedVarWatchers,
+  template: `<div class="part"><slot></slot></div>`
+});
+
+window.v = new Vue({ el: '#g1658' });
+
+glider.setPartVueComponents(window.v);
+
+
+</script>
+
+
+
+</html>
+
+
+
+
+
+
+

@@ -3,7 +3,6 @@ import { PARSING_CONSTANTS } from '../system-settings.js';
 import { LOG } from '../misc/logger.js';
 
 let sharedStore;  // Holds the single instance of the Store
-const clientId = 'glider-client-' + getNow() + Math.floor(Math.random() * 1000);
 
 // Get the timestamp for the current time
 
@@ -18,8 +17,8 @@ class SharedStore {
   constructor(initParameters) {
     this.app = undefined, // initialized by GliderApp constructor
     this.state = {};
-    this.clientId = clientId;
-    this.clientRole = initParameters.herePlace,
+    this.clientId = initParameters.clientId;
+    this.clientRole = initParameters.herePlace;
     this.sync = () => {}; // This gets overridden by the initConnection routine
   }
 

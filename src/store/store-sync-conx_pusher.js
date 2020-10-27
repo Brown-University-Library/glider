@@ -45,10 +45,10 @@ function getConnection(options) {
   //  to the sender
   //  see: https://pusher.com/docs/channels/server_api/excluding-event-recipients
   
-  let clientId = null;
+  let pusherClientId = null;
   
   pusher.connection.bind('connected', function() {
-    clientId = pusher.connection.socket_id;
+    pusherClientId = pusher.connection.socket_id;
   });
   
   // Set up logging function
@@ -83,7 +83,7 @@ function getConnection(options) {
 
       const dataAsJson = encodeURI(JSON.stringify(data)),
             urlWithData = `${SEND_URL}?flight_id=${FLIGHT_ID}&var_id=${messageName}` +
-                          `&data=${dataAsJson}&sender=${clientId}`;
+                          `&data=${dataAsJson}&sender=${pusherClientId}`;
       
       // Send data to the PHP file on the CDS server via HTTP
       // Forwards it to WebSockets server
