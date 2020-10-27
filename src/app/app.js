@@ -1,5 +1,17 @@
 import { LOG } from '../misc/logger.js';
 import { PartsDB } from './pppvDB.js';
+/*
+
+  The GliderApp object is the hub of the Glider architecture.
+  Parts, PartViews, Places, and Phases do not communicate directly with each
+  other -- all communication is done via the GliderApp object.
+
+  Therefore, you will see methods below that are 
+  specifically used by each of the major functional areas. For example, 
+  when a Phase changes state, it notifies the GliderApp, who is aware of
+  the Parts that this effects, and notifies them accordingly.
+
+*/
 
 class GliderApp {
 
