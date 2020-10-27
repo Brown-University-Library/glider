@@ -1,5 +1,5 @@
 import { LOG } from '../misc/logger.js';
-import { PartsDB } from './pppvDB.js';
+import { PartsDB } from './p4v_map.js';
 import { PARSING_CONSTANTS } from '../system-settings.js';
 
 

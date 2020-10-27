@@ -1,6 +1,18 @@
 
 import { LOG } from "../misc/logger.js";
 
+/*
+
+  METHODS USED (by app.js): 
+
+  initPartComponentsByIdMap
+  getAssociatedPartId
+  getPartOrPartView
+  getPartViewsFromPart
+  getPlaceIdFromPartViewId
+  
+*/
+
 
 class PartsDB {
 
@@ -20,6 +32,7 @@ class PartsDB {
   //   pl-mobile-defaultRegion: ["pv-nn-1-controller"]
   //   pl-wall-defaultRegion: ["pv-nn-1-display"]
   // this.placeToPartViewMap = initParameters.placesPartviews;
+  // @todo can this be moved to the parsing phase?
 
   getPartViewsByPlaceMap(initParameters) {
 
@@ -28,11 +41,13 @@ class PartsDB {
         placeIds = Object.keys(initParameters.places);
 
     placeIds.forEach(placeId => {
+      LOG([`XCVXCV: ${placeId}`, placeToPartViewMap[placeId]]);
       placeToPartViewMap[placeId].forEach(
         partViewId => partViewsToPlaceMap[partViewId] = placeId
       );
     });
-
+    console.log('RRRRRRRRRRRRRR');
+    console.log(partViewsToPlaceMap);
     return partViewsToPlaceMap;
   }
 
