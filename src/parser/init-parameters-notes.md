@@ -29,11 +29,13 @@ The root element of a Flightplan can be either:
 * the body element (if this is the case, then a `<template>` element is automatically inserted as the direct child of `<body>` to act as a root)
 
 Note
-> Unless explicitly designared otherwise, the glider-root is a parallel timecontainer, so that all children run simultaneously. To have each child appear in order as a "slideshow", the `phase-type` attribute must be set to `SEQ`.
+> Unless explicitly designated otherwise, the `glider-root` is a parallel timecontainer, so that all children run simultaneously. To have each child appear in order as a "slideshow", the `phase-type` attribute must be set to `SEQ`.
 
 ### Phases
 
-> NOTE: The model for Glider Phases is a simplified version of the SMIL standard.
+> NOTE: Glider Phases is a highly simplified version of [the SMIL standard](https://www.w3.org/TR/2008/REC-SMIL3-20081201/smil-timing.html).
+
+Currently, for simplicity, _all Glider markup elements have a Phase assigned_, even if it's a trivial instance of `[begin time = 0, duration = Infinity, type = PAR or LEAF]`. (In the future, these Phases - which basically don't do anything - may be filtered out)
 
 Flightplan elements can act as either:
 
@@ -41,6 +43,12 @@ Flightplan elements can act as either:
     * Child Phases of a `PAR` are active simultaneously
     * Child Phases of a `SEQ` run one after another
 * _Leafs_, which do not have any children.
+
+A Phase can have the following attributes:
+
+* `phase-type`: one of "PAR", "SEQ", "LEAF". (default: "PAR")
+* `phase-begin`: the time (in seconds) after which the Phase begins (default: 0)
+* `phase-duration`: how long after the start does a Phase last? (default: Infinity)
 
 ### Parts
 
@@ -71,3 +79,5 @@ If the Part doesn't have any children, then a default Part View is created.
 ## Definitions markup
 
 ## URL parameters
+
+
