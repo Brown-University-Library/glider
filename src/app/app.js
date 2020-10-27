@@ -1,5 +1,8 @@
 import { LOG } from '../misc/logger.js';
 import { PartsDB } from './pppvDB.js';
+import { PARSING_CONSTANTS } from '../system-settings.js';
+
+
 /*
 
   The GliderApp object is the hub of the Glider architecture.
@@ -75,16 +78,13 @@ class GliderApp {
 
   getStoreItemId({ flightInstanceId, partOrPartViewId, varName }) {
     const partId = this.partsDB.getAssociatedPartId(partOrPartViewId);
-    return `${flightInstanceId}--${partId}--${varName}`
+    return PARSING_CONSTANTS.STORE.GET_ITEM_ID({flightInstanceId, partId, varName});
   }
 
   parseStoreItemId(itemId) {
-    const [ flightInstanceId, partId, varName ] = itemId.split('--');
-    return {
-      flightInstanceId, 
-      partId, 
-      varName
-    }
+    const [flightInstanceId, partId, varName] = 
+            itemId.split(PARSING_CONSTANTS.STORE.ITEM_ID_DELIMITER);
+    return {flightInstanceId, partId, varName}
   }
 
   // Given an store item ID and value, update

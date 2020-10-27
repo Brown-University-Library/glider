@@ -59,6 +59,10 @@ let PARSING_CONSTANTS = {
     }
   },
 
+  STORE: {
+    ITEM_ID_DELIMITER: '--'
+  },
+
   STYLE: {
     ELEM_ID: 'glider-style',
     HREF: '/src/style/glider.css'
@@ -103,5 +107,8 @@ PARSING_CONSTANTS.PART.GET_VUE_COMPONENT_NAME = (partName, partViewName) => {
 
   return vueComponentName;
 };
+
+PARSING_CONSTANTS.STORE.GET_ITEM_ID = 
+  ({flightInstanceId, partId, varName}) => [flightInstanceId, partId, varName].join(PARSING_CONSTANTS.STORE.ITEM_ID_DELIMITER);
 
 export { PARSING_CONSTANTS };
