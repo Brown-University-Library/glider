@@ -1,5 +1,5 @@
 import { LOG } from '../misc/logger.js';
-import { PartsDB } from './p4v_map.js';
+import { p4vDB } from './p4v_map.js';
 import { PARSING_CONSTANTS } from '../system-settings.js';
 
 /*
@@ -13,7 +13,7 @@ import { PARSING_CONSTANTS } from '../system-settings.js';
   when a Phase changes state, it notifies the GliderApp, who is aware of
   the Parts that this effects, and notifies them accordingly.
 
-  @todo - make PartsDB into a general store for all p4v data (move placeData into it)
+  @todo - make p4vDB into a general store for all p4v data (move placeData into it)
 
 */
 
@@ -21,15 +21,12 @@ class GliderApp {
 
   constructor(initParameters, store) {
 
-    this.partsDB = new PartsDB(initParameters);
-    window.partsDB = this.partsDB; // TEMP
-
-    this.placeData = initParameters.places;
+    this.p4vDB = new p4vDB(initParameters);
 
     // Once Vue components have been initialized, create map
     //  between Vue instances and Part IDs
 
-    this.setPartVueComponents = vueObject => this.partsDB.initPartComponentsByIdMap(vueObject);
+    this.setPartVueComponents = vueObject => this.p4vDB.initPartComponentsByIdMap(vueObject);
 
     // Set up store
 
@@ -82,7 +79,7 @@ class GliderApp {
   // mint a store ID
 
   getStoreItemId({ flightInstanceId, partOrPartViewId, varName }) {
-    const partId = this.partsDB.getAssociatedPartId(partOrPartViewId);
+    const partId = this.p4vDB.getAssociatedPartId(partOrPartViewId);
     return PARSING_CONSTANTS.STORE.GET_ITEM_ID({flightInstanceId, partId, varName});
   }
 
@@ -102,18 +99,18 @@ class GliderApp {
   distributeUpdateToPartsAndViews({itemId, itemVal, doNotUpdate = null}) {
 
     const partId = this.parseStoreItemId(itemId).partId,
-          part = partId ? this.partsDB.getPartOrPartView(partId) : undefined;
+          part = partId ? this.p4vDB.getPartOrPartView(partId) : undefined;
 
     if (part) {
 
       // Update PartViews and/or Part instance that is
       //  NOT the Part/PartView that is doing the updating
 
-      const partViews = this.partsDB.getPartViewsFromPart(part),
+      const partViews = this.p4vDB.getPartViewsFromPart(part),
             partsAndPartViews = [part].concat(partViews);
 
       partsAndPartViews.filter(p => p !== doNotUpdate)
-                      .forEach(p => p[varName] = itemVal);
+                       .forEach(p => p[varName] = itemVal);
     }  
   }
 
@@ -124,8 +121,8 @@ class GliderApp {
   updatePartVarFromStore(itemId, itemVal) {
 
     const { partId, varName } = this.parseStoreItemId(itemId),
-          partComponent = this.partsDB.getPartOrPartView(partId),
-          partViewComponents = this.partsDB.getPartViewsFromPart(partId),
+          partComponent = this.p4vDB.getPartOrPartView(partId),
+          partViewComponents = this.p4vDB.getPartViewsFromPart(partId),
           partAndPartViewComponents = [partComponent].concat(partViewComponents);
 
     // Temporarily suspend watchers to avoid updating 
@@ -177,15 +174,15 @@ class GliderApp {
 
           // Update associated Part and PartViews
           // @todo: could this be simplified with a well-designed 
-          //        API in partsDB?
+          //        API in p4vDB?
           //        OR by sharing state via renderless components?
           // This basically takes a Part of PV id and returns an array
           //  of the Part and PVs except for the PV that initiated the change
-          //  Could this be partsDB.getPartAndPartViewsToUpdateFromChangeIn(this.id)
+          //  Could this be p4vDB.getPartAndPartViewsToUpdateFromChangeIn(this.id)
 
-          const partId = app.partsDB.getAssociatedPartId(this.id),
-                part = app.partsDB.getPartOrPartView(partId),
-                partViews = app.partsDB.getPartViewsFromPart(partId),
+          const partId = app.p4vDB.getAssociatedPartId(this.id),
+                part = app.p4vDB.getPartOrPartView(partId),
+                partViews = app.p4vDB.getPartViewsFromPart(partId),
                 partViewsExceptThisOne = partViews.filter(pv => pv !== this),
                 partAndPartViewsToUpdate = partViewsExceptThisOne.concat(part);
 
@@ -229,14 +226,20 @@ class GliderApp {
 
     partAndPartViewIds.forEach(partId => {
 
-      const placeId = this.partsDB.getPlaceIdFromPartViewId(partId);
-          
+      const placeId = this.p4vDB.getPlaceIdFromPartViewId(partId);
+
+      console.log(`${placeId}::::${partId}`);
+      console.log(this.p4vDB);
+
       if (placeId) {
-        const placeRoleId = this.placeData[placeId].role,
-              placeRegionId = this.placeData[placeId].region,
+
+        const { placeRoleId, placeRegionId } = this.p4vDB.getPlaceDataById(placeId),
               regionInstance = places[placeRoleId].assignPartViewToRegion(placeRegionId, parts[partId]);
-    
-        parts[partId].setPlace({ placeCssClasses: regionInstance.classNames });
+
+        parts[partId].setPlace({ 
+          placeCssClasses: regionInstance.classNames,
+          isHere: regionInstance.isHere
+        });
       }
     });
   }

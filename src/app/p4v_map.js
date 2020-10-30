@@ -14,7 +14,7 @@ import { LOG } from "../misc/logger.js";
 */
 
 
-class PartsDB {
+class p4vDB {
 
   constructor(initParameters) {
     this.partViewToPartMap = {};
@@ -59,7 +59,7 @@ class PartsDB {
 
   /*
 
-  @todo Does PartsDB need all these methods? (which ones are actually being used?)
+  @todo Does p4vDB need all these methods? (which ones are actually being used?)
         Is there a way to get off the dependence on Part/PartView IDs
           and just map using the component objects themselves?
 
@@ -148,4 +148,4 @@ class PartsDB {
   }
 }
 
-export { PartsDB };
+export { p4vDB };
