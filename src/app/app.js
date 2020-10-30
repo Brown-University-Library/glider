@@ -36,16 +36,14 @@ class GliderApp {
 
     this.flightInstanceId = initParameters.flightInstanceId;
 
-
-
     /*
 
     @todo
 
-    In the Phase, make the onPhaseChange methods assignable rather than hard-coded 
-    onto the App object.
-    This introduces a dependency on the App object. Phases can be independent.
-    Instead, App can add its methods to the Phases.
+      In the Phase, make the onPhaseChange methods assignable rather than hard-coded 
+      onto the App object.
+      Currently, there is a dependency on the App object. But Phases can be independent.
+      Instead, App can add its methods to the Phases.
 
     */
 
