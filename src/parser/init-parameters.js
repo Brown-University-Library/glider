@@ -21,7 +21,7 @@ function getInitParameters(documentSections) {
       parseFlightMarkup(documentSections), 
       urlOptions, 
       getPlaceDefs(documentSections),
-      {clientId}
+      { clientId }
     )
   );
 }
