@@ -25,14 +25,10 @@ import Vue from 'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.esm.browser.js
       - Initialize this Part Type's shared data
       - If no rendering defined, just do a pass-through
       - If there are shared variables in this Part, then 
-        create getters/setters for use in the Part View
+        create watchers for use in the Part View
     - Register Part component with Vue
     - Create & register (with Vue) this Part's Views as components
   - MODIFY DOM TO ADD @is & @ref & @class TO MARKUP
-    - Also adds @is_also for those DOM elements that define
-      a Part and (singleton) PartView at the same time
-      e.g. HTML elements
-    - Associate PartView and Place in GliderApp
   - SET VUE ON TO MARKUP
 
   - - - - - - - -
@@ -58,22 +54,9 @@ import Vue from 'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.esm.browser.js
   The problem is that until Vue compiles the markup, we don't know things like
   the Part instance IDs. Therefore, we can't create accessors for instances.
 
-  The trick is to create accessors for the Part TYPE that are wrapped in another 
+  The trick is to create watchers for the Part TYPE that are wrapped in another 
   function that references the instance id off of _this_ -- effectively, it 
   defers the valuation of instance id.
-
-*/ 
-
-
-/*
-
-  IDEAS:
-  
-  - This is a good place to optimize:
-    - Any Parts type=default that have no Phases or Places associated can be ignored
-      (would this take care of the nested HTML problem?)
-  - Make implicit types explicit, e.g. state default Part types, Phase types, etc.
-    Maybe on @data-part-type-implicit or @phase-type-implicit
 
 */
 
@@ -190,10 +173,6 @@ function prepareDisplayDomForVueCompilation(initParameters, displayDomRoot) {
   
   // Part Views - add @is and @ref and add classname
 
-  // @todo disentangle the shadowDom markup references from the lightDOM
-  // maybe .container is not the right term, since it points to the lightDOM
-  // markup -- maybe .markupNode?
-
   for (let partViewId in initParameters.partViews) {
     
     const partViewDef = initParameters.partViews[partViewId],
@@ -256,6 +235,9 @@ function createVueComponentsFromPartTypes_views(partTypeDef, sharedVarWatchers, 
       }
 
       // Add shared variables on the Part into the PartView via mixin
+      //   (this incorporates the shared data variables into the component's
+      //   .data property without directly writing into it)
+
       // @todo - eventually there should be a better solution - 
       //         e.g. renderless components to share state?
 
@@ -300,7 +282,9 @@ function createVueComponentsFromPartTypes_part(partDef, sharedVarAccessors, part
 
   const partVueName = PARSING_CONSTANTS.PART.GET_VUE_COMPONENT_NAME(partTypeName);
 
-  // Add shared variables on the Part into the PartView via mixin
+  // Add shared variables on the Part into the PartView via a mixin
+  //   (this incorporates the shared data variables into the component's
+  //   .data property without directly writing into it)
 
   let sharedDataMixin = {
     data: partDef.sharedData
@@ -370,12 +354,11 @@ function compileMarkupInVue(gliderDisplayDomRoot, componentDefs, gliderApp) {
 }
 
 
-// Main function: register Vue components for each Part Type in the markup;
-//                make a copy of the markup for display purposes - put in a shadow DOM; 
-//                prepare that markup copy for compilation by Vue
-
-// @todo is initParts() the place to create the shadow DOM copy of the markup?
-//   maybe this should be in main.js
+// Main function: 
+//   Register Vue components for each Part Type in the markup
+//   Prepare display DOM for compilation by Vue
+//   Compile DOM in Vue, creating Part components
+//   Let the App know about the Parts
 
 function initParts(gliderApp, initParameters, displayDomRoot) {
 
@@ -385,11 +368,13 @@ function initParts(gliderApp, initParameters, displayDomRoot) {
   let componentDefs = createVueComponentsFromPartTypes(gliderApp, initParameters, partRegistry);
   prepareDisplayDomForVueCompilation(initParameters, displayDomRoot);
 
-  console.log(displayDomRoot.outerHTML);
-
-
+  // @todo should all the display DOM prep happen elsewhere?
+  //   Don't we also want to prep for Places? (adding classnames, etc.)
+  
+  LOG(['HTML PREPPED FOR VUE', displayDomRoot.innerHTML]);
+  
   const vueRoot = compileMarkupInVue(displayDomRoot, componentDefs, gliderApp);
-  gliderApp.setPartVueComponents(vueRoot);
+  gliderApp.setPartVueComponents(vueRoot); // Make the App aware of the Vue components
 
   //window.gliderVueRoot = vueRoot; // @todo temp
 
