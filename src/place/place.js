@@ -88,6 +88,13 @@ class Place {
   }
 }
 
+class Place_region {
+  constructor({ parentPlace }) {
+    this.role = parentPlace;
+    this.isHere = parentPlace.isHere;
+  }
+}
+
 // FixedGridPlace
 
 /*
@@ -140,11 +147,11 @@ class FixedGridPlace extends Place {
   }
 }
 
-class FixedGridPlaceRegion {
+class FixedGridPlaceRegion extends Place_region {
   
   constructor(selector, partView, parentPlace) {
     
-    // super(); // @todo: Is there any reason to make this a subclass of Place?
+    super({ parentPlace: parentPlace });
     
     this.parentPlace = parentPlace;
     
@@ -236,8 +243,9 @@ class BootstrapPlace extends Place {
   }
 }
 
-class BootstrapPlaceRegion {
+class BootstrapPlaceRegion extends Place_region {
   constructor(selector, partView, parentPlace) {
+    super({ parentPlace: parentPlace });
     // @todo: selector currently unused -- mapped to Bootstrap columns?
     parentPlace.loadBootstrap();
     this.classNames = [`place-${parentPlace.id}`, `place-${parentPlace.id}-${selector}`];
