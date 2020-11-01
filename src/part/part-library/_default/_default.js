@@ -1,10 +1,13 @@
 
+import { PARSING_CONSTANTS } from '../../../system-settings.js';
+
 // The default Part is an HTML pass-through
+// @todo erase data (just for testing)
 
 let part = {
   data() {
     return {
-      blue: "This is from the HTML Part"
+      testVar: "This is from the HTML Part"
     }
   }
 };
