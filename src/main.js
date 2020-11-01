@@ -36,12 +36,10 @@ function main() {
   gliderApp.assignPartsToPlaces(parts, places);
 
   glider = getGliderAPI({
-    gliderApp: gliderApp, 
-    parts: parts, 
-    places: places,
-    // phases: phases,
-    store: sharedStore,
-    storeConn: sharedStoreConn,
+    initParameters,
+    gliderApp, parts, places,phases,
+    sharedStore, sharedStoreConn,
+    displayDomRoot,
     DEBUG: true // If false, return a limited API 
                 // @todo: default FALSE -- override in user settings?
   });
