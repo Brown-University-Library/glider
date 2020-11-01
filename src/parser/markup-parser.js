@@ -205,7 +205,7 @@ function parseDomElem(domElem, p4vReg_inherited, p4vData, isChildOfPart = false)
 
 function getChildGliderElements(domElem) {
   return Array.from(domElem.children).filter(childElem => 
-    ! PARSING_CONSTANTS.SKIP_ELEMENTS.includes(domElem.tagName.toLowerCase())
+    ! PARSING_CONSTANTS.SKIP_ELEMENTS.includes(childElem.tagName.toLowerCase())
   )
 }
 
