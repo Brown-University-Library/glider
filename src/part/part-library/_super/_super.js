@@ -5,7 +5,7 @@ import { LOG } from '../../../misc/logger.js';
 // _SUPER PART
 // This is the base functionality that all parts share
 
-/* @todo: NOT SURE if the Part needs to know its ID / PartID */
+// @todo: NOT SURE if the Part needs to know its ID / PartID
 
 let part = {
   
@@ -20,14 +20,16 @@ let part = {
   props: ['id'],
   
   created: function() {
-    // this.$root.parts[this.id] = this; // TODO: this may not be necessary
+    // this.$root.parts[this.id] = this; // @todo this may not be necessary
     this.$root.app.addPartInstanceToRegistry(this);
     this.makeInactive();
   },
   
-  // Default behaviour for making Part active/inactive
-
   methods: {
+
+    // Methods for making a Part active/inactive
+    //  (from Phases)
+
     makeActive: function() { 
       LOG(`PART ${this.id} IS TURNING ON`);
       this._isActive = true;
@@ -36,9 +38,12 @@ let part = {
       LOG(`PART ${this.id} IS TURNING OFF`);
       this._isActive = false;
     },
+
+    // Data sync methods
+
     setWithoutWatch: function(varName, val) {
       this.suspendWatch[varName] = true;
-      this[varName] = val;
+      this[varName] = val; // This will trigger the watch callback
     },
     watchNotSuspended: function(varName) {
       if (this.suspendWatch[varName]) {
@@ -120,7 +125,8 @@ let partView = {
     }
   },
   
-  // Default behaviour for making PartView active/inactive
+  // Default behaviour for making PartView active/inactive:
+  //   Adding/removing classname
 
   methods: {
     makeActive: function() { 
@@ -144,7 +150,7 @@ let partView = {
     },
     setWithoutWatch: function(varName, val) {
       this.suspendWatch[varName] = true;
-      this[varName] = val;
+      this[varName] = val; // This will trigger the watch callback
     },
     suspendWatchFor: function(varName) { // @todo: defunct?
       this.suspendWatch[varName] = true;
@@ -162,6 +168,6 @@ let partView = {
 
 // WRAP IT ALL UP AND EXPORT
 
-let views = [partView];
+let views = [ partView ];
 
 export { part, views }
