@@ -9,6 +9,9 @@ let part = {
     return {
       testVar: "This is from the HTML Part"
     }
+  },
+  render: function() { 
+    return this.$slots.default 
   }
 };
 
