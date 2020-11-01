@@ -10,7 +10,7 @@ let part = {
 };
 
 let views = [{
-  partviewName: 'defaultView',
+  partviewName: PARSING_CONSTANTS.PART.DEFAULT_VIEW_NAME,
   render(h) { 
     return h(
       this.$vnode.data.tag,
