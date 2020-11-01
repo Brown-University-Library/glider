@@ -1,17 +1,25 @@
 
 import { PARSING_CONSTANTS } from '../system-settings.js';
 
+/*
+
+  The initDisplayDom routine defined here creates an element
+  and sticks a shadow DOM inside of it, adds a global stylesheet,
+  and copies over the markup
+
+*/
+
+// Create a new node of type newRootElemName and
+//   move the children and attributes of domNode over to it
+//   and return the new node
+
 function changeRootElem(domNode, newRootElemName) {
 
   let newDomNode = document.createElement(newRootElemName);
 
-  // Copy the children
-
   while (domNode.firstChild) {
     newDomNode.appendChild(domNode.firstChild);
   }
-
-  // Copy the attributes
 
   for(let attr of domNode.attributes) {
     newDomNode.setAttribute(attr.name, attr.value);
