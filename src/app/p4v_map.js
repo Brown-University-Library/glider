@@ -22,7 +22,7 @@ class p4vDB {
     this.partToPartViewMap = {};
     this.partViewToPlaceMap = this.getPartViewsByPlaceMap(initParameters);
     this.initPartViewsToPartMap(initParameters.partViews);
-    this.placeIdToRoleRegionMap = initParameters.places;
+    this.placeDataById = initParameters.places;
   }
 
   initPartComponentsByIdMap(vueObject) {
@@ -152,7 +152,7 @@ class p4vDB {
   // Given a Place ID, return the role and region
 
   getPlaceDataById(placeId) {
-    return this.placeIdToRoleRegionMap[placeId];
+    return this.placeDataById[placeId];
   }
 }
 
