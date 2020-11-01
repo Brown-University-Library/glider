@@ -62,10 +62,9 @@ let partView = {
 
   data() {
     return {
-      _isActive: false,
-      suspendWatch: {},
-      // id: undefined, // Needs to know ID for PartView-Part lookup
-      red: 'This is from _Super PV edition'
+      _isActive: false, // @todo does this conflict with Vue _isActive?
+      _isHere: true, // default value
+      suspendWatch: {} // suspend variable's watchers for updates from store
     }
   },
   
@@ -95,12 +94,32 @@ let partView = {
       this.$el.classList.remove(PARSING_CONSTANTS.PART.ACTIVE_CLASSNAME);
       this.$el.classList.add(PARSING_CONSTANTS.PART.INACTIVE_CLASSNAME);
     },
-    setPlace: function({ placeCssClasses }) {
+
+    // @todo this should probably be moved to the markup (via pre-processing)
+    //       rather than be done through a method after. Classes could be
+    //       set beforehand
+
+    setPlace: function({ placeCssClasses, isHere }) {
+
+      // Add class for place
+
       if (placeCssClasses) {
         placeCssClasses.forEach(
           cssClass => this.$el.classList.add(cssClass)
         );
       }
+
+      // Add class for here or not-here
+
+      this.$el.classList.add(
+        (isHere === true)
+          ? PARSING_CONSTANTS.PART.VIEW_HERE_CLASSNAME
+          : PARSING_CONSTANTS.PART.VIEW_NOT_HERE_CLASSNAME
+      );
+
+      // Update isHere instance property
+
+      this._isHere = (isHere === true);
     },
     setWithoutWatch: function(varName, val) {
       this.suspendWatch[varName] = true;
