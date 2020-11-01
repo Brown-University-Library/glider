@@ -69,60 +69,14 @@ let partView = {
     }
   },
   
-  props: ['id', 'is_also', 'part_id'],
+  props: ['id', 'part_id'],
   
   // Create the Part if there is @isAlso
   // (if PartView and Part are on the same element)
   
-  mounted: function() {
-    
-    let isAlso = this.is_also;
-    
-    this.$root.app.addPartInstanceToRegistry(this);
+  mounted: function() {    
+    this.$root.app.addPartInstanceToRegistry(this); // @todo is this necessary?
     this.makeInactive();
-    
-    if (isAlso) {
-
-      LOG('PART AND PART VIEW ON SAME ELEMENT:');
-      LOG(`Is also value: ${isAlso}`);
-      LOG('AND APP IS');
-      LOG(this.$root.app);
-      
-      let otherComponentName = isAlso;
-      let PartComponentClass = Vue.extend(window.wtf.components[otherComponentName]);
-      let partId = this.part_id;
-      
-      // TODO: add association between PartView and (new) Part
-      
-      let propsData = this.$props;
-      
-      let partPropKeys = Object.keys(this.$props)
-        .filter(
-          attributeName => !['id','is_also', 'part_id'].includes(attributeName)
-        );
-      
-      let propsData2 = partPropKeys.reduce((acc, key) => {
-        let newPropsData = acc;
-        newPropsData[key] = this.$props[key];
-        return newPropsData;
-      }, {});
-      
-      LOG(`PROPS DATA FOR ${this.id}`);
-      LOG(propsData2);
-      
-      let partComponent = new PartComponentClass({
-        propsData: { id: partId }
-      });
-      
-      partComponent.$mount(); // manually start the mounting of an unmounted Vue instance.
-      partComponent.makeInactive();
-      
-      LOG(`And the new Part is:`);
-      LOG(partComponent);
-      
-      //this.$root.parts[partId] = partComponent;
-      this.$root.app.addPartInstanceToRegistry(partComponent);
-    }
   },
   
   // Default behaviour for making PartView active/inactive:
