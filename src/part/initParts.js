@@ -87,6 +87,9 @@ function getPartSharedVarWatcher(gliderApp, partTypeName, partTypeDef) {
   return watchers;
 }
 
+// @todo erase - this is from the old system
+
+/*
 function getPartSharedVarAccessors(gliderApp, initParameters, partTypeName, partTypeDef) {
 
   let accessors = {
@@ -149,6 +152,7 @@ function getPartSharedVarAccessors(gliderApp, initParameters, partTypeName, part
   
   return accessors;
 }
+*/
 
 // Given the root of the display markup, prepare that markup 
 //  for compilation into Vue components
@@ -178,7 +182,8 @@ function prepareDisplayDomForVueCompilation(initParameters, displayDomRoot) {
     const partViewDef = initParameters.partViews[partViewId],
           parentPartId = partViewDef.partId,
           parentPartType = initParameters.parts[parentPartId].type,
-          partViewContainerId = partViewDef.container.id,
+          // partViewContainerId = partViewDef.container.id,
+          partViewContainerId = partViewDef.markupNode.id,
           partViewContainer = displayDomRoot.getElementById(partViewContainerId);
     
     // KLUDGE: Copy over id in data structure to DOM node
@@ -193,10 +198,11 @@ function prepareDisplayDomForVueCompilation(initParameters, displayDomRoot) {
     
     if (partViewContainer.getAttribute('is') !== null) {
 
-      partViewContainer.setAttribute(
-        'is_also',
-        partViewContainer.getAttribute('is')
-      );
+      const newPartMarkup = document.createElement('div'); // @todo no magic
+      newPartMarkup.setAttribute('is', partViewContainer.getAttribute('is'));
+      newPartMarkup.setAttribute('ref', parentPartId);
+      partViewContainer.parentNode.insertBefore(newPartMarkup, partViewContainer);
+      newPartMarkup.appendChild(partViewContainer);
       
       partViewContainer.setAttribute('part_id', parentPartId);
     }
@@ -226,7 +232,9 @@ function createVueComponentsFromPartTypes_views(partTypeDef, sharedVarWatchers, 
 
       const partViewVueName = PARSING_CONSTANTS.PART.GET_VUE_COMPONENT_NAME(partTypeName, partViewDef.partviewName);
 
-      partViewDef.extends = partRegistry['_super'].views[0]; // @todo: should this be a mixin?
+      // partViewDef.extends = partRegistry['_super'].views[0]; // @todo: should this be a mixin?
+      if (partViewDef.mixins === undefined) { partViewDef.mixins = [] }
+      partViewDef.mixins.push(partRegistry['_super'].views[0]);
 
       // Assign watchers for shared variables
 
@@ -263,7 +271,15 @@ function createVueComponentsFromPartTypes_views(partTypeDef, sharedVarWatchers, 
 
 function createVueComponentsFromPartTypes_part(partDef, sharedVarAccessors, partTypeName, partRegistry) {
 
-  partDef.extends = partRegistry['_super'].part;
+  // partDef.extends = partRegistry['_super'].part; // @todo should Glider functionality be a mixin?
+
+  // Initialize .mixin property
+
+  if (! Array.isArray(partDef.mixins)) {
+    partDef.mixins = [];
+  }
+
+  partDef.mixins.push(partRegistry['_super'].part);
 
   // Parts should never have a template 
   //  (that's what Views are for)
@@ -280,8 +296,6 @@ function createVueComponentsFromPartTypes_part(partDef, sharedVarAccessors, part
     partDef.watchers = Object.assign(sharedVarAccessors, partDef.watchers);
   }
 
-  const partVueName = PARSING_CONSTANTS.PART.GET_VUE_COMPONENT_NAME(partTypeName);
-
   // Add shared variables on the Part into the PartView via a mixin
   //   (this incorporates the shared data variables into the component's
   //   .data property without directly writing into it)
@@ -290,11 +304,9 @@ function createVueComponentsFromPartTypes_part(partDef, sharedVarAccessors, part
     data: partDef.sharedData
   };
 
-  if (! Array.isArray(partDef.mixin)) {
-    partDef.mixin = [];
-  }
+  partDef.mixins.push(sharedDataMixin);
 
-  partDef.mixin.push(sharedDataMixin);
+  const partVueName = PARSING_CONSTANTS.PART.GET_VUE_COMPONENT_NAME(partTypeName);
 
   return { [partVueName] : partDef }
 }
@@ -376,7 +388,7 @@ function initParts(gliderApp, initParameters, displayDomRoot) {
   const vueRoot = compileMarkupInVue(displayDomRoot, componentDefs, gliderApp);
   gliderApp.setPartVueComponents(vueRoot); // Make the App aware of the Vue components
 
-  //window.gliderVueRoot = vueRoot; // @todo temp
+  window.gliderVueRoot = vueRoot; // @todo temp
 
   return vueRoot.$refs;
 }

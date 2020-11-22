@@ -8,7 +8,7 @@ import { LOG } from '../misc/logger.js';
 
 function getPlaceDefs() {
 
-  let placeDefinitions = [];
+  let placeDefinitions = {};
 
   document.querySelectorAll(PARSING_CONSTANTS.PLACE.DEF_MARKUP_SELECTOR)
           .forEach(placeDefElem => {
@@ -21,11 +21,19 @@ function getPlaceDefs() {
       definitionParameters[placeDefParamKey] = placeDefParamVal;
     });
     
-    placeDefinitions.push(definitionParameters);
+    if (definitionParameters.id) {
+      placeDefinitions[definitionParameters.id] = definitionParameters;
+    } else {
+      LOG(`NO ID PROVIDED FOR PLACE DEFINITION - ignored`, 7, 'warn');
+    }
   });
 
-  if (placeDefinitions.length) {
-    LOG([`FOUND ${placeDefinitions.length} PLACE DEFINITIONS`, placeDefinitions], 1);
+  const numberOfDefs = Object.keys(placeDefinitions).length;
+
+  if (numberOfDefs) {
+    LOG([`FOUND ${numberOfDefs} PLACE DEFINITIONS`, placeDefinitions], 1);
+  } else {
+    LOG(`FOUND NO PLACE DEFINITIONS`, 1);
   }
 
   return { placeDefs: placeDefinitions }

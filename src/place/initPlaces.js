@@ -1,50 +1,147 @@
 
-import { LOG }               from '../misc/logger.js';
 import { PARSING_CONSTANTS } from '../system-settings.js';
-import * as PlaceType        from './place.js';
+import { LOG } from '../misc/logger.js';
+import * as placeTypeDefinitions from './place-library/_all.js';
 
-// Go through each Place in initParameters and create a Place instance
-//   and add it to a PlaceRegistry.
-//   (Remember that Parts don't have Places -- only Part Views do)
-// Return the PlaceRegistry
+// Add a CSS stylesheet reference to the display
+// Returns style element if already exists
+// Returns undefined if no URL provided
+
+function addCssStylesheet({ id, href, integrity, crossorigin }, displayDomRoot) {
+
+  let styleElement;
+
+  if (href) {
+
+    const ssId = id || PARSING_CONSTANTS.PLACE.CREATE_STYLESHEET_ID(href),
+          existingStylesheet = document.getElementById(ssId);
+    
+    if (existingStylesheet === null) {
+
+      styleElement = document.createElement('link');
+    
+      styleElement.setAttribute('id', ssId);
+      styleElement.setAttribute('rel', 'stylesheet');
+      styleElement.setAttribute('href', href);
+      
+      if (integrity) {
+        styleElement.setAttribute('integrity', integrity);  
+      }
+      
+      if (crossorigin) {
+        styleElement.setAttribute('crossorigin', crossorigin);
+      }
+      
+      displayDomRoot.appendChild(styleElement);
+    } else {
+      styleElement = existingStylesheet;
+    }
+  } else {
+    LOG(`No URL provided for stylesheet`, 'warn');
+  }
+
+  return styleElement; 
+}
+
+// Add CSS code for a role in a <style> element
+//  Return that element
+  
+function addCss(css, displayDomRoot) {
+
+  let styleElement;
+  const styleElemId = PARSING_CONSTANTS.PLACE.CREATE_STYLE_ELEM_ID(css),
+        existingStyleElem = document.getElementById(styleElemId);
+
+  // Check if style w that ID already exists
+  // console.log(`##### ${styleElemId}`, existingStyleElem);
+  if (existingStyleElem === null) {
+    // console.log(`##### YES`);
+    styleElement = document.createElement('style');
+    styleElement.setAttribute('id', styleElemId);
+    styleElement.appendChild(document.createTextNode(css));
+    displayDomRoot.appendChild(styleElement);
+  } else {
+    styleElement = existingStyleElem;
+  }
+
+  return styleElement;
+}
+
 
 function initPlaces(gliderApp, initParameters, displayDomRoot) {
 
-  // Create the place registry -- explicity defined Places
+  const currRoleId = initParameters.herePlace;
 
-  const placeRegistry = {},
-        placeConstructorByTypeName = PARSING_CONSTANTS.PLACE.TYPE_MARKUP_NAMES;
+  // Create array of PlaceType definition data structure -- it merges (in order)
+  //  a base definition, then a type, then the user definition from the markup
+
+console.log(['@@@@@', { initParameters, ip: initParameters.placeDefs, currRoleId  }]);
+
+  const basePlaceTypeDef = placeTypeDefinitions[PARSING_CONSTANTS.PLACE.DEFAULT_PLACE_TYPE],
+        placeDef = initParameters.placeDefs[currRoleId] || {},
+        placeTypeId = (placeDef && placeDef.type) ? placeDef.type : undefined,
+        placeTypeDef = (placeTypeId && placeTypeDefinitions[placeTypeId]) ?
+                        placeTypeDefinitions[placeTypeId] : {};
+
+  const mergedLists = {
+    stylesheets: [basePlaceTypeDef.stylesheet, placeTypeDef.stylesheet, placeDef.stylesheet]
+                  .filter(ss => ss !== undefined),
+    css: [basePlaceTypeDef.css, placeTypeDef.css, placeDef.css]
+                  .filter(css => css !== undefined)
+  }
+
+  const fullPlaceDef = Object.assign(
+    {css: [], stylesheets: []}, 
+    basePlaceTypeDef, 
+    placeTypeDef, 
+    placeDef,
+    mergedLists
+  );
+
+  // Get stylesheets and CSS for this PlaceRole
+  // (remove CSS duplicates before calling addCss())
+
+  const placeStyleElems = {
+    roleStylesheetLink: fullPlaceDef.stylesheets.map((ss) =>
+      addCssStylesheet(ss, displayDomRoot)
+    ),
+    roleCSS: fullPlaceDef.css
+      .filter((css, index, allCss) => allCss.indexOf(css) === index)
+      .map((css) => addCss(css, displayDomRoot)),
+  };
+
+  // Get all PartViews that are used in this Glider instance (based on herePlace)
+
+  const partViewsThatAreHere = Object.values(initParameters.partViews).filter(
+    pv => initParameters.places[pv.place].role === currRoleId
+  );
+
+  // Get CSS for all PlaceRegions
+  // @todo this is hard to read ...
+
+  const { regionCssElems } = partViewsThatAreHere.reduce(
+    (acc, pv) => {
+      const region = initParameters.places[pv.place].region,
+        { css } = fullPlaceDef.addRegion({ region, settings: placeTypeDef }),
+        regionStyleElem = (acc.cssRegister[css] === undefined) 
+          ? addCss(css, displayDomRoot)
+          : acc.cssRegister[css];
   
-  // Get PlaceDefs from InitParameters & add defaultPlace
-
-  let placeDefs = initParameters.placeDefs;
-
-  const defaultPlaceDef = Object.assign({
-    id: PARSING_CONSTANTS.PLACE.DEFAULT_PLACE_NAME,
-    type: PARSING_CONSTANTS.PLACE.DEFAULT_PLACE_TYPE
-  }, PARSING_CONSTANTS.PLACE.DEFAULT_PLACE_OPTIONS);
-
-  placeDefs.push(defaultPlaceDef);
-
-  // Create Place instances from PlaceDefs and keep in placeRegistry
-  //   Let each Place know if it's "here" or not
-
-  placeDefs.forEach(placeDef => {
-    const placeConstructorName = placeConstructorByTypeName[placeDef.type],
-          placeConstructor = PlaceType[placeConstructorName];
-    if (placeConstructor) {
-      const additionalOptions = { 
-        displayDomRoot: displayDomRoot,
-        isHere: (initParameters.herePlace === placeDef.id)
-      };
-      const placeDefWithOptions = Object.assign(placeDef, additionalOptions);
-      placeRegistry[placeDef.id] = new placeConstructor(placeDefWithOptions);
-    } else {
-      LOG(`You have defined a place of type ${placeDef.type}, which doesn't exist`, 5, 'error');
-    }
-  });
+      acc.regionCssElems[region] = regionStyleElem;
+      acc.cssRegister[css] = regionStyleElem;
   
-  return placeRegistry;
+      return acc;
+    },
+    { regionCssElems: {}, cssRegister: {} }
+  );  
+
+  // console.log('+++++++++', regionCssElems);
+
+  return Object.assign(
+    {},
+    { regions: regionCssElems, thisRole: initParameters.herePlace },
+    placeStyleElems
+  );  
 }
 
 export { initPlaces }

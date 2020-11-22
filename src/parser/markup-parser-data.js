@@ -18,7 +18,7 @@ class P4V_Data {
     this.parts = {};
     this.partViews = {};
     this.places = {};
-    this.placeDefs = [];
+    this.placeDefs = {};
     this.phases = {};
     
     this.rootPhaseId = null;

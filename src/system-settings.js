@@ -49,7 +49,7 @@ let PARSING_CONSTANTS = {
     ROLE_REGION_DELIMITER: '-', // @todo: We define this but don't use it!
     DEF_MARKUP_SELECTOR: 'glider-defs > place',
     DEFAULT_PLACE_NAME: 'defaultRole', // @todo rename this DEFAULT_ROLE_NAME
-    DEFAULT_PLACE_TYPE: 'bootstrapplace', // @todo: more generic?
+    DEFAULT_PLACE_TYPE: 'baseplace', // @todo: is it the basePlace, or genericPlace?
     DEFAULT_PLACE_OPTIONS: { asetting: true },
     DEFAULT_REGION_NAME: 'defaultRegion',
     BODY_ELEM_HERE_CLASSNAME_PREFIX: 'place-here-',
@@ -75,6 +75,22 @@ let PARSING_CONSTANTS = {
 
 // ID and Classname generators
 
+// Simple hash function adapted from 
+//  https://stackoverflow.com/questions/6122571/simple-non-secure-hash-function-for-javascript
+// NOTE: Can return negative numbers; e.g. hash for 'strign' is -891986113
+
+function getHash(string) {
+  
+  let hash = 0;
+  
+  string.split('').forEach(char => {
+    hash = ((hash << 5) - hash) + char.charCodeAt();
+    hash = hash & hash; // Convert to 32bit integer
+  });
+  
+  return Math.abs(hash);
+}
+
 PARSING_CONSTANTS.GET_CLIENT_ID = () => 
   'glider-client-' + Date.now() + Math.floor(Math.random() * 10000);
 
@@ -93,6 +109,24 @@ PARSING_CONSTANTS.PLACE.GET_ID = (role, region) => {
   
   return `pl-${role}-${region}`
 };
+
+PARSING_CONSTANTS.PLACE.PARSE_ID = (placeId) => {
+  const [_, role, region] = /^(?:pl-)?(\w+)(?:-(\w+))?$/.exec(placeId);
+  return { role, region };
+}
+
+PARSING_CONSTANTS.PLACE.CREATE_ROLE_ID = () => {
+  return `place-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+}
+
+PARSING_CONSTANTS.PLACE.CREATE_STYLESHEET_ID = url => {
+  return `place-stylesheet-${getHash(url)}`;
+}
+
+PARSING_CONSTANTS.PLACE.CREATE_STYLE_ELEM_ID = css => {
+  console.log('PPPPPP', css);
+  return `place-role-style_${getHash(css)}`;
+}
 
 PARSING_CONSTANTS.PART.GET_VIEW_ID = (partId, partViewName) => `pv-${partId}-${partViewName}`;
 

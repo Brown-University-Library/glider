@@ -19,25 +19,33 @@ let glider = {};
 
 function main() {
 
-  const initParameters = getInitParameters(); // @todo: Pass user overrides
+  // Get initializing parameters
 
+  const documentSections = getDocumentSections(),
+        preparedDocumentSections = prepareMarkupForParsing(documentSections),
+        initParameters = getInitParameters(preparedDocumentSections); // @todo: Pass user overrides
+        
   LOG(['PARSED DATA', initParameters], 4);
-  
-  const displayDomRoot = initDom(initParameters),
+
+  // Set up Glider architecture
+
+  const displayDomRoot = initDisplayDom(initParameters),
         sharedStore = getSharedStore(initParameters),
         sharedStoreConn = initConnection(initParameters, connectionConfig, sharedStore);
 
   const gliderApp = new GliderApp(initParameters, sharedStore);
 
   let parts  = initParts(gliderApp, initParameters, displayDomRoot),
-      places = initPlaces(gliderApp, initParameters, displayDomRoot); //,
+      places = initPlaces(gliderApp, initParameters, displayDomRoot);
       // phases = initPhases(gliderApp, initParameters);
 
-  gliderApp.assignPartsToPlaces(parts, places);
+  // gliderApp.assignPartsToPlaces(parts, places); // @todo: instead pass this info to Parts via markup
+
+  let [_parts, _places, phases, _] = [undefined, undefined, undefined, undefined];
 
   glider = getGliderAPI({
     initParameters,
-    gliderApp, parts, places,phases,
+    gliderApp, parts, places, phases,
     sharedStore, sharedStoreConn,
     displayDomRoot,
     DEBUG: true // If false, return a limited API 
