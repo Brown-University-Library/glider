@@ -8,7 +8,7 @@ let PARSING_CONSTANTS = {
   DEFAULT_FLIGHT_ID: 'f0000',
   DISPLAY_ROOT_CLASSNAME: 'glider-display',
   DISPLAY_ROOT_ELEM: 'div',
-  SKIP_ELEMENTS: ['glider-defs'], // Use lower case
+  SKIP_ELEMENTS: ['glider-defs', 'style', 'script', 'link'], // Use lower case
 
   PART: {
     ID_ATT_NAME: 'id',
