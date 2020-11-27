@@ -8,6 +8,7 @@ import { initConnection }          from './store/store-sync.js';
 import { connectionConfig }        from './store/store-sync-conx_pusher_config.js';
 import { getGliderAPI }            from './misc/gliderAPI.js';
 import { GliderApp }               from './app/app.js';
+import { initDisplayMarkup }       from './misc/initDisplayMarkup.js';
 import { initDisplayDom }          from './misc/initDisplayDom.js';
 import { initParts }               from './part/initParts.js';
 import { initPhases }              from './phase/initPhases.js';
@@ -27,10 +28,16 @@ function main() {
         
   LOG(['PARSED DATA', initParameters], 4);
 
+  // Derive display markup from Flight Plan markup and attach to
+  //  DOM as a shadow DOM
+
+  const markupCopy = initParameters.markupRoot.cloneNode(true),
+        displayMarkup = initDisplayMarkup(initParameters, markupCopy),
+        displayDomRoot = initDisplayDom(initParameters, displayMarkup);
+
   // Set up Glider architecture
 
-  const displayDomRoot = initDisplayDom(initParameters),
-        sharedStore = getSharedStore(initParameters),
+  const sharedStore = getSharedStore(initParameters),
         sharedStoreConn = initConnection(initParameters, connectionConfig, sharedStore);
 
   const gliderApp = new GliderApp(initParameters, sharedStore);

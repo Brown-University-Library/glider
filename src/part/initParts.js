@@ -13,8 +13,7 @@ import Vue from 'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.esm.browser.js
   - Scans the Flight markup for Parts/PartViews and registers a corresponding
     component with Vue (remember that you need to set up a Vue component so that
     when it is encountered in the markup, it can be recognised).
-  - Prepares the markup for parsing by Vue -- with the components registered,
-    Vue will see the @is attributes and create instances
+  - Compile the display markup (created in initDisplayMarkup.js) through Vue into Vue components
 
   OUTLINE
 
@@ -28,7 +27,6 @@ import Vue from 'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.esm.browser.js
         create watchers for use in the Part View
     - Register Part component with Vue
     - Create & register (with Vue) this Part's Views as components
-  - MODIFY DOM TO ADD @is & @ref & @class TO MARKUP
   - SET VUE ON TO MARKUP
 
   - - - - - - - -
@@ -43,20 +41,6 @@ import Vue from 'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.esm.browser.js
     Part Type in the store
   - Add setters/getters to the Part instance's .computed
   - Delete .sharedData property
-
-*/
-
-
-/* 
-
-  THE DIFFICULTY OF SHARED VARIABLES
-
-  The problem is that until Vue compiles the markup, we don't know things like
-  the Part instance IDs. Therefore, we can't create accessors for instances.
-
-  The trick is to create watchers for the Part TYPE that are wrapped in another 
-  function that references the instance id off of _this_ -- effectively, it 
-  defers the valuation of instance id.
 
 */
 
@@ -153,67 +137,6 @@ function getPartSharedVarAccessors(gliderApp, initParameters, partTypeName, part
   return accessors;
 }
 */
-
-// Given the root of the display markup, prepare that markup 
-//  for compilation into Vue components
-
-function prepareDisplayDomForVueCompilation(initParameters, displayDomRoot) {
-
-  // For each Part and PartView in the initParameters,
-  //  add an @is attribute to the element to
-  //  signal to Vue that it is a component
-  // Also, add a @ref and set it to ID
-  // Also, add a class name to indicate Part Type
-  
-  for (let partId in initParameters.parts) {
-    const partDef = initParameters.parts[partId],
-          partContainer = displayDomRoot.getElementById(partId);
-    partContainer.setAttribute('is', partDef.type);
-    partContainer.classList.add(
-      PARSING_CONSTANTS.PART.GET_CSS_CLASS(partDef.type)
-    );
-    partContainer.setAttribute('ref', partId);
-  }
-  
-  // Part Views - add @is and @ref and add classname
-
-  for (let partViewId in initParameters.partViews) {
-    
-    const partViewDef = initParameters.partViews[partViewId],
-          parentPartId = partViewDef.partId,
-          parentPartType = initParameters.parts[parentPartId].type,
-          // partViewContainerId = partViewDef.container.id,
-          partViewContainerId = partViewDef.markupNode.id,
-          partViewContainer = displayDomRoot.getElementById(partViewContainerId);
-    
-    // KLUDGE: Copy over id in data structure to DOM node
-    // @todo figure out why I'm doing this ...
-
-    partViewContainer.setAttribute('id', partViewId);
-    
-    // If this PartView is also a Part, then create a 
-    //  parent element and make THAT the Part
-    //  and register this PartView in a Place 
-    //  @todo is this is the place to do that?
-    
-    if (partViewContainer.getAttribute('is') !== null) {
-
-      const newPartMarkup = document.createElement('div'); // @todo no magic
-      newPartMarkup.setAttribute('is', partViewContainer.getAttribute('is'));
-      newPartMarkup.setAttribute('ref', parentPartId);
-      partViewContainer.parentNode.insertBefore(newPartMarkup, partViewContainer);
-      newPartMarkup.appendChild(partViewContainer);
-      
-      partViewContainer.setAttribute('part_id', parentPartId);
-    }
-    
-    partViewContainer.setAttribute('is', `${parentPartType}-${partViewDef.name}`);
-    partViewContainer.classList.add(
-      PARSING_CONSTANTS.PART.GET_CSS_CLASS(parentPartType, partViewDef.name)
-    );
-    partViewContainer.setAttribute('ref', partViewId);
-  }
-}
 
 // Go through all the PartViews found in the Flight Plan markup and 
 //   register a corresponding Vue component
@@ -365,10 +288,8 @@ function compileMarkupInVue(gliderDisplayDomRoot, componentDefs, gliderApp) {
   return vueRoot;
 }
 
-
 // Main function: 
 //   Register Vue components for each Part Type in the markup
-//   Prepare display DOM for compilation by Vue
 //   Compile DOM in Vue, creating Part components
 //   Let the App know about the Parts
 
@@ -377,14 +298,7 @@ function initParts(gliderApp, initParameters, displayDomRoot) {
   const userPartRegistry = {}, // @todo implement this -- user parts from from initParameters?
         partRegistry = Object.assign(userPartRegistry, systemPartRegistry);
 
-  let componentDefs = createVueComponentsFromPartTypes(gliderApp, initParameters, partRegistry);
-  prepareDisplayDomForVueCompilation(initParameters, displayDomRoot);
-
-  // @todo should all the display DOM prep happen elsewhere?
-  //   Don't we also want to prep for Places? (adding classnames, etc.)
-  
-  LOG(['HTML PREPPED FOR VUE', displayDomRoot.innerHTML]);
-  
+  let componentDefs = createVueComponentsFromPartTypes(gliderApp, initParameters, partRegistry);  
   const vueRoot = compileMarkupInVue(displayDomRoot, componentDefs, gliderApp);
   gliderApp.setPartVueComponents(vueRoot); // Make the App aware of the Vue components
 
