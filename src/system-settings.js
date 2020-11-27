@@ -110,6 +110,15 @@ PARSING_CONSTANTS.PLACE.GET_ID = (role, region) => {
   return `pl-${role}-${region}`
 };
 
+PARSING_CONSTANTS.PLACE.CREATE_CSS_CLASSNAME = 
+  ({role, region}) => `place-${role}-${region}`;
+
+PARSING_CONSTANTS.PLACE.CREATE_ROLE_CSS_CLASSNAME =
+  role => `place-role-${role}`;
+
+PARSING_CONSTANTS.PLACE.CREATE_REGION_CSS_CLASSNAME =
+  region => `place-region-${region}`;
+
 PARSING_CONSTANTS.PLACE.PARSE_ID = (placeId) => {
   const [_, role, region] = /^(?:pl-)?(\w+)(?:-(\w+))?$/.exec(placeId);
   return { role, region };
