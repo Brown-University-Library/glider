@@ -30,7 +30,7 @@ function changeRootElem(domNode, newRootElemName) {
 
 // Get shadow DOM node for display
 
-function initShadowDom(initParameters, flightDisplayMarkup, gliderStylesheetLink) {
+function initShadowDom(initParameters, flightDisplayMarkup) {
 
   // Create and append display root element and add global Glider classname
 
@@ -53,32 +53,14 @@ function initShadowDom(initParameters, flightDisplayMarkup, gliderStylesheetLink
     flightDisplayMarkup = changeRootElem(flightDisplayMarkup, 'div');
   }
   
-  // Append markup copy and global CSS stylesheet to shadow DOM
 
   displayDomRoot.appendChild(flightDisplayMarkup);
-
-  if (gliderStylesheetLink) {
-    displayDomRoot.appendChild(gliderStylesheetLink);
-  }
 
   return displayDomRoot;
 }
 
 // This initializes the DOM upon startup
 
-function initDisplayDom(initParameters) {
-
-  // Add default stylesheet unless overridden
-  //  (user can override by providing a link with the reserved Glider ID)
-
-  let gliderStylesheetLink;
-
-  if (! document.querySelector(`#${PARSING_CONSTANTS.STYLE.ELEM_ID}`)) {
-    gliderStylesheetLink = document.createElement('link');
-    gliderStylesheetLink.setAttribute('id', PARSING_CONSTANTS.STYLE.ELEM_ID);
-    gliderStylesheetLink.rel = 'stylesheet';
-    gliderStylesheetLink.href = PARSING_CONSTANTS.STYLE.HREF;
-  }
 
   // Add classname to body tag for this place
 
@@ -92,8 +74,9 @@ function initDisplayDom(initParameters) {
   // Create a shodow DOM node and copy the Flight markup over
 
   const flightMarkupCopy = initParameters.markupRoot.cloneNode(true),
-        displayDomRoot = initShadowDom(initParameters, flightMarkupCopy, gliderStylesheetLink);
+  // Create a shodow DOM node and copy the display markup over
 
+  const displayDomRoot = initShadowDom(initParameters, displayMarkup);
   return displayDomRoot;
 }
 
