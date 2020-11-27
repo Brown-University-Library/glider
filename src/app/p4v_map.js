@@ -1,4 +1,4 @@
-
+import { PARSING_CONSTANTS } from '../system-settings.js';
 import { LOG } from "../misc/logger.js";
 
 /*
@@ -150,9 +150,11 @@ class p4vDB {
   }
 
   // Given a Place ID, return the role and region
+  // @todo placeDataById has ROLE IDs, not Place. 
 
   getPlaceDataById(placeId) {
-    return this.placeDataById[placeId];
+    const { roleId } = PARSING_CONSTANTS.PLACE.PARSE_ID(placeId);
+    return this.placeDataById[roleId];
   }
 }
 
