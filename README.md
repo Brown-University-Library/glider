@@ -22,12 +22,10 @@ Installation
 I'm still learning my devops techniques, so eventually I'll have a proper installation process. For now, I use rollup to reconcile all the modules into a single file. Here's the script I run from the root directory in order to generate `dist/glider.js`:
 
 ```
-curl https://www.gstatic.com/firebasejs/5.8.2/firebase.js > dist/glider.js
 curl https://cdn.jsdelivr.net/npm/vue >> dist/glider.js
-curl https://cdnjs.cloudflare.com/ajax/libs/vuex/3.1.0/vuex.min.js >> dist/glider.js
 rollup src/main.js --format iife  --name "glider" >> dist/glider.js
 ```
 
 Progress
 ----------
-The pandemic has pushed the Immersive Scholar timelines later, so I took the opportunity to do a major re-write of Glider which, as of July, is nearing completion. Progress is in the `develop` branch.
+The pandemic has pushed the Immersive Scholar timelines later, so I took the opportunity to do a major re-write of Glider which is nearing completion. Progress is in the `develop` branch.
