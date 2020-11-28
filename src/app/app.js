@@ -204,44 +204,6 @@ class GliderApp {
     return watchersByVarName;
   }
 
-  // PartViews and Place methods
-
-  // Go through each PartView object and tell
-  //  the associated Place to assignPartViewToRegion(place, part)
-  //  then tell the Part to setPlace() -- provide a list of CSS classes
-  //    and whether the PV is here
-  // This is called from main.js
-
-  assignPartsToPlaces(parts, places) {
-
-    const partAndPartViewIds = Object.keys(parts);
-
-    // @todo: it would be better just to get partView IDs,
-    //        instead of mixing in Part IDs as well
-
-    // BETTER: iterate through parts (objects), then
-    //  extract ID to get the placeId
-
-    partAndPartViewIds.forEach(partId => {
-
-      const placeId = this.p4vDB.getPlaceIdFromPartViewId(partId);
-
-      console.log(`${placeId}::::${partId}`);
-      console.log(this.p4vDB);
-
-      if (placeId) {
-
-        const { placeRoleId, placeRegionId } = this.p4vDB.getPlaceDataById(placeId),
-              regionInstance = places[placeRoleId].assignPartViewToRegion(placeRegionId, parts[partId]);
-
-        parts[partId].setPlace({ 
-          placeCssClasses: regionInstance.classNames,
-          isHere: regionInstance.isHere
-        });
-      }
-    });
-  }
-
   placesPartviews() {}
 }
 

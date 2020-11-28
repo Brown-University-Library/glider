@@ -63,12 +63,19 @@ let partView = {
   data() {
     return {
       _isActive: false, // @todo does this conflict with Vue _isActive?
-      _isHere: true, // default value
       suspendWatch: {} // suspend variable's watchers for updates from store
     }
   },
   
-  props: ['id', 'part_id'],
+  // Glider-specific attributes go here
+
+  props: [
+    'id', 
+    PARSING_CONSTANTS.PART.PART_ID_ATT_NAME, // @todo: is this necessary?
+    PARSING_CONSTANTS.PLACE.ROLE_ATT_NAME,
+    PARSING_CONSTANTS.PLACE.REGION_ATT_NAME,
+    PARSING_CONSTANTS.PLACE.IS_HERE_ATT_NAME
+  ],
   
   // Create the Part if there is @isAlso
   // (if PartView and Part are on the same element)

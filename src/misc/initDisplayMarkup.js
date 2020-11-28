@@ -77,6 +77,9 @@ function prepareDisplayMarkupForPlaces(initParameters, flightMarkup) {
       markupDomNode.setAttribute(
         PARSING_CONSTANTS.PLACE.REGION_ATT_NAME, region
       );
+      markupDomNode.setAttribute(
+        PARSING_CONSTANTS.PLACE.IS_HERE_ATT_NAME, role === initParameters.herePlace
+      );
       markupDomNode.classList.add(
         PARSING_CONSTANTS.PLACE.CREATE_ROLE_CSS_CLASSNAME(role)
       );

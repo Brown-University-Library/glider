@@ -46,8 +46,6 @@ function main() {
       places = initPlaces(gliderApp, initParameters, displayDomRoot);
       // phases = initPhases(gliderApp, initParameters);
 
-  // gliderApp.assignPartsToPlaces(parts, places); // @todo: instead pass this info to Parts via markup
-
   let [_parts, _places, phases, _] = [undefined, undefined, undefined, undefined];
 
   glider = getGliderAPI({
