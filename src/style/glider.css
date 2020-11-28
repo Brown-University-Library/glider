@@ -1,6 +1,7 @@
 
 /* Main Glider styles */
 
-.glider-root .place-not-here {
+.place-not-here {
   display: none;
 }
+

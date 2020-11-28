@@ -120,7 +120,11 @@ function initPlaces(gliderApp, initParameters, displayDomRoot) {
   const { regionCssElems } = partViewsThatAreHere.reduce(
     (acc, pv) => {
       const region = initParameters.places[pv.place].region,
-        { css } = fullPlaceDef.addRegion({ region, settings: placeTypeDef }),
+        { css } = fullPlaceDef.addRegion({ 
+          role: currRoleId, 
+          region, 
+          settings: placeTypeDef 
+        }),
         regionStyleElem = (acc.cssRegister[css] === undefined) 
           ? addCss(css, displayDomRoot)
           : acc.cssRegister[css];

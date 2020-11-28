@@ -89,6 +89,11 @@ function prepareDisplayMarkupForPlaces(initParameters, flightMarkup) {
       markupDomNode.classList.add(
         PARSING_CONSTANTS.PLACE.CREATE_CSS_CLASSNAME({role, region})
       );
+      markupDomNode.classList.add(
+        (role === initParameters.herePlace || role === PARSING_CONSTANTS.PLACE.DEFAULT_PLACE_NAME) 
+          ? PARSING_CONSTANTS.PLACE.IS_HERE_CLASSNAME
+          : PARSING_CONSTANTS.PLACE.IS_NOT_HERE_CLASSNAME
+      );
     }
   });
 

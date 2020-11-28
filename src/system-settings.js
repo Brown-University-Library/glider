@@ -45,6 +45,8 @@ let PARSING_CONSTANTS = {
     ROLE_ATT_NAME: 'place-role',
     REGION_ATT_NAME: 'place-region',
     IS_HERE_ATT_NAME: 'place-is-here',
+    IS_HERE_CLASSNAME: 'place-is-here',
+    IS_NOT_HERE_CLASSNAME: 'place-not-here',
     SELECTOR_PREFIX: 'place-',
     CLASSNAME_PREFIX: 'place-',
     ROLE_REGION_DELIMITER: '-', // @todo: We define this but don't use it!
