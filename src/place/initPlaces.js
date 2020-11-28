@@ -67,12 +67,15 @@ function addCss(css, displayDomRoot) {
   return styleElement;
 }
 
+// Get the required definitions for this Place (Role) and compile the
+//  required CSS for this Role as well as all the Regions references in
+//  all the PartViews in this Place
 
 function initPlaces(gliderApp, initParameters, displayDomRoot) {
 
   const currRoleId = initParameters.herePlace;
 
-  // Create array of PlaceType definition data structure -- it merges (in order)
+  // Create array of PlaceType definitions for this Role -- it merges (in order)
   //  a base definition, then a type, then the user definition from the markup
 
   const basePlaceTypeDef = placeTypeDefinitions[PARSING_CONSTANTS.PLACE.DEFAULT_PLACE_TYPE],
@@ -81,7 +84,7 @@ function initPlaces(gliderApp, initParameters, displayDomRoot) {
         placeTypeDef = (placeTypeId && placeTypeDefinitions[placeTypeId]) ?
                         placeTypeDefinitions[placeTypeId] : {};
 
-  const mergedLists = {
+  const mergedLists = { // Collect all the defined stylesheet and CSS references in arrays
     stylesheets: [basePlaceTypeDef.stylesheet, placeTypeDef.stylesheet, placeDef.stylesheet]
                   .filter(ss => ss !== undefined),
     css: [basePlaceTypeDef.css, placeTypeDef.css, placeDef.css]
@@ -115,7 +118,7 @@ function initPlaces(gliderApp, initParameters, displayDomRoot) {
   );
 
   // Get CSS for all PlaceRegions
-  // @todo this is hard to read ...
+  // @todo make this easier to read
 
   const { regionCssElems } = partViewsThatAreHere.reduce(
     (acc, pv) => {
@@ -136,8 +139,6 @@ function initPlaces(gliderApp, initParameters, displayDomRoot) {
     },
     { regionCssElems: {}, cssRegister: {} }
   );  
-
-  // console.log('+++++++++', regionCssElems);
 
   return Object.assign(
     {},
