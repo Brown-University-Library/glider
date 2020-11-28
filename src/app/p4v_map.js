@@ -12,6 +12,10 @@ import { LOG } from "../misc/logger.js";
   getPlaceIdFromPartViewId
   getPlaceDataById
   
+  @todo Does p4vDB need all these methods? (which ones are actually being used?)
+        Is there a way to get off the dependence on Part/PartView IDs
+          and just map using the component objects themselves?
+
 */
 
 
@@ -43,13 +47,11 @@ class p4vDB {
         placeIds = Object.keys(initParameters.places);
 
     placeIds.forEach(placeId => {
-      LOG([`XCVXCV: ${placeId}`, placeToPartViewMap[placeId]]);
       placeToPartViewMap[placeId].forEach(
         partViewId => partViewsToPlaceMap[partViewId] = placeId
       );
     });
-    console.log('RRRRRRRRRRRRRR');
-    console.log(partViewsToPlaceMap);
+
     return partViewsToPlaceMap;
   }
 
@@ -58,14 +60,6 @@ class p4vDB {
   getPlaceIdFromPartViewId(partViewId) {
     return this.partViewToPlaceMap[partViewId];
   }
-
-  /*
-
-  @todo Does p4vDB need all these methods? (which ones are actually being used?)
-        Is there a way to get off the dependence on Part/PartView IDs
-          and just map using the component objects themselves?
-
-  */
 
   // Generate a map between PartViews ID and their containing Part ID
 
@@ -150,7 +144,7 @@ class p4vDB {
   }
 
   // Given a Place ID, return the role and region
-  // @todo placeDataById has ROLE IDs, not Place. 
+  // @todo rename - placeDataById has ROLE IDs, not Place. 
 
   getPlaceDataById(placeId) {
     const { roleId } = PARSING_CONSTANTS.PLACE.PARSE_ID(placeId);

@@ -111,8 +111,6 @@ function prepareDisplayMarkupForParts(initParameters, flightMarkup) {
   for (let partId in initParameters.parts) {
     const partDef = initParameters.parts[partId],
           partContainer = getElementById(flightMarkup, partId);
-    console.log('id?', partId);
-    console.log(flightMarkup);
     partContainer.setAttribute('is', partDef.type);
     partContainer.classList.add(
       PARSING_CONSTANTS.PART.GET_CSS_CLASS(partDef.type)
@@ -127,7 +125,6 @@ function prepareDisplayMarkupForParts(initParameters, flightMarkup) {
     const partViewDef = initParameters.partViews[partViewId],
           parentPartId = partViewDef.partId,
           parentPartType = initParameters.parts[parentPartId].type,
-          // partViewContainerId = partViewDef.container.id,
           partViewContainerId = partViewDef.markupNode.id,
           partViewContainer = getElementById(flightMarkup, partViewContainerId);
     

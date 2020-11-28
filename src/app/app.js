@@ -57,10 +57,10 @@ class GliderApp {
   // Part state methods
 
   /*
-   THIS IS AN IMPLEMENTATION of using Vue watchers to sync
-     shared variables across partViews, parts, and the store.
-   It seems like a lot of work, but the variables behave just
-     like local component variables because they ARE local.
+    THIS IS AN IMPLEMENTATION of using Vue watchers to sync
+      shared variables across partViews, parts, and the store.
+    It seems like a lot of work, but the variables behave just
+      like local component variables because they ARE local.
   */
 
   registerPart() {}

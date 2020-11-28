@@ -134,7 +134,6 @@ PARSING_CONSTANTS.PLACE.CREATE_STYLESHEET_ID = url => {
 }
 
 PARSING_CONSTANTS.PLACE.CREATE_STYLE_ELEM_ID = css => {
-  console.log('PPPPPP', css);
   return `place-role-style_${getHash(css)}`;
 }
 

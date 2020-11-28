@@ -75,8 +75,6 @@ function initPlaces(gliderApp, initParameters, displayDomRoot) {
   // Create array of PlaceType definition data structure -- it merges (in order)
   //  a base definition, then a type, then the user definition from the markup
 
-console.log(['@@@@@', { initParameters, ip: initParameters.placeDefs, currRoleId  }]);
-
   const basePlaceTypeDef = placeTypeDefinitions[PARSING_CONSTANTS.PLACE.DEFAULT_PLACE_TYPE],
         placeDef = initParameters.placeDefs[currRoleId] || {},
         placeTypeId = (placeDef && placeDef.type) ? placeDef.type : undefined,

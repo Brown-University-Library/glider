@@ -37,10 +37,13 @@ function main() {
 
   // Set up Glider architecture
 
+  // Set up shared store and App
+
   const sharedStore = getSharedStore(initParameters),
         sharedStoreConn = initConnection(initParameters, connectionConfig, sharedStore);
 
   const gliderApp = new GliderApp(initParameters, sharedStore);
+  // Set up Parts, Places, Phases
 
   let parts  = initParts(gliderApp, initParameters, displayDomRoot),
       places = initPlaces(gliderApp, initParameters, displayDomRoot);

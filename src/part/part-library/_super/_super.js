@@ -4,6 +4,7 @@ import { LOG } from '../../../misc/logger.js';
 
 // _SUPER PART
 // This is the base functionality that all parts share
+// Only really handles shared store
 
 // @todo: NOT SURE if the Part needs to know its ID / PartID
 

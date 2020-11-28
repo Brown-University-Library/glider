@@ -1,6 +1,6 @@
 
 import { getConnection } from './store-sync-conx_pusher.js';
-import { LOG } from './logger.js';
+import { LOG } from '../misc/logger.js';
 
 /*
 
@@ -102,7 +102,8 @@ function sendStoreSync() {
   connection.send(STORE_SYNC_MESSAGE_NAME, messageContent);
 }
 
-// Store calls this when there's something to synchronize
+// Store calls this when there's something to synchronize.
+//   Gets called by store.setItemLocally(itemId, itemVal)
 // @todo: why is this different from sendStoreSync()?
 
 function localStore_sendStoreSync() {
@@ -127,9 +128,9 @@ function initConnection(initParameters, connectionConfig, localStore) {
   }; // @todo - fill this in
   store.onVarChange(onVarChangeFunc); */
 
-  store.sync = localStore_sendStoreSync;
+  store.sync = localStore_sendStoreSync; // gets called by store.setItemLocally(itemId, itemVal)
 
-  // Handlers
+  // Define message handlers
 
   const connectionHandlers = {
     onReceiveHandlers: {
