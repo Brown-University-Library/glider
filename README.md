@@ -22,7 +22,7 @@ Installation
 I'm still learning my devops techniques, so eventually I'll have a proper installation process. For now, I use rollup to reconcile all the modules into a single file. Here's the script I run from the root directory in order to generate `dist/glider.js`:
 
 ```
-curl https://cdn.jsdelivr.net/npm/vue >> dist/glider.js
+curl https://cdn.jsdelivr.net/npm/vue > dist/glider.js
 rollup src/main.js --format iife  --name "glider" >> dist/glider.js
 ```
 
