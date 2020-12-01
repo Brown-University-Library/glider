@@ -1,4 +1,38 @@
 
+/*
+
+  The TimeGraph is a representation of the temporal relationships of Phases.
+
+  It consists of TimeGraphNodes which are either resolved or unresolved.
+
+  The Phase information in the FlightPlan markup indicates relationships
+  (e.g. Phase A is simultaneous with Phase B) that is initially expressed as constraints
+  between unresolved nodes. (e.g. we don't know when A or B will be active, 
+  but we know it will be at the same time)
+
+  Those relationships are established through a callback mechanism, where
+  when a node resolves (i.e. gets a value) it broadcasts that value to 
+  all the other TimeGraphNodes that depend on its value (its "subscribers"),
+  so that they can try to resolve themselves with this new information.
+  (e.g. once Phase A knows its value, it lets Phase B know so that it can resolve itself)
+
+  Note that TimeGraphNodes are basically just wrappers for a number, which can
+  represent a moment in time (as in the timestamp value of a Date object) 
+  or a duration in ms.
+
+  OUTLINE
+
+  - TimeGraphNode class definition
+  - Some misc TimeGraphNode-related creation functions
+  - Constraint functions (establish relationships between Nodes)
+  - Tests - which check for conditions, but don't assert
+      Constraints between Nodes
+  - Exports an object with all the public functions
+
+*/
+
+
+
 class TimeGraphNode {
 
   constructor(state) {
@@ -9,6 +43,8 @@ class TimeGraphNode {
   get val() {
     return this.state;
   }
+
+  // Human-readable version of the state
 
   get prettyVal() {
 
@@ -38,11 +74,10 @@ class TimeGraphNode {
     return (this.val !== undefined)
   }
 
-  subscribe(fn) {
+  // Subscriptions consist of callbacks that
+  //  are called when the state value resolves
 
-//  if (Array.isArray(fn)) {
-//    return this.subscribeMany(fn);
-//  }
+  subscribe(fn) {
 
     this.subscribers.push(fn);
 
@@ -52,11 +87,8 @@ class TimeGraphNode {
       ));
   }
 
-  // Set callback if the timeNode resolves
-
-  // set onResolve(doThis) {
-  //  this.subscribe(doThis);
-  // }
+  // Called when the state resolves;
+  //   calls all subscriber functions with the new state value
 
   broadcast(data) {
     this.subscribers.forEach(subscriber => subscriber(data));
@@ -65,7 +97,6 @@ class TimeGraphNode {
 }
 
 TimeGraphNode.INDEFINITE = Number.POSITIVE_INFINITY;
-
 
 
 // TimeNode factory
