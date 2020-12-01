@@ -242,21 +242,24 @@ Constraint.max_all = function(timeNodes, latestTimeNode) {
 
 // Constraint tests (don't modify the TimeGraph, return boolean)
 
+let Test = {};
+
 // Is the timeStamp later than timeNode1, and earlier than
 //  timeNode2?
 
-Constraint.test_isBetween = function(timeNode1, timeStamp, timeNode2) {
+Test.isBetween = function(timeNode1, timeStamp, timeNode2) {
   return (timeStamp > timeNode1.val && timeStamp < timeNode2.val);
 }
 
-Constraint.test_isBefore = function(timeNode, timeStamp) {
+Test.isBefore = function(timeNode, timeStamp) {
   return (timeStamp < timeNode.val);
 }
 
-Constraint.test_isAfter = function(timeNode, timeStamp) {
+Test.isAfter = function(timeNode, timeStamp) {
   return (timeStamp > timeNode.val);
 }
 
+// Exported collection of functions
 
 let TimeGraph = {
   getNode: getTimeGraphNode,
@@ -267,9 +270,9 @@ let TimeGraph = {
   isTheLatest: Constraint.max_all,
   isTheEarlier: Constraint.min,
   separatedByDuration: Constraint.sum,
-  test_isBetween: Constraint.test_isBetween,
-  test_isBefore: Constraint.test_isBefore,
-  test_isAfter: Constraint.test_isAfter,
+  test_isBetween: Test.isBetween,
+  test_isBefore: Test.isBefore,
+  test_isAfter: Test.isAfter,
   INDEFINITE: TimeGraphNode.INDEFINITE
 }
 
