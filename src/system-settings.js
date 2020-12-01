@@ -36,7 +36,8 @@ let PARSING_CONSTANTS = {
     TYPES: { PAR: 'par', SEQ: 'seq', LEAF: 'leaf' },
     DELAY_ATT_NAME: 'phase-begin',
     DURATION_ATT_NAME: 'phase-duration',
-    PHASE_DESCENDANT_SELECTOR: '*[phase-type],*[phase-duration],*[phase-begin]'
+    PHASE_DESCENDANT_SELECTOR: '*[phase-type],*[phase-duration],*[phase-begin]',
+    CLOCK_INTERVAL: 100 // In ms
   },
 
   PLACE: {

@@ -1,3 +1,4 @@
+import { PARSING_CONSTANTS } from '../system-settings.js';
 
 // With every Clock tick, the root Phase checks the state
 //  of all Phases
@@ -49,7 +50,7 @@ class Clock {
 
 // How many ms between ticks
 
-Clock.INTERVAL = 100; 
+Clock.INTERVAL = PARSING_CONSTANTS.PHASES.CLOCK_INTERVAL; // @todo: move to system settings?
 
 // Create a clock instance for export
 
