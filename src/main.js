@@ -46,8 +46,8 @@ function main() {
   // Set up Parts, Places, Phases
 
   let parts  = initParts(gliderApp, initParameters, displayDomRoot),
-      places = initPlaces(gliderApp, initParameters, displayDomRoot);
-      // phases = initPhases(gliderApp, initParameters);
+      places = initPlaces(gliderApp, initParameters, displayDomRoot),
+      {phases, phaseController} = initPhases(gliderApp, initParameters);
 
   let [_parts, _places, phases, _] = [undefined, undefined, undefined, undefined];
 

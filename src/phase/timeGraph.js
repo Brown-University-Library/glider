@@ -266,6 +266,7 @@ let TimeGraph = {
   getNowNode: getNowNode,
   getIndefiniteNode: getIndefiniteNode,
   areSimultaneous: Constraint.equals,
+  areEqual: Constraint.equals,
   isTheLater: Constraint.max,
   isTheLatest: Constraint.max_all,
   isTheEarlier: Constraint.min,

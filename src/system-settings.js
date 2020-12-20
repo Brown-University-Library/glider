@@ -37,7 +37,8 @@ let PARSING_CONSTANTS = {
     DELAY_ATT_NAME: 'phase-begin',
     DURATION_ATT_NAME: 'phase-duration',
     PHASE_DESCENDANT_SELECTOR: '*[phase-type],*[phase-duration],*[phase-begin]',
-    CLOCK_INTERVAL: 100 // In ms
+    CONTROLLER_ID: '_CONTROLLER',
+    CLOCK_INTERVAL: 100, // In ms
     STATE: { 
       'WAITING': 'WAITING', 
       'ACTIVE': 'ACTIVE', 

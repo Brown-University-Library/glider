@@ -5,3 +5,20 @@
   display: none;
 }
 
+/* Naive classes for Part states */
+
+.part-waiting {
+  display: none;
+}
+
+.part-active {
+  display: initial;
+}
+
+.part-frozen {
+  display: initial;
+}
+
+.part-ended {
+  display: none;
+}
