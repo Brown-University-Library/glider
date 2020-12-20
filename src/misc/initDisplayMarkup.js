@@ -147,6 +147,7 @@ function prepareDisplayMarkupForParts(initParameters, flightMarkup) {
 
       const newPartMarkup = document.createElement('div'); // @todo no magic
       newPartMarkup.setAttribute('is', partViewContainer.getAttribute('is'));
+      newPartMarkup.setAttribute('id', parentPartId);
       newPartMarkup.setAttribute('ref', parentPartId);
       partViewContainer.parentNode.insertBefore(newPartMarkup, partViewContainer);
       newPartMarkup.appendChild(partViewContainer);
