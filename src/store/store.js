@@ -4,22 +4,16 @@ import { LOG } from '../misc/logger.js';
 
 let sharedStore;  // Holds the single instance of the Store
 
-// Get the timestamp for the current time
-
-function getNow() {
-  return Date.now();
-}
-
 // Main Shared Store class
 
 class SharedStore {
 
   constructor(initParameters) {
-    this.app = undefined, // initialized by GliderApp constructor
     this.state = {};
     this.clientId = initParameters.clientId;
     this.clientRole = initParameters.herePlace;
-    this.sync = () => {}; // This gets overridden by the initConnection routine
+    this.app = undefined, // gets initialized by GliderApp constructor
+    this.sync = () => {}; // gets overridden by initConnection()
   }
 
   // Get an item OR if undefined, initialize it
