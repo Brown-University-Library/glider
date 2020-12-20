@@ -2,7 +2,7 @@
 import { PARSING_CONSTANTS } from '../system-settings.js';
 import * as systemPartRegistry from './part-library/_all.js';
 import { LOG } from '../misc/logger.js';
-import Vue from 'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.esm.browser.js'
+import Vue from 'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.esm.browser.js';
 
 /*
 

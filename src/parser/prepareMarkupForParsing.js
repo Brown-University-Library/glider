@@ -3,7 +3,7 @@ import { LOG } from '../misc/logger.js';
 import { PARSING_CONSTANTS } from '../system-settings.js';
 import { getIdFromDomPosition } from './getIdFromDomPosition.js';
 
-// Put ID's on all elements in body (for now)
+// Put ID's on all elements in Glider root (for now)
 // These IDs map to P4V IDs, for easy cross-checking
 
 function addElementIds(domNode) {
@@ -18,10 +18,11 @@ function addElementIds(domNode) {
 
 function initializeBodyElemAsFlightPlan() {
 
-  LOG(`No flight plan root declared: using <BODY> tag`);
+  LOG(`No flight plan root explcitly declared: using <BODY> tag`); // @todo no magic
 
-  // If body element, then create a child div and make that the
-  //  Glider root (Vue can't use the body element)
+  // If body element, then create a child elem and make that the
+  //   Glider root 
+  // (why? Because Vue can't use the body element)
 
   let gliderRoot,
       domRoot = document.body;

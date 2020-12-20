@@ -81,7 +81,9 @@ class GliderApp {
 
   registerPart() {}
 
-  addPartInstanceToRegistry() {} // Called by _super Vue component
+  addPartInstanceToRegistry() {
+    // Called by _super Vue component
+  } 
 
   savePartComponentReferences(vueObject) {
     this.getVueComponentById
@@ -125,7 +127,7 @@ class GliderApp {
 
       partsAndPartViews.filter(p => p !== doNotUpdate)
                        .forEach(p => p[varName] = itemVal);
-    }  
+    }
   }
 
   // This is called when an update originates from the 

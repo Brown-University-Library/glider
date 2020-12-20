@@ -30,7 +30,7 @@ let PARSING_CONSTANTS = {
     VIEW_NOT_HERE_CLASSNAME: 'place-not-here'
   },
 
-  PHASE: {
+  PHASE: { 
     ID_ATT_NAME: 'id',
     TYPE_ATT_NAME: 'phase-type',
     TYPES: { PAR: 'par', SEQ: 'seq', LEAF: 'leaf' },

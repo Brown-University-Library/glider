@@ -117,7 +117,7 @@ class p4vDB {
 
   getPartViewsFromPart(partComponentOrId) {
 
-    const part = this.getPartOrPartView(partComponentOrId);
+    const part = this.getPartOrPartView(partComponentOrId); // Part is the actual Vue object
     let partViews;
 
     if (part && part.id) {

@@ -1,4 +1,3 @@
-
 import { PARSING_CONSTANTS } from '../../../system-settings.js';
 import { LOG } from '../../../misc/logger.js';
 
@@ -38,14 +37,6 @@ let part = {
         this.gliderState = state;
         // @todo Change class name? (maybe only on the PV ...)
       }
-    }, /*
-    makeActive: function() { 
-      LOG(`PART ${this.id} IS TURNING ON`);
-      this._isActive = true;
-    },
-    makeInactive: function() { 
-      LOG(`PART ${this.id} IS TURNING OFF`);
-      this._isActive = false;
     },
 
     // Data sync methods
@@ -54,6 +45,7 @@ let part = {
       this.suspendWatch[varName] = true;
       this[varName] = val; // This will trigger the watch callback
     },
+
     watchNotSuspended: function(varName) {
       if (this.suspendWatch[varName]) {
         this.suspendWatch[varName] = false;
@@ -92,7 +84,6 @@ let partView = {
   mounted: function() {    
     this.$root.app.addPartInstanceToRegistry(this); // @todo is this necessary?
     this.setGliderState(PARSING_CONSTANTS.PHASE.STATE.WAITING);
-    // this.makeInactive();
   },
   
   // Default behaviour for making PartView active/inactive:
@@ -112,18 +103,6 @@ let partView = {
         classList.remove(PARSING_CONSTANTS.PART.STATE_CLASSNAME[oldState]);
         classList.add(PARSING_CONSTANTS.PART.STATE_CLASSNAME[state]);
       }
-    }, /*
-    makeActive: function() { 
-      LOG(`PART VIEW ${this.id} IS TURNING ON`);
-      this._isActive = true;
-      this.$el.classList.add(PARSING_CONSTANTS.PART.ACTIVE_CLASSNAME);
-      this.$el.classList.remove(PARSING_CONSTANTS.PART.INACTIVE_CLASSNAME);
-    },
-    makeInactive: function() { 
-      LOG(`PART VIEW ${this.id} IS TURNING OFF`);
-      this._isActive = false;
-      this.$el.classList.remove(PARSING_CONSTANTS.PART.ACTIVE_CLASSNAME);
-      this.$el.classList.add(PARSING_CONSTANTS.PART.INACTIVE_CLASSNAME);
     },
 
     // @todo this should probably be moved to the markup (via pre-processing)

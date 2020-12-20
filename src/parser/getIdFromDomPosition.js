@@ -1,5 +1,7 @@
 
 
+// @todo Move this to global settings? (already done getHash)
+
 // Simple hash function adapted from 
 //  https://stackoverflow.com/questions/6122571/simple-non-secure-hash-function-for-javascript
 // NOTE: Can return negative numbers; e.g. hash for 'strign' is -891986113

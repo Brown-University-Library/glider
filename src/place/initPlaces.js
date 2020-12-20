@@ -53,9 +53,7 @@ function addCss(css, displayDomRoot) {
         existingStyleElem = document.getElementById(styleElemId);
 
   // Check if style w that ID already exists
-  // console.log(`##### ${styleElemId}`, existingStyleElem);
   if (existingStyleElem === null) {
-    // console.log(`##### YES`);
     styleElement = document.createElement('style');
     styleElement.setAttribute('id', styleElemId);
     styleElement.appendChild(document.createTextNode(css));

@@ -36,22 +36,22 @@ class Phase {
 
   constructor(options) {
 
-    this.id = options.id || `phase_${Math.floor(Math.random() * 10000)}`; // TODO: This should be different
+    this.id = options.id || `phase_${Math.floor(Math.random() * 10000)}`; // @todo: Isn't this set during the parsing?
     this.initOptions = options; // Store original instance settings
-    this.time = {};
+    this.time = {}; // Holds the TimeGraph nodes
     this.parentPhase;
     this.childPhases = [];
 
     this.freezeSetting = options.hold || false; // the original setting from the markup
+                                                // @todo - move this to initOptions.canFreeze?
     this.canFreeze = this.freezeSetting;        // the actual behaviour 
                                                 //  (may be overridden -- see Phase_seq)
 
     this.currentState = undefined;
   }
 
-  // Pass TimeGraph initialization request to root Phase
-  //  If this is the root, start initializing
-
+  // Pass TimeGraph initialization request up to Phase_controller
+  
   requestTimeGraphInit() {
     if (this.parentPhase) {
       this.parentPhase.requestTimeGraphInit();
@@ -60,7 +60,15 @@ class Phase {
     }
   }
 
-  // Initialize TimeGraph nodes
+  // Initialize TimeGraph
+  //  Load up begin, dur, etc. with new TimeGraph node instances;
+  //  Apply duration constraint
+  // NOTE that all the subclasses (and subsubclasses) of Phase also have initializeTimeGraph()
+  //  that call their respective super.initializeTimeGraph()
+  //  While kind of cool, it's also a bit confusing.
+  // @todo should Phase.initializeTimeGraph be renamed to avoid confusion?
+  //  e.g. Phase.initializeTimeGraph_Phase(), Phase_nochildren.initializeTimeGraph_noChildren(), etc.?
+  //  Only the bottom of the class hierachy has initializeTimeGraph()
 
   initializeTimeGraph() {
 
@@ -101,13 +109,13 @@ class Phase {
     this.saveTimeGraphToStore();
   }
 
-  // Get app - recurse up to Phase_root instance
+  // Get app - recurse up to Phase_controller instance
 
   get app() {
     return (this.hasParent) ? this.parentPhase.app : undefined;
   }
 
-  // Get root (either Phase_root or top of hierarchy)
+  // Get Phase_controller
 
   get root() {
     return (this.hasParent) ? this.parentPhase.root : this;
@@ -126,6 +134,9 @@ class Phase {
   get beginTime() {
     return this.time.beginTime;
   }
+
+  // @todo - is there ever a time when a value (not a node) 
+  //         is passed? This may be unnecessarily complicated
 
   set beginTime(timeGraphNodeOrValue) {
     if (typeof timeGraphNodeOrValue === 'number') {
@@ -497,10 +508,12 @@ class Phase_seq extends Phase_withChildren {
   }
 }
 
-// The Phase_root class is the root of the Phase hierarchy.
+// The Phase_controller class is the root of the Phase hierarchy.
+// It is the PARENT of the Glider root in the markup. Therefore, it
+//   serves as a container for the phases defined in the Flight plan.
 // This object is uniquely connected to the Clock and to the App.
 // All Clock updates start at the root and get sent down.
-// Until the Phases are connected to the Phase_root instance,
+// Until the Phases are connected to the Phase_controller instance,
 //   they have no connection to the rest of Glider, and do
 //   not get driven by the Clock.
 

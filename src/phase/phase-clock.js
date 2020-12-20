@@ -50,7 +50,7 @@ class Clock {
 
 // How many ms between ticks
 
-Clock.INTERVAL = PARSING_CONSTANTS.PHASES.CLOCK_INTERVAL; // @todo: move to system settings?
+Clock.INTERVAL = PARSING_CONSTANTS.PHASE.CLOCK_INTERVAL;
 
 // Create a clock instance for export
 

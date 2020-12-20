@@ -26,7 +26,7 @@ function main() {
         preparedDocumentSections = prepareMarkupForParsing(documentSections),
         initParameters = getInitParameters(preparedDocumentSections); // @todo: Pass user overrides
         
-  LOG(['PARSED DATA', initParameters], 4);
+  LOG(['PARSED DATA', JSON.stringify(initParameters, null, 2)], 4);
 
   // Derive display markup from Flight Plan markup and attach to
   //  DOM as a shadow DOM

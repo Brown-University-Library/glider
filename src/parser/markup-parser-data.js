@@ -207,7 +207,7 @@ class P4V_Data {
       this.placesPartviews[placeId] = []; 
     }
 
-    console.log(`this.placesPartviews[${placeId}].push(${partViewId});`)
+    // console.log(`this.placesPartviews[${placeId}].push(${partViewId});`)
 
     this.placesPartviews[placeId].push(partViewId);
   }
@@ -269,11 +269,11 @@ class P4V_Data {
     this.setRootPhase(p4vReg.phase);
   }
 
-  // Post-parse cleanup
+  // Post-parse cleanup & freeze
   // @todo -- prune tree of unnecessary Parts/Phases?
 
   clean() {
-    
+    return this;
   }
 }
 

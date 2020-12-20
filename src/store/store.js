@@ -43,13 +43,14 @@ class SharedStore {
   }
 
   // Set an item's value
-  // Returns true if the store was updated; false if not
+  //  Returns true if the store was updated; false if not
+  //  Called by setItemFromSync() and setItemLocally()
 
   setItem(itemId, newItem) {
 
     if (!itemId) return false;
 
-    newItem.lastModified = newItem.lastModified || getNow();
+    newItem.lastModified = newItem.lastModified || Date.now();
     newItem.lastModifiedBy = newItem.lastModifiedBy || this.clientId;
 
     const oldItem = this.getOrInitItem(itemId),
@@ -57,7 +58,7 @@ class SharedStore {
           updateIsFresher = (oldItem.lastModified < newItem.lastModified),
           valueChanged = (newItem.val !== oldItem.val);
 
-    let storeUpdated;
+    let storeUpdated; // return value
 
     if (hasWritePermission && updateIsFresher) {
 
@@ -93,21 +94,16 @@ class SharedStore {
     
     // Update all Parts & PartViews (via App)
 
-    if (storeWasUpdated || true) {
+    if (storeWasUpdated || true) { // @todo temporarily always on
       this.app.updatePartVarFromStore(itemId, itemData.val);
     }
   }
 
   // Set an item's value internally (i.e. locally)
+  //   Update store & trigger sync (if a change)
 
   setItemLocally(itemId, itemVal) {
-
-    // Update store
-
     const storeWasUpdated = this.setItem(itemId, { val: itemVal });
-
-    // Trigger sync
-
     if (storeWasUpdated) { this.sync() }
   }
 
@@ -121,6 +117,10 @@ class SharedStore {
 
   getState() {
     return this.state;
+  }
+
+  toString() {
+    // @todo a nice pretty-print here
   }
 }
 
