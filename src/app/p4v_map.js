@@ -27,6 +27,7 @@ class p4vDB {
     this.partViewToPlaceMap = this.getPartViewsByPlaceMap(initParameters);
     this.initPartViewsToPartMap(initParameters.partViews);
     this.placeDataById = initParameters.places;
+    this.phaseToPartMap = initParameters.phasesParts;
   }
 
   initPartComponentsByIdMap(vueObject) {
@@ -149,6 +150,17 @@ class p4vDB {
   getPlaceDataById(placeId) {
     const { roleId } = PARSING_CONSTANTS.PLACE.PARSE_ID(placeId);
     return this.placeDataById[roleId];
+  }
+
+  // Called by App.phaseChange()
+
+  getPartsAndPartViewsByPhase(phaseId) {
+
+    const partId = this.phaseToPartMap[phaseId][0], // @todo TEMP JUST USE FIRST - there may be more than one
+          partAndPartViewIds = this.getPartViewIdsFromPartId(partId).concat([partId]),
+          partAndPartViewVueObjects = partAndPartViewIds.map(id => this.getPartOrPartView(id));
+
+    return partAndPartViewVueObjects;
   }
 }
 
