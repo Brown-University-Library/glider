@@ -23,13 +23,13 @@ export const fixedgridplace = {
   // Region selectors are in the form r#c#h#w#
   //  (# = number, in any order)
 
-  addRegion: ({ roleName, regionName, settings }) => {
+  addRegion: ({ role, region, settings }) => {
 
     let css;
 
-    if (regionName) {
+    if (region) {
 
-      const geometry = Array.from(regionName.matchAll(/[crwh]\d+/ig))
+      const geometry = Array.from(region.matchAll(/[crwh]\d+/ig))
       .reduce(
         (geoDims, x) => { 
           geoDims[x[0][0]] = parseInt(x[0][1]); 
