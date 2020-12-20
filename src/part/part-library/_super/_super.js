@@ -12,7 +12,7 @@ let part = {
   
   data: function () {
     return {
-      _isActive: false,
+      gliderState: PARSING_CONSTANTS.PHASE.STATE.WAITING,
       suspendWatch: {} // If set, disables the watcher once
                        //  Used to avoid update feedback loops with store
     }
@@ -23,14 +23,22 @@ let part = {
   created: function() {
     // this.$root.parts[this.id] = this; // @todo this may not be necessary
     this.$root.app.addPartInstanceToRegistry(this);
-    this.makeInactive();
-  },
+    this.setGliderState(PARSING_CONSTANTS.PHASE.STATE.WAITING);
+  }, 
   
   methods: {
 
     // Methods for making a Part active/inactive
     //  (from Phases)
 
+    setGliderState: function(state) {
+      if (PARSING_CONSTANTS.PHASE.STATE[state] 
+          && this.gliderState !== state) {
+        LOG([`AT ${Date.now()} IN PART#${this.id}.setGliderState CHANGING STATE TO #${state}`, this]);
+        this.gliderState = state;
+        // @todo Change class name? (maybe only on the PV ...)
+      }
+    }, /*
     makeActive: function() { 
       LOG(`PART ${this.id} IS TURNING ON`);
       this._isActive = true;
@@ -83,13 +91,28 @@ let partView = {
   
   mounted: function() {    
     this.$root.app.addPartInstanceToRegistry(this); // @todo is this necessary?
-    this.makeInactive();
+    this.setGliderState(PARSING_CONSTANTS.PHASE.STATE.WAITING);
+    // this.makeInactive();
   },
   
   // Default behaviour for making PartView active/inactive:
   //   Adding/removing classname
 
   methods: {
+
+    setGliderState: function(state) {
+      if (PARSING_CONSTANTS.PHASE.STATE[state] 
+          && this.gliderState !== state) {
+        LOG(`AT ${Date.now()} IN PARTVIEW#${this.id}.setGliderState CHANGING STATE TO #${state}`);
+        const oldState = this.gliderState,
+              classList = this.$el.classList;
+        this.gliderState = state;
+        // @todo Change class name?
+        // LOG(['CLASSLIST', this.$el.classList]);
+        classList.remove(PARSING_CONSTANTS.PART.STATE_CLASSNAME[oldState]);
+        classList.add(PARSING_CONSTANTS.PART.STATE_CLASSNAME[state]);
+      }
+    }, /*
     makeActive: function() { 
       LOG(`PART VIEW ${this.id} IS TURNING ON`);
       this._isActive = true;

@@ -51,8 +51,24 @@ class GliderApp {
 
   // Phase methods
 
-  phaseChange() {}
-  updatePhaseBoundaries() {}
+  // Called by Phase.setState()
+  // Update Parts and PartViews when Phase state changes
+
+  phaseChange(phaseId, state) {
+    this.p4vDB.getPartsAndPartViewsByPhase(phaseId).forEach(
+      partOrPartView => { 
+        partOrPartView.setGliderState(state);
+      }
+    );
+  }
+
+  // Called by Phase.saveTimeGraphToStore()
+  // Passes PhaseBoundary object
+
+  updatePhaseBoundaries(phaseBoundaries) {
+    // @todo is this where the timegraphs are syncronised across
+    //  clients?
+  }
 
   // Part state methods
 
