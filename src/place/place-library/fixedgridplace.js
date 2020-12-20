@@ -1,4 +1,6 @@
 
+import { PARSING_CONSTANTS } from '../../system-settings.js';
+
 export const fixedgridplace = {
 
   id: 'fixedgridplace',
@@ -40,9 +42,9 @@ export const fixedgridplace = {
 
       css = `
 
-        /* Some CSS for a fixedgridplace instance, region ${regionName} */
+        /* Some CSS for a fixedgridplace instance, region ${region} */
 
-        .${roleName}.${regionName} {
+        .${PARSING_CONSTANTS.PLACE.CREATE_CSS_CLASSNAME({role, region})} {
           position: fixed;
           box-sizing: border-box;
           width: ${settings.columnWidth * geometry.w}px;
