@@ -38,6 +38,12 @@ let PARSING_CONSTANTS = {
     DURATION_ATT_NAME: 'phase-duration',
     PHASE_DESCENDANT_SELECTOR: '*[phase-type],*[phase-duration],*[phase-begin]',
     CLOCK_INTERVAL: 100 // In ms
+    STATE: { 
+      'WAITING': 'WAITING', 
+      'ACTIVE': 'ACTIVE', 
+      'FROZEN': 'FROZEN',
+      'ENDED': 'ENDED'
+    }
   },
 
   PLACE: {
@@ -76,6 +82,13 @@ let PARSING_CONSTANTS = {
     NO_SEQ_ON_PART: "You can't declare a Phase of type SEQ on a Part. Defaulting to PAR."
   }
 };
+
+PARSING_CONSTANTS.PART.STATE_CLASSNAME = {
+  [PARSING_CONSTANTS.PHASE.STATE.WAITING]: 'part-waiting',
+  [PARSING_CONSTANTS.PHASE.STATE.ACTIVE]: 'part-active',
+  [PARSING_CONSTANTS.PHASE.STATE.FROZEN]: 'part-frozen',
+  [PARSING_CONSTANTS.PHASE.STATE.ENDED]: 'part-ended'
+}
 
 // ID and Classname generators
 
