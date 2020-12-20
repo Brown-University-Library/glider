@@ -47,14 +47,6 @@ function initializeBodyElemAsFlightPlan() {
 
   document.body.appendChild(gliderRoot);
 
-  // If glider-defs is inside of GliderRoot, then move it just before
-
-  const gliderDefs = gliderRoot.querySelector('glider-defs');  // @todo no magic
-
-  if (gliderDefs) {
-    gliderRoot.parentElement.insertBefore(gliderDefs, gliderRoot);
-  }
-
   return gliderRoot;
 }
 
@@ -65,6 +57,19 @@ function initializeBodyElemAsFlightPlan() {
 function addFlightPlanClassAndId(flightPlanRoot) {
   flightPlanRoot.classList.add(PARSING_CONSTANTS.FLIGHT_PLAN_ROOT_CLASSNAME);
   flightPlanRoot.setAttribute('id', 'glider-root'); // @todo NO MAGIC
+}
+
+// If glider-defs is inside of GliderRoot, then move it to head
+
+function moveGliderDefsToHead(flightPlanRoot) {
+
+    const gliderDefs = flightPlanRoot.querySelector(
+      PARSING_CONSTANTS.DEFS_ELEMENT_NAME
+    );
+
+    if (gliderDefs) {
+      document.head.appendChild(gliderDefs);
+    }
 }
 
 
@@ -82,6 +87,7 @@ function prepareMarkupForParsing(documentSections) {
     flightPlanRoot => {
       addFlightPlanClassAndId(flightPlanRoot);
       addElementIds(flightPlanRoot);
+      moveGliderDefsToHead(flightPlanRoot);
     }
   );
 
